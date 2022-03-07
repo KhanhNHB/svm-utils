@@ -1,0 +1,95 @@
+*, body, p {
+    font-family: 'Manrope', sans-serif;
+}
+
+* {
+    margin: 0;
+}
+
+/* FOOTER START */
+footer .title-footer {
+    font-size: 20px;
+    padding-bottom: 20px;
+    color: #fff;
+}
+
+footer .content-footer {
+    font-size: 14px;
+    color: #C3C3C3;
+    padding-bottom: 10px;
+}
+
+footer svg {
+    padding-right: 8px;
+}
+
+footer a {
+    color: #C3C3C3 !important;
+    text-decoration-color: #C3C3C3 !important;
+}
+
+footer a:hover {
+    color: #fff !important;
+    text-decoration-color: #fff !important;
+}
+
+footer .receive-info-form {
+    display: flex;
+    padding-bottom: 25px;
+}
+
+footer .receive-info-form input[type=text] {
+    height: 20px;
+    width: 180px;
+    border: 1px solid #C3C3C3;
+    background: transparent;
+    color: #fff;
+    padding: 10px 10px;
+    font-size: 16px;
+}
+
+footer .receive-info-form input[type=submit] {
+    height: 42px;
+    width: 68px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    font-size: 16px;
+    color: #27272C;
+    border: 1px solid #fff;
+}
+/* FOOTER END */
+
+/* ORDER FORM START - TRIAL REGISTER FORM START */
+#order-form .css-1wnsr1i, #trial-register-form #order-form .css-1wnsr1i {
+    border: 1px solid #fff;
+}
+
+#order-form .modal-modal-title, #trial-register-form .modal-modal-title {
+    font-size: 24px;
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 30px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#order-form .input-container input, #trial-register-form .input-container input {
+    width: 358px;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: 1px solid #C6C6C6;
+    border-radius: 4px;
+    color: #9A9A9A;
+}
+
+#order-form .order-button, #trial-register-form .order-button {
+    padding: 10px 20px;
+    background: linear-gradient(#00AFEC, #005FBE);
+    color: #fff;
+    border: 1px solid #6092B9;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    width: 160px;
+    height: 48px;
+    cursor: pointer;
+}
+/* ORDER FORM END - TRIAL REGISTER FORM END */

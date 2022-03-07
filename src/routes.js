@@ -1,12 +1,12 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import DashboardLayout from './layouts/DashboardLayout/index';
-import AccountView from './views/account/AccountView/index';
 import ShipperListView from './views/shipper/ShipperListView/index';
 import LoginView from './views/auth/LoginView';
-import Invoices from './views/invoice/InvoicesListView/index';
 import ShippingArea from './views/hub';
-import HubManager from './views/hub_manager';
+import Feature from './views/feature';
+import Products from './views/product/ProductListView';
+import Home from './views/home/Home';
 
 const routes = [
   {
@@ -14,11 +14,16 @@ const routes = [
     element: <LoginView />,
     element: <DashboardLayout />,
     children: [
-      { path: 'account', element: <AccountView /> },
-      { path: 'shipper', element: <ShipperListView /> },
-      { path: 'shipping-area', element: <ShippingArea /> },
-      { path: 'invoices-list', element: <Invoices /> },
-      { path: 'hub-manager', element: <HubManager /> },
+      { path: 'san-pham', element: <Products /> },
+      { path: 'tinh-nang', element: <Feature /> },
+      // { path: 'lap-dat', element: <HubManager /> },
+      // { path: 'lien-he', element: <HubManager /> },
+      // { path: 'bao-hanh', element: <HubManager /> },
+      // { path: 'dai-ly', element: <HubManager /> },
+      { path: 'tin-khuyen-mai', element: <ShipperListView /> },
+      { path: 'tin-san-pham', element: <ShippingArea /> },
+      { path: 'tin-su-kien', element: <Products /> },
+      { path: '', element: <Home /> },
     ]
   },
   {
@@ -26,7 +31,7 @@ const routes = [
     exact: true,
     element: <LoginView />,
     children: [
-      { path: '/', element: <Navigate to="/app/invoices-list" /> },
+      { path: '/', element: <Navigate to="/app" /> },
     ]
   },
 ];
