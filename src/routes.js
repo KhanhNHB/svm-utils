@@ -5,8 +5,8 @@ import ShipperListView from './views/shipper/ShipperListView/index';
 import LoginView from './views/auth/LoginView';
 import ShippingArea from './views/hub';
 import Feature from './views/feature';
-import Products from './views/product/ProductListView';
 import Home from './views/home/Home';
+import Products from './views/product/ProductListView/Products';
 
 const routes = [
   {

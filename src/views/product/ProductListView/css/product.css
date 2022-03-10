@@ -1,0 +1,22 @@
+.modal-area {
+    overflow: auto !important
+}
+.modal-content {
+    margin: 10% auto !important;
+    background: white;
+    padding: 20px;
+    
+   
+}
+.modal-modal-title {
+    margin: auto;
+}
+.button-detail {
+    width: fit-content;
+    height: fit-content;
+    display: block !important;
+    float: right !important;
+}
+.flex-reverse {
+    flex-direction: row-reverse !important;
+}
