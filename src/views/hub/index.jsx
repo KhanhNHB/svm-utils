@@ -59,51 +59,51 @@ export function MapContainer(props) {
   }
 
   useEffect(() => {
-    const fetchOrder = async (user) => {
-      let query = "none";
-      if (user.roleId === ROLE.HUB_MANAGER) {
-        query = user.hubId;
-      }
+    // const fetchOrder = async (user) => {
+    //   let query = "none";
+    //   if (user.roleId === ROLE.HUB_MANAGER) {
+    //     query = user.hubId;
+    //   }
 
-      const response = await API.get(`${PRODUCT_ENDPOINT}/status/available?hub_id=${query}`);
-      if (response.ok) {
-        const fetchData = await response.json();
-        setInvoiceLocation(fetchData.data);
-        dispatch(actLoadProducts(fetchData.data));
-      }
-    };
+    //   const response = await API.get(`${PRODUCT_ENDPOINT}/status/available?hub_id=${query}`);
+    //   if (response.ok) {
+    //     const fetchData = await response.json();
+    //     setInvoiceLocation(fetchData.data);
+    //     dispatch(actLoadProducts(fetchData.data));
+    //   }
+    // };
 
-    const fetchHub = async (user) => {
-      let query = 'none';
-      if (user.roleId === ROLE.HUB_MANAGER) {
-        query = user.phone;
-      }
+    // const fetchHub = async (user) => {
+    //   let query = 'none';
+    //   if (user.roleId === ROLE.HUB_MANAGER) {
+    //     query = user.phone;
+    //   }
 
-      const response = await API.get(`${HUB_ENDPOINT}?page=1&limit=50&hub_manager_phone=${query}`);
-      if (response.ok) {
-        const fetchData = await response.json();
-        fetchOrder(user);
-        dispatch(actGetListHub(fetchData.data));
-      }
-    };
+    //   const response = await API.get(`${HUB_ENDPOINT}?page=1&limit=50&hub_manager_phone=${query}`);
+    //   if (response.ok) {
+    //     const fetchData = await response.json();
+    //     fetchOrder(user);
+    //     dispatch(actGetListHub(fetchData.data));
+    //   }
+    // };
 
-    const readCookie = async () => {
-      const user = Cookies.get(USER_TOKEN);
-      if (user) {
-        const response = await API.post(`${PROFILE_ENDPOINT}`, {
-          "access_token": user
-        });
+    // const readCookie = async () => {
+    //   const user = Cookies.get(USER_TOKEN);
+    //   if (user) {
+    //     const response = await API.post(`${PROFILE_ENDPOINT}`, {
+    //       "access_token": user
+    //     });
 
-        if (response.ok) {
-          const fetchData = await response.json();
-          setUser(fetchData.data);
-          fetchHub(fetchData.data);
-          dispatch(actLoadProfile(fetchData.data));
-        }
-      }
-    };
+    //     if (response.ok) {
+    //       const fetchData = await response.json();
+    //       setUser(fetchData.data);
+    //       fetchHub(fetchData.data);
+    //       dispatch(actLoadProfile(fetchData.data));
+    //     }
+    //   }
+    // };
 
-    readCookie();
+    // readCookie();
   }, [dispatch, navigate]);
 
   const onMarkerClick = (evt) => {
@@ -134,7 +134,7 @@ export function MapContainer(props) {
           onClick={onMarkerClick}
           {...props}
         >
-        </Marker >
+        </Marker>
         );
       });
     }

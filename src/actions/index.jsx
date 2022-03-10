@@ -7,6 +7,20 @@ export const actSignIn = (userToken) => {
     };
 };
 
+export const actGetAllInsurance = (insurances) => {
+    return {
+        type: types.GET_ALL_INSURANCE,
+        insurances,
+    }
+};
+
+export const actGetInsuranceIsActive = (insurance) => {
+    return {
+        type: types.GET_INSURANCE_IS_ACTIVE,
+        insurance,
+    }
+};
+
 export const actGetAllShipper = (shippers) => {
     return {
         type: types.GET_ALL_SHIPPERS,
