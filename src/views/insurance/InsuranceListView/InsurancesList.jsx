@@ -55,7 +55,7 @@ const InsurancesList = ({ data }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [messageSuccess, setMessageSuccess] = useState('');
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -96,14 +96,15 @@ const InsurancesList = ({ data }) => {
       if (repsonseInsurance.ok) {
         const fetchData = await response.json();
         const data = { content: fetchData.content, totalPages: fetchData.totalPages };
-        setMessageSuccess(`Lưu dữ liệu bảo hành thành công!`);
+        setMessage(`Lưu dữ liệu bảo hành thành công!`);
         setOpenSnackbar(true);
         dispatch(actGetAllInsurance(data));
       }
     } else {
+      
       const patchData = await response.json();
       if (patchData.message) {
-        alert(patchData.message);
+        setMessage(`Lưu dữ liệu bảo hành thất bại!`);
       }
     }
     setLoading(false);
@@ -213,10 +214,10 @@ const InsurancesList = ({ data }) => {
         message={`Import Sucess!`}
       >
         <Alert onClose={handleCloseSnackbar} severity='success'>
-          {messageSuccess}
+          {message}
         </Alert>
       </Snackbar>
-    </div >
+    </div>
   );
 };
 
