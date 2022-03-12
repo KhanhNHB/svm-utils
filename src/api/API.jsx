@@ -58,4 +58,15 @@ export default {
             body: JSON.stringify(body),
         })
     },
+    getNSL: (url) => {
+        return  fetch(url, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + Cookies.get(USER_TOKEN)
+            }
+        })
+    }
 }

@@ -14,3 +14,11 @@ export const PROFILE_ENDPOINT = `${BASE_URL}/auth/profile`;
 export const DELIVERIES_STATUS_ENDPOINT = `${BASE_URL}/deliveries-status`;
 
 export const IMAGE_ENDPOINT = `${BASE_URL}/gds/images`;
+
+
+export const PRODUCTS_ENDPOINT = `${BASE_URL}/product/all`;
+export const PRODUCT_UPDATE_ENDPOINT = `${BASE_URL}/product`;
+
+export const PRODUCT_BY_ID_ENDPOINT = `${BASE_URL}/product/id`;
+export const PRODUCT_FEATURES_BY_ID_ENDPOINT = `${BASE_URL}/product-features/all`;
+export const PRODUCT_IMAGES_BY_ID_ENDPOINT = `${BASE_URL}/product-images/all`;

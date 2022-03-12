@@ -3,7 +3,7 @@ import user from './users';
 import shippers from './shippers';
 import hub from './hub';
 import providers from './providers';
-import product from './product';
+import product from '../views/product/ProductListView/redux/product.reducer';
 import profile from './profile';
 import CreateHub from './createhub';
 import shipper from './shipper';
@@ -16,7 +16,7 @@ const appReducers = combineReducers({
         shippers,
         hub,
         providers,
-        product,
+        product, 
         profile,
         CreateHub,
         shipper,

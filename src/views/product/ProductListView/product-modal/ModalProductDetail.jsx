@@ -1,17 +1,74 @@
-import {Box, Grid, Modal, Button, TextField, FormControl, InputLabel, OutlinedInput, FormHelperText} from '@mui/material';
-import React, {  useState } from 'react';
+import {Box, Grid, Modal, Button, FormControl, InputLabel, OutlinedInput, FormHelperText} from '@mui/material';
+import React, {  useState, useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import TextEditorProduct from '../product-input/TextEditorProduct';
+import * as Actions from '../redux/product.action'
 import '../css/product.css';
+import { PRODUCT_BY_ID_ENDPOINT } from './../../../../api/endpoint';
+import API from '../../../../api/API';
 
 
 const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
 
+    const dispatch = useDispatch();
+    const currentId = useSelector((state)=> state.product.currentProductId )
+    const product = useSelector((state)=> state.product.product )
+
+    const [name, setName] = useState(product.name);
+    const [price, setPrice] = useState(product.price);
+    const [info1, setInfo1] = useState(product.info1);
+    const [info2, setInfo2] = useState(product.info2);
+    const [description, setDescription] = useState(product.description);
+    const [gift, setGift] = useState(product.gift);
+
+    useEffect(() => {
+        console.log('curentId changed: '+currentId);
+        const setProduct = () => {
+            setName(product.name)
+            setPrice(product.price)
+            setInfo1(product.info1)
+            setInfo2(product.info2)
+            setDescription(product.description)
+            setGift(product.gift)
+        }
+        setProduct()
+    }, [product]);
     
-    const [name, setName] = useState('');
-    const [info1, setInfo1] = useState('');
-    const [info2, setInfo2] = useState('');
-    const [description, setDescription] = useState('');
-    const [gift, setGift] = useState('');
+    // useEffect(() => {
+    //     console.log('product change: ',product);
+        
+    //     setName(product.name)
+    //     setPrice(product.price)
+    //     setInfo1(product.info1)
+    //     setInfo2(product.info2)
+    //     setDescription(product.description)
+    //     setGift(product.gift)
+    
+    // }, [product]);
+
+   
+  
+
+    const handleValue = (event, typeValue) => {
+        switch (typeValue) {
+            case 'name':
+                setName(event.target.value);
+              break;
+            case 'price':
+                setPrice(event.target.value);
+              break;
+            default:
+              break;
+          }
+    };
+
+    const saveDetail = () => {
+        const productUpdate = {
+            id: currentId, name, price, info1, info2, description, gift
+        }
+        dispatch(Actions.updateProduct(productUpdate))
+        handleCloseDetail();
+    }
 
     return (
         <Box >
@@ -29,15 +86,21 @@ const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
                             <Grid  item container xs={12} sm={12} >
                                 <Grid  item container xs={12} spacing={5} className='flex-reverse' > 
                                     <Grid  item xs={12} sm={12} md={3}>
-                                        <Button className='button-detail' background='info' variant='contained'>Lưu</Button>
+                                        <Button 
+                                            className='button-detail' 
+                                            background='info'
+                                            variant='contained'
+                                            onClick={saveDetail}
+                                         
+                                         >Lưu</Button>
                                     </Grid>
                                     <Grid item container xs={12} sm={12} md={9} spacing={5}>
                                         <Grid  item container xs={12} sm={6} md={6}>
                                             <FormControl size='medium' sx={{ width: '100%' }}>
                                                 <InputLabel>Tên sản phẩm</InputLabel>
                                                 <OutlinedInput
-                                                    value={name}
-                                                    onChange={setName}
+                                                    value={product.name}
+                                                    onChange={e => handleValue(e,'name')}
                                                     label="Tên sản phẩm"
                                                 />
                                             </FormControl>
@@ -46,8 +109,8 @@ const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
                                             <FormControl size='medium' sx={{ width: '100%' }}>
                                                 <InputLabel >Giá sản phẩm</InputLabel>
                                                 <OutlinedInput
-                                                    value={name}
-                                                    onChange={setName}
+                                                    value={product.price}
+                                                    onChange={e => handleValue(e,'price')}
                                                     label="Giá sản phẩm"
                                                 />
                                             </FormControl>
@@ -60,30 +123,30 @@ const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
                             <Grid item xs={12} sm={6} className="input-container">
                                 <TextEditorProduct
                                     title='Cấu hình 1'
-                                    content={info1}
-                                    setContent={setInfo1}                                
+                                    content={product.info1}
+                                    setContent={setInfo1}                         
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} className="input-container">
                             <TextEditorProduct
                                     title='Cấu hình 2'
-                                    content={info2}
-                                    setContent={setInfo2}                                
+                                    content={product.info2}
+                                    setContent={setInfo2}                                   
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} className="input-container">
                                 <TextEditorProduct
                                  title='Thông tin sản phẩm'
-                                    content={description}
-                                    setContent={setDescription}                                
+                                    content={product.description}
+                                    setContent={setDescription}                                     
                                 />
                                 
                             </Grid>
                             <Grid item xs={12} sm={6} className="input-container">
                                 <TextEditorProduct
                                     title='Quà tặng'
-                                    content={gift}
-                                    setContent={setGift}                                
+                                    content={product.gift}
+                                    setContent={setGift}                                 
                                 />
                             
                             </Grid>

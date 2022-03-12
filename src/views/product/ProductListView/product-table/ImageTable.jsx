@@ -47,7 +47,7 @@ const rows = [
  
 ];
 
-export default function FeatureTable() {
+export default function ImageTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const handleChangePage = (event, newPage) => {
