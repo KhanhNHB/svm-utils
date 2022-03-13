@@ -1,22 +1,22 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import { Button } from '@mui/material';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow   } from '@mui/material';
+import * as Actions from '../redux/product.action'
 
 const columns = [
   { id: 'no', label: 'No.', minWidth: 50 },
   { id: 'id', label: 'Id', minWidth: 50 },
+  
   {
-    id: 'name',
-    label: 'Name',
-    minWidth: 170,
+    id: 'smallImage',
+    label: 'Hình lớn',
+    maxWidth: 100,
+    align: 'center'
+  },
+  {
+    id: 'largeImage',
+    label: 'Hình nhỏ',
+    maxWidth: 150,
     align: 'center'
   },
   {
@@ -28,38 +28,50 @@ const columns = [
   
 ];
 
-function createData(no, id, name, action) {
-  return { no, id, name, action};
-}
-
-const rows = [
-  createData(1, 1, 'NextG RT650', 1),
-  createData(2, 2, 'NextG RT750', 2),
-  createData(2, 2, 'NextG RT750', 2),
-  createData(2, 2, 'NextG RT750', 2),
-  createData(2, 2, 'NextG RT750', 2),
-  createData(2, 2, 'NextG RT750', 2),
-  createData(2, 2, 'NextG RT750', 2),
-  createData(2, 2, 'NextG RT750', 2),
-  createData(2, 2, 'NextG RT750', 2),
-  createData(2, 2, 'NextG RT750', 2),
-  createData(2, 2, 'NextG RT750', 2),
- 
-];
-
 export default function ImageTable() {
+  const dispatch = useDispatch();
+
+  const currentProductId = useSelector((state)=> state.product.currentProductId)
+
+  const images = useSelector((state)=> state.product.images)
+
+
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
+  
+
+  const mappingImage = (images) => {
+    let newImgs = [...images]
+    let imgsTable = newImgs.map((image, index)=> {
+      return {
+        no: index+1,
+        id: image.id,        
+        smallImage: image.smallImage,
+        largeImage: image.largeImage,
+        action: image.id,
+    }
+    })
+    return imgsTable;
+  }
+  const rows = mappingImage(images)
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  const handleDelete = (event, id) => {
+  const handleDeleteImage = (event, id) => {
     console.log('delete: ', id);
+  }
+
+  const handleEditImage = (event, id) => {
+    dispatch(Actions.setImageButtonStatus('edit'))
+    dispatch(Actions.setImageId(id))
+    dispatch(Actions.loadImage(id))
   }
   return (
     <Paper sx={{  overflow: 'hidden' }}>
@@ -89,11 +101,17 @@ export default function ImageTable() {
                       if(column.id == 'action') {
                         return (
                           <TableCell align={column.align} key={column.id+index}>
-                              <Button onClick={(e)=> {handleDelete(e,value)}} color='error'>Ẩn</Button>
-                              <Button onClick={(e)=> {handleDelete(e,value)}} color='success'>Sửa</Button>                              
+                              <Button onClick={(e)=> {handleDeleteImage(e,value)}} color='error'>Ẩn</Button>
+                              <Button onClick={(e)=> {handleEditImage(e,value)}} color='success'>Sửa</Button>                              
                           </TableCell>
                         );
-                      } else {
+                      } if(column.id == 'smallImage' || column.id == 'largeImage') {
+                        return (
+                          <TableCell align={column.align} key={column.id+index} style={{width:column.maxWidth}}>
+                              <img src={value} style={{width:'100%'}}/>                                     
+                          </TableCell>
+                        );
+                      }else {
                         return (
                           <TableCell align={column.align} key={column.id+index}>
                             {value}

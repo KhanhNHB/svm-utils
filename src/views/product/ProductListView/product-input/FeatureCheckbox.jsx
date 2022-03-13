@@ -1,32 +1,48 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import * as Actions from '../redux/product.action'
+import { useDispatch, useSelector } from "react-redux";
 
 export default function FeatureCheckbox() {
-  const [checked, setChecked] = React.useState([true, false, false]);
+
+  const dispatch = useDispatch();
+
+  const featureCheckbox = useSelector((state)=> state.product.featureCheckbox)
+
+  const [checked, setChecked] = React.useState(featureCheckbox);
+
+  useEffect(() => {
+    setChecked(featureCheckbox)
+  }, [featureCheckbox]);
 
   const handleChangeFull = (event) => {
     const newCheckeds = [...checked]
     if(newCheckeds[0] == newCheckeds[1]) {
-        setChecked([!newCheckeds[0], !newCheckeds[1], false]);
+      dispatch(Actions.setFeatureChecked([!newCheckeds[0], newCheckeds[1], false]));
     } else if(newCheckeds[0] != newCheckeds[1]){
-        setChecked([event.target.checked, event.target.checked, false]);
+      dispatch(Actions.setFeatureChecked([event.target.checked, event.target.checked, false]));
     }
-   
+  
+
   };
 
   const handleChangeFullButSmall = (event) => {
     const newCheckeds = [...checked]
     if(newCheckeds[0] && newCheckeds[1]) {
-        setChecked([true, false, false]);
+      dispatch(Actions.setFeatureChecked([true, false, false]));
     } else {
-        setChecked([true, true, false]);
+      dispatch(Actions.setFeatureChecked([true, true, false]));
     }
-    
+
+    console.log('handleChangeFullButSmall', checked);
+
   };
   const handleChangeHalf = (event) => {
-    setChecked([false, false, true]);
+    dispatch(Actions.setFeatureChecked([false, false, true]));
+    console.log('handleChangeHalf', checked);
+
   };
 
   const children = (

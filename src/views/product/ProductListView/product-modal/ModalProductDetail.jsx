@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import TextEditorProduct from '../product-input/TextEditorProduct';
 import * as Actions from '../redux/product.action'
 import '../css/product.css';
-import { PRODUCT_BY_ID_ENDPOINT } from './../../../../api/endpoint';
-import API from '../../../../api/API';
+
 
 
 const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {

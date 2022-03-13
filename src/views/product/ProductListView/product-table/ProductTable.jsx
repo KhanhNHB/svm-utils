@@ -87,12 +87,14 @@ export default function ProductTable() {
     
   }
   const handleFeature = (event, id) => {
+    dispatch(Actions.loadProductFeatures(id))
     dispatch(Actions.setProductId(id))
 
     handleClose('feature', id);
   
   }
   const handleImage = (event, id) => {
+    dispatch(Actions.loadProductImages(id))
     dispatch(Actions.setProductId(id))
     handleClose('image', id);
   }

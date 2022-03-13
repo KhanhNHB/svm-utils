@@ -11,11 +11,46 @@
 .modal-modal-title {
     margin: auto;
 }
+.button-add-product {
+    color: white !important;
+    width: fit-content;
+    height: fit-content;
+    display: block !important;
+    float: left !important;
+}
 .button-detail {
     width: fit-content;
     height: fit-content;
     display: block !important;
     float: right !important;
+}
+.button-detail-image {
+    width: fit-content;
+    height: fit-content;
+    display: block !important;
+    float: left !important;
+}
+.button-reset {
+    margin-right: 20px !important;
+    width: fit-content;
+    height: fit-content;
+    display: block !important;
+    float: right !important;
+    background: white !important;
+    color: black !important;
+}
+.button-reset-image {
+    margin-left: 20px !important;
+    width: fit-content;
+    height: fit-content;
+    display: block !important;
+    float: left !important;
+    background: white !important;
+    color: black !important;
+}
+.button-choose-image {
+    background: wheat!important;
+    color: black !important;
 }
 .flex-reverse {
     flex-direction: row-reverse !important;

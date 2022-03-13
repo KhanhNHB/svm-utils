@@ -49,24 +49,14 @@ export default {
         })
     },
     post_form_data: async (url, body) => {
+    
         return await fetch(url, {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data; boundary=---'
             },
-            body: JSON.stringify(body),
-        })
-    },
-    getNSL: (url) => {
-        return  fetch(url, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + Cookies.get(USER_TOKEN)
-            }
+            body: body,
         })
     }
 }

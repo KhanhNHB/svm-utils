@@ -1,18 +1,30 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { useDispatch, useSelector } from "react-redux";
+import * as Actions from '../redux/product.action'
 
 export default function PositionRadioButton() {
-  const [value, setValue] = React.useState('false');
+  const dispatch = useDispatch();
+  
+  const featureRadio = useSelector((state)=> state.product.featureRadio)
+
+  const [value, setValue] = React.useState(featureRadio);
 
   const handleChange = (event) => {
-    setValue(event.target.value);
-    console.log(value);
-    
+    const isRight = event.target.value   
+    setValue(isRight);
+    dispatch(Actions.setFeatureRight(isRight));
+    console.log(isRight);
   };
+
+  useEffect(() => {
+    setValue(featureRadio)
+  }, [featureRadio]);
+
   return (
     <div>
       <FormControl>

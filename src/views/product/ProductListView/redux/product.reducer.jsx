@@ -3,9 +3,17 @@ import * as Actions from './product.action';
 const initialState = {
   products: [],
   product: {},
-  productFeatures: [],
-  productImages: [],
-  currentProductId: 0
+  features: [],
+  feature: {},
+  images: [],
+  image: {},
+  imageButtonStatus: 'add',
+  featureCheckbox: [true, false, false],
+  featureRadio: false,
+  featureButtonStatus: 'add',
+  currentProductId: 0,
+  currentFeatureId: 0,
+  currentImageId: 0,
 
 };
 const product = (state = initialState, {type, payload}) => {
@@ -24,16 +32,46 @@ const product = (state = initialState, {type, payload}) => {
      
       };
     }
-    case Actions.SET_PRODUCT_FEATURES: {
+    case Actions.SET_FEATURES: {
       return {
         ...state,
-       productFeatures: payload
+        features: payload
       };
     }
-    case Actions.SET_PRODUCT_IMAGES: {
+    case Actions.SET_FEATURE: {
       return {
         ...state,
-       productImages: payload
+        feature: payload
+      };
+    }
+    case Actions.SET_FEATURE_RIGHT: {
+      return {
+        ...state,
+        featureRadio: payload
+      };
+    }
+    case Actions.SET_FEATURE_CHECKED: {
+      return {
+        ...state,
+        featureCheckbox: payload
+      };
+    }
+    case Actions.SET_FEATURE_BUTTON: {
+      return {
+        ...state,
+        featureButtonStatus: payload
+      };
+    }
+    case Actions.SET_IMAGES: {
+      return {
+        ...state,
+       images: payload
+      };
+    }
+    case Actions.SET_IMAGE: {
+      return {
+        ...state,
+       image: payload
       };
     }
     case Actions.SET_PRODUCT_ID: {
@@ -42,26 +80,32 @@ const product = (state = initialState, {type, payload}) => {
         currentProductId: payload
       };
     }
+    case Actions.SET_FEATURE_ID: {
+      return {
+        ...state,
+        currentFeatureId: payload
+      };
+    }
+    case Actions.SET_IMAGE_ID: {
+      return {
+        ...state,
+        currentImageId: payload
+      };
+    }
+    case Actions.SET_IMAGE_BUTTON: {
+      return {
+        ...state,
+        imageButtonStatus: payload
+      };
+    }
+    
     default:
       return state;
   }
 };
 
 
-const getNameById = (list, id) => {
-  const result = list.filter(item => item.id === id)
-  return result ? result[0].name : 'NextG 01';
-}
 
-const getProductById = (list, id) => {
-  const result = list.filter(item => item.id === id)  
-  return result ? result[0] : {};
-}
-
-const getCurrentId = (list) => {
-  const result = list.filter(item => item.active === true)  
-  return result ? result[0].id : 0;
-}
 
 
 export default product;
