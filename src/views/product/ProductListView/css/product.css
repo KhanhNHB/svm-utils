@@ -1,6 +1,12 @@
 .modal-area {
     overflow: auto !important
 }
+
+.modal-area-delete {
+    max-width: 430px;
+    margin: 5% auto;
+
+}
 .modal-content {
     margin: 10% auto !important;
     background: white;
@@ -10,6 +16,7 @@
 }
 .modal-modal-title {
     margin: auto;
+    text-align: center
 }
 .button-add-product {
     color: white !important;
@@ -51,6 +58,15 @@
 .button-choose-image {
     background: wheat!important;
     color: black !important;
+}
+
+.button-cancel {
+    background: grey !important;
+    margin-right: 20px !important;
+}
+
+.button-delete {
+    background: red !important;
 }
 .flex-reverse {
     flex-direction: row-reverse !important;

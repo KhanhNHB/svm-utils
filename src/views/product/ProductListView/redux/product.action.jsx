@@ -29,9 +29,12 @@ export const SET_IMAGE = 'SET_IMAGE';
 export const SET_IMAGE_ID = 'SET_IMAGE_ID';
 export const SET_IMAGE_BUTTON = 'SET_IMAGE_BUTTON';
 
+export const SET_DELETE_TYPE = 'SET_DELETE_TYPE';
+export const SET_DELETE_STATUS = 'SET_DELETE_STATUS';
 
 
-
+// ----------------------------------------------------------------------------------------------------
+// process set state
 
 export function setProductId(id) {
   return {
@@ -129,6 +132,24 @@ export function setImageButtonStatus(status) {
   }
 }
 
+export function setDeleteType(delType) {
+  return {
+    type: SET_DELETE_TYPE,
+    payload: delType,
+  };
+}
+
+export function setDeleteStatus(status) {
+  return {
+    type: SET_DELETE_STATUS,
+    payload: status,
+  };
+}
+
+
+// ----------------------------------------------------------------------------------------------------
+// process load from server
+
 export function loadProducts() {
   return dispatch => {
     const response = api.get(`${PRODUCTS_ENDPOINT}`);
@@ -204,6 +225,7 @@ export function updateProduct(product) {
         const fetchData = response.json();
         fetchData.then(data => {      
           dispatch(loadProducts());        
+          alert('Cập nhật thành công!')    
         })
       }
     })
@@ -231,7 +253,7 @@ export function updateFeature(feature) {
       if (response.ok) {
         const fetchData = response.json();
         fetchData.then(data => {      
-          alert('update success!')     
+          alert('Cập nhật thành công!')     
           console.log('update success!', data);
           const productId = feature.productId;
           dispatch(loadProductFeatures(productId));   
@@ -248,7 +270,7 @@ export function updateImage(image) {
       if (response.ok) {
         const fetchData = response.json();
         fetchData.then(data => {      
-          alert('update success!')     
+          alert('Cập nhật thành công!')     
           console.log('update success!', data);
           const productId = image.productId;
           dispatch(loadProductImages(productId));   
@@ -270,3 +292,47 @@ export function loadImage(imageId) {
     })
   }
 }
+
+export function deleteProduct(id) {
+  return dispatch => {
+    const request = api.delete(`${PRODUCT_BY_ID_ENDPOINT}/${id}`);
+    request.then(response => {
+      if (response.ok) {   
+          dispatch(setDeleteStatus(true));
+          dispatch(loadProducts());
+      } else {
+        dispatch(setDeleteStatus(false));
+      }
+    })
+  }
+}
+export function deleteProductFeature(id, productId) {
+  return dispatch => {
+    const request = api.delete(`${PRODUCT_FEATURE_BY_ID_ENDPOINT}/${id}`);
+    request.then(response => {
+      if (response.ok) {             
+          dispatch(setDeleteStatus(true));   
+          dispatch(loadProductFeatures(productId));
+    
+      } else {
+        dispatch(setDeleteStatus(false));
+      }
+    })
+  }
+}
+export function deleteProductImage(id, productId) {
+  return dispatch => {
+    const request = api.delete(`${PRODUCT_IMAGE_BY_ID_ENDPOINT}/${id}`);
+    request.then(response => {
+      if (response.ok) {
+          dispatch(setDeleteStatus(true));
+          dispatch(loadProductImages(productId));
+      
+      } else {
+        dispatch(setDeleteStatus(false));
+      }
+    })
+  }
+}
+
+

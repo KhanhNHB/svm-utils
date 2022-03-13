@@ -14,6 +14,8 @@ const initialState = {
   currentProductId: 0,
   currentFeatureId: 0,
   currentImageId: 0,
+  deleteType: '',
+  deleteStatus: false
 
 };
 const product = (state = initialState, {type, payload}) => {
@@ -98,7 +100,18 @@ const product = (state = initialState, {type, payload}) => {
         imageButtonStatus: payload
       };
     }
-    
+    case Actions.SET_DELETE_TYPE: {
+      return {
+        ...state,
+        deleteType: payload
+      }
+    }
+    case Actions.SET_DELETE_STATUS: {
+      return {
+        ...state,
+        deleteStatus: payload
+      }
+    }
     default:
       return state;
   }

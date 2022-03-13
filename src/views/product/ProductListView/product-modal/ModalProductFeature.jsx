@@ -44,9 +44,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
     const [labelAddButton, setLabelAddButton] = useState('Thêm tính năng');
 
     useEffect(() => {
-        console.log('currentProductId changed: '+currentProductId);
-        console.log('currentFeatureId changed: '+currentFeatureId);
-        
+      
         const setFeature = () => {
             if(feature.productId == currentProductId) {
                 const checked = checkedByFeature(feature)
@@ -60,13 +58,15 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
                 dispatch(Actions.setFeatureRight(feature.right))
                 dispatch(Actions.setFeatureChecked(checked))  
             } else {
+                setSmallErr('');
+                setSmallUrl('')
+                setLargeErr('');
+                setLargeUrl('');
                 setTitle('')
                 setIcon('')
                 setContent('')
                 setSmallImage('')
                 setLargeImage('')
-                setSmallUrl('')
-                setLargeUrl('')
                 setRight(false)
             }
            
@@ -75,14 +75,17 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
     }, [feature]);
 
     useEffect(() => {
+        setSmallErr('');
+        setSmallUrl('')
+        setLargeErr('');
+        setLargeUrl('');
         setTitle('')
         setIcon('')
         setContent('')
         setSmallImage('')
         setLargeImage('')
-        setSmallUrl('')
-        setLargeUrl('')
-    }, [currentProductId]);
+        setRight(false)
+    }, [openFeature]);
 
     useEffect(() => {
         setRight(featureRadio)
@@ -113,7 +116,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
             small: getSmall(featureCheckbox),
             right : parseRight(right)
         }
-        console.log("feat", feat);
+            console.log("feat", feat);
             
           dispatch(Actions.updateFeature(feat))
 
@@ -181,7 +184,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
         })
         .catch(err => {
             setSmallUrl('')
-            setSmallErr('Tải hình ảnh thất bại, mời thử lại!')
+            setSmallErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
         });
         
 
@@ -204,7 +207,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
         })
         .catch(err => {
             setLargeUrl('')
-            setLargeErr('Tải hình ảnh thất bại, mời thử lại!')
+            setLargeErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
         });
     }
 
@@ -223,6 +226,16 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
         dispatch(Actions.setFeatureButtonStatus('add'));
         dispatch(Actions.setFeature({}));
         dispatch(Actions.setFeatureId(0));
+        setSmallErr('');
+        setSmallUrl('')
+        setLargeErr('');
+        setLargeUrl('');
+        setTitle('')
+        setIcon('')
+        setContent('')
+        setSmallImage('')
+        setLargeImage('')
+        setRight(false)
     }
     return (
         <Box >
@@ -318,7 +331,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
                                     </Button>
                                 </label> 
                                 <img src={smallUrl} style={{display:'block',maxWidth:'150px', height:'150px'}}/>
-                                <p color='error'>{smallErr}</p>
+                                <p style={{color: 'red'}}>{smallErr}</p>
                             </Grid>
                             {/* large image */}
                             <Grid item xs={12} sm={12} md={3} mt={2} p={2}>
@@ -340,7 +353,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
                                     </Button>
                                 </label> 
                                 <img src={largeUrl} style={{display:'block',maxWidth:'300px', height:'150px'}}/>
-                                <p color='error'>{largeErr}</p>
+                                <p style={{color: 'red'}}>{largeErr}</p>
                             </Grid>
                        
                         </Grid>

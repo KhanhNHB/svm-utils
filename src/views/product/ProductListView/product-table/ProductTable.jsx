@@ -3,6 +3,8 @@ import { Paper, Button, Table, TableBody, TableContainer, TableHead, TableRow, T
 import ModalProductDetail from '../product-modal/ModalProductDetail';
 import ModalProductFeature from '../product-modal/ModalProductFeature';
 import ModalProductImage from '../product-modal/ModalProductImage';
+import ModalProductDelete from '../product-modal/ModalProductDelete';
+
 import { useDispatch, useSelector } from "react-redux";
 import * as Actions from '../redux/product.action'
 
@@ -69,6 +71,7 @@ export default function ProductTable() {
   };
 
   const handleDelete = (event, id) => {
+    dispatch(Actions.setDeleteType('product'))
     dispatch(Actions.setProductId(id))
     handleClose('delete', id);
   }
@@ -188,6 +191,11 @@ export default function ProductTable() {
      <ModalProductImage
         openImage={openImage}
         handleCloseImage={() => { handleClose('image')}}
+    />
+
+    <ModalProductDelete
+        openDelete={openDelete}
+        handleCloseDelete={() => { handleClose('delete')}}
     />
     </Paper>
     

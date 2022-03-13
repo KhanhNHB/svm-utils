@@ -19,9 +19,9 @@ const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
     const [info2, setInfo2] = useState(product.info2);
     const [description, setDescription] = useState(product.description);
     const [gift, setGift] = useState(product.gift);
+    const [videoUrl, setVideoUrl] = useState(product.videoUrl);
 
     useEffect(() => {
-        console.log('curentId changed: '+currentId);
         const setProduct = () => {
             setName(product.name)
             setPrice(product.price)
@@ -29,25 +29,11 @@ const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
             setInfo2(product.info2)
             setDescription(product.description)
             setGift(product.gift)
+            setVideoUrl(product.videoUrl)
         }
         setProduct()
     }, [product]);
     
-    // useEffect(() => {
-    //     console.log('product change: ',product);
-        
-    //     setName(product.name)
-    //     setPrice(product.price)
-    //     setInfo1(product.info1)
-    //     setInfo2(product.info2)
-    //     setDescription(product.description)
-    //     setGift(product.gift)
-    
-    // }, [product]);
-
-   
-  
-
     const handleValue = (event, typeValue) => {
         switch (typeValue) {
             case 'name':
@@ -55,6 +41,8 @@ const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
               break;
             case 'price':
                 setPrice(event.target.value);
+            case 'videoUrl':
+                setVideoUrl(event.target.value);
               break;
             default:
               break;
@@ -63,7 +51,7 @@ const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
 
     const saveDetail = () => {
         const productUpdate = {
-            id: currentId, name, price, info1, info2, description, gift
+            id: currentId, name, price, info1, info2, description, gift, videoUrl
         }
         dispatch(Actions.updateProduct(productUpdate))
         handleCloseDetail();
@@ -147,6 +135,18 @@ const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
                                     content={product.gift}
                                     setContent={setGift}                                 
                                 />
+                            
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} className="input-container">
+                                <FormControl size='medium' sx={{ width: '100%' }}>
+                                    <InputLabel>Id Video Youtube</InputLabel>
+                                    <OutlinedInput
+                                        value={product.videoUrl}
+                                        onChange={e => handleValue(e,'videoUrl')}
+                                        label="Id Video Youtube"
+                                    />
+                                </FormControl>
                             
                             </Grid>
                         </Grid>               

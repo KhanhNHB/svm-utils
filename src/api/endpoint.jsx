@@ -28,4 +28,7 @@ export const PRODUCT_FEATURE_UPDATE_ENDPOINT = `${BASE_URL}/product-features`;
 export const PRODUCT_IMAGES_BY_ID_ENDPOINT = `${BASE_URL}/product-images/all`;
 export const PRODUCT_IMAGE_BY_ID_ENDPOINT = `${BASE_URL}/product-images/id`;
 export const PRODUCT_IMAGE_UPDATE_ENDPOINT = `${BASE_URL}/product-images`;
+
+
+
 export const UPLOAD_FILE = `${BASE_URL}/file/upload`;

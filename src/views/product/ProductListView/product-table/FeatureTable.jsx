@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Paper, Button, Table, TableBody, TableContainer, TableHead, TableRow, TableCell, TablePagination } from '@mui/material';
 import parse from 'html-react-parser';
 import * as Actions from '../redux/product.action'
+import ModalProductDelete from './../product-modal/ModalProductDelete';
 
 const columns = [
   { id: 'no', label: 'No.', minWidth: 50 },
@@ -71,6 +72,8 @@ export default function FeatureTable() {
   const currentId = useSelector((state)=> state.product.currentProductId)
 
   const features = useSelector((state)=> state.product.features)
+  
+  const [openDelete, setOpenDelete] = useState(false);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -129,9 +132,15 @@ export default function FeatureTable() {
       dispatch(Actions.loadFeature(id))
   }
   const handleDeleteFeature = (value, id) => {
-    alert('delete feature');
-}
-  
+    dispatch(Actions.setDeleteType('product-feature'))
+    dispatch(Actions.setFeatureId(id))
+
+    handleClose();
+
+  }
+  const handleClose = () => {
+      setOpenDelete(!openDelete)
+  }
   return (
     <Paper sx={{  overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 800 }}>
@@ -215,7 +224,10 @@ export default function FeatureTable() {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
 
-  
+    <ModalProductDelete
+        openDelete={openDelete}
+        handleCloseDelete={() => { handleClose()}}
+    />
     </Paper>
     
   );

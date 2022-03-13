@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow   } from '@mui/material';
 import * as Actions from '../redux/product.action'
+import ModalProductDelete from './../product-modal/ModalProductDelete';
 
 const columns = [
   { id: 'no', label: 'No.', minWidth: 50 },
@@ -36,6 +37,7 @@ export default function ImageTable() {
   const images = useSelector((state)=> state.product.images)
 
 
+  const [openDelete, setOpenDelete] = useState(false);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -43,7 +45,10 @@ export default function ImageTable() {
     setPage(newPage);
   };
 
+  useEffect(() => {
+    dispatch(Actions.loadProductImages(currentProductId))
   
+  }, [dispatch, currentProductId]);
 
   const mappingImage = (images) => {
     let newImgs = [...images]
@@ -64,15 +69,24 @@ export default function ImageTable() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  const handleDeleteImage = (event, id) => {
-    console.log('delete: ', id);
-  }
 
   const handleEditImage = (event, id) => {
     dispatch(Actions.setImageButtonStatus('edit'))
     dispatch(Actions.setImageId(id))
     dispatch(Actions.loadImage(id))
   }
+
+  const handleDeleteImage = (value, id) => {
+    dispatch(Actions.setDeleteType('product-image'))
+    dispatch(Actions.setImageId(id))
+
+    handleClose();
+
+  }
+  const handleClose = () => {
+      setOpenDelete(!openDelete)
+  }
+
   return (
     <Paper sx={{  overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 800 }}>
@@ -136,7 +150,10 @@ export default function ImageTable() {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
 
-  
+    <ModalProductDelete
+        openDelete={openDelete}
+        handleCloseDelete={() => { handleClose('delete')}}
+    />
     </Paper>
     
   );

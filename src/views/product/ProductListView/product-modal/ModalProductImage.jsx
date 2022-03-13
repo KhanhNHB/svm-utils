@@ -79,7 +79,7 @@ const ModalProductImage = ({ openImage, handleCloseImage }) => {
         })
         .catch(err => {
             setSmalImagelUrl('')
-            setSmallErr('Tải hình ảnh thất bại, mời thử lại!')
+            setSmallErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
         });
         
 
@@ -102,7 +102,7 @@ const ModalProductImage = ({ openImage, handleCloseImage }) => {
         })
         .catch(err => {
             setLargeImageUrl('')
-            setLargeErr('Tải hình ảnh thất bại, mời thử lại!')
+            setLargeErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
         });
     }
     const reset = () => {
@@ -166,7 +166,7 @@ const ModalProductImage = ({ openImage, handleCloseImage }) => {
                                         </Button>
                                     </label> 
                                     <img src={largeImageUrl} style={{display:'block',maxWidth:'150px', height:'150px'}} id="lgImage"/>
-                                    <p color='error'>{largeErr}</p>
+                                    <p style={{color: 'red'}}>{largeErr}</p>
                                 </Grid>
                             <Grid item xs={12} sm={12} md={6} mt={1} p={2}>
                                 <input
@@ -184,7 +184,7 @@ const ModalProductImage = ({ openImage, handleCloseImage }) => {
                                     </Button>
                                 </label> 
                                 <img src={smallImageUrl} style={{display:'block',maxWidth:'150px', height:'150px'}} id="smImage"/>
-                                <p color='error'>{smallErr}</p>
+                                <p style={{color: 'red'}}>{smallErr}</p>
                             </Grid>
                         </Grid>
                         {/* right-box to show image has uploaded */}      
