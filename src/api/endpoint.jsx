@@ -30,5 +30,8 @@ export const PRODUCT_IMAGE_BY_ID_ENDPOINT = `${BASE_URL}/product-images/id`;
 export const PRODUCT_IMAGE_UPDATE_ENDPOINT = `${BASE_URL}/product-images`;
 
 
+export const DEALDER_ENDPOINT = `${BASE_URL}/dealer`;
+export const DEALDER_GET_ALL_ENDPOINT = `${BASE_URL}/dealer/all`;
+export const DEALDER_GET_BY_ID_ENDPOINT = `${BASE_URL}/dealer/id`;
 
 export const UPLOAD_FILE = `${BASE_URL}/file/upload`;

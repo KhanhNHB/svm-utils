@@ -11,12 +11,15 @@ import feature from "./feature";
 import assignHubStatus from './assignHubStatus';
 import assignOrderToShipperStatus from './assignOrderToShipperStatus';
 
+import dealer from '../views/dealer/redux/dealer.reducer'
+
 const appReducers = combineReducers({
         user,
         shippers,
         hub,
         providers,
-        product, 
+        product,
+        dealer, 
         profile,
         CreateHub,
         shipper,
