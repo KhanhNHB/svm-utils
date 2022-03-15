@@ -3,7 +3,7 @@ import user from './users';
 import shippers from './shippers';
 import hub from './hub';
 import providers from './providers';
-import product from './product';
+import product from '../views/product/ProductListView/redux/product.reducer';
 import profile from './profile';
 import CreateHub from './createhub';
 import shipper from './shipper';
@@ -12,12 +12,15 @@ import assignHubStatus from './assignHubStatus';
 import assignOrderToShipperStatus from './assignOrderToShipperStatus';
 import insurance from './insurance';
 
+import dealer from '../views/dealer/redux/dealer.reducer'
+
 const appReducers = combineReducers({
         user,
         shippers,
         hub,
         providers,
         product,
+        dealer, 
         profile,
         CreateHub,
         shipper,

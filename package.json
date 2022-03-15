@@ -25,7 +25,6 @@
     "formik": "^2.2.5",
     "google-map-react": "^2.1.10",
     "google-maps-drawing-tools": "^1.0.0",
-    "google-maps-react": "^2.0.6",
     "history": "^5.0.0",
     "html-react-parser": "^1.4.8",
     "js-cookie": "^2.2.1",

@@ -1,0 +1,73 @@
+.modal-area {
+    overflow: auto !important
+}
+
+.modal-area-delete {
+    max-width: 430px;
+    margin: 5% auto;
+
+}
+.modal-content {
+    margin: 10% auto !important;
+    background: white;
+    padding: 20px;
+    
+   
+}
+.modal-modal-title {
+    margin: auto;
+    text-align: center
+}
+.button-add-product {
+    color: white !important;
+    width: fit-content;
+    height: fit-content;
+    display: block !important;
+    float: left !important;
+}
+.button-detail {
+    width: fit-content;
+    height: fit-content;
+    display: block !important;
+    float: right !important;
+}
+.button-detail-image {
+    width: fit-content;
+    height: fit-content;
+    display: block !important;
+    float: left !important;
+}
+.button-reset {
+    margin-right: 20px !important;
+    width: fit-content;
+    height: fit-content;
+    display: block !important;
+    float: right !important;
+    background: white !important;
+    color: black !important;
+}
+.button-reset-image {
+    margin-left: 20px !important;
+    width: fit-content;
+    height: fit-content;
+    display: block !important;
+    float: left !important;
+    background: white !important;
+    color: black !important;
+}
+.button-choose-image {
+    background: wheat!important;
+    color: black !important;
+}
+
+.button-cancel {
+    background: grey !important;
+    margin-right: 20px !important;
+}
+
+.button-delete {
+    background: red !important;
+}
+.flex-reverse {
+    flex-direction: row-reverse !important;
+}

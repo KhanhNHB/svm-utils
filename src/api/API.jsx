@@ -36,6 +36,17 @@ export default {
             body: JSON.stringify(body),
         })
     },
+    delete: async (url, body) => {
+        return await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + Cookies.get(USER_TOKEN)
+            },
+            body: JSON.stringify(body),
+        })
+    },
     patch: async (url, body) => {
         return await fetch(url, {
             method: 'PATCH',
@@ -49,13 +60,14 @@ export default {
         })
     },
     post_form_data: async (url, body) => {
+    
         return await fetch(url, {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data; boundary=---'
             },
-            body: JSON.stringify(body),
+            body: body,
         })
-    },
+    }
 }
