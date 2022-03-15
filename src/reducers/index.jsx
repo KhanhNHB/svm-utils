@@ -10,6 +10,7 @@ import shipper from './shipper';
 import feature from "./feature";
 import assignHubStatus from './assignHubStatus';
 import assignOrderToShipperStatus from './assignOrderToShipperStatus';
+import insurance from './insurance';
 
 import dealer from '../views/dealer/redux/dealer.reducer'
 
@@ -23,6 +24,7 @@ const appReducers = combineReducers({
         profile,
         CreateHub,
         shipper,
+        insurance,
         feature,
         assignHubStatus,
         assignOrderToShipperStatus

@@ -2,6 +2,8 @@ export const BASE_URL = "http://localhost:8080";
 // export const BASE_URL = "https://________";
 
 export const LOGIN_ENDPOINT = `${BASE_URL}/login`;
+export const INSURANCE_ENDPOINT = `${BASE_URL}/insurance`;
+
 export const ADMIN_ENDPOINT = `${BASE_URL}/admins`;
 export const CUSTOMER_ENDPOINT = `${BASE_URL}/customers`;
 export const SHIPPER_ENDPOINT = `${BASE_URL}/shippers`;
