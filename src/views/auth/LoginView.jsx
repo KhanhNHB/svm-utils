@@ -109,11 +109,11 @@ const LoginView = () => {
       return;
     }
 
-    dispatch(actLoadProfile(json.username));
+    // dispatch(actLoadProfile(json.username));
     setIsLoading(false);
 
     Cookies.set(USER_TOKEN, json.token);
-    dispatch(actSignIn(json.token));
+    // dispatch(actSignIn(json.token));
     navigate('/app', { replace: true });
   }
 

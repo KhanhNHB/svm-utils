@@ -36,4 +36,15 @@ export const DEALDER_ENDPOINT = `${BASE_URL}/dealer`;
 export const DEALDER_GET_ALL_ENDPOINT = `${BASE_URL}/dealer/all`;
 export const DEALDER_GET_BY_ID_ENDPOINT = `${BASE_URL}/dealer/id`;
 
+
+export const CONTACT_GET_ALL_ENDPOINT = `${BASE_URL}/contact/all`;
+export const CONTACT_GET_BY_ID_ENDPOINT = `${BASE_URL}/contact/id`;
+
+export const ORDER_GET_ALL_ENDPOINT = `${BASE_URL}/order/all`;
+export const ORDER_GET_BY_ID_ENDPOINT = `${BASE_URL}/order/id`;
+
+export const ORDER_TRIAL_GET_ALL_ENDPOINT = `${BASE_URL}/order-trial/all`;
+export const ORDER_TRIAL__BY_ID_ENDPOINT = `${BASE_URL}/order-trial/id`;
+
+
 export const UPLOAD_FILE = `${BASE_URL}/file/upload`;

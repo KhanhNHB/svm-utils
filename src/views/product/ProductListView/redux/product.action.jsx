@@ -157,7 +157,7 @@ export function loadProducts() {
       if (res.ok) {
         const fetchData = res.json();
         fetchData.then(data => {
-          dispatch(setProducts(data.content));
+          dispatch(setProducts(data));
         })
       }
     })

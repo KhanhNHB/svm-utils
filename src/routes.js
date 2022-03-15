@@ -9,6 +9,9 @@ import Home from './views/home/Home';
 import Products from './views/product/ProductListView/Products';
 import Dealer from './views/dealer/Dealer';
 import Insurance from './views/insurance/InsuranceListView';
+import Contact from './views/contact/Contact';
+import Order from './views/order/Order';
+import OrderTrial from './views/order-trial/OrderTrial';
 
 const routes = [
   {
@@ -25,6 +28,9 @@ const routes = [
       { path: 'tin-khuyen-mai', element: <ShipperListView /> },
       { path: 'tin-san-pham', element: <ShippingArea /> },
       { path: 'he-thong-dai-ly', element: <Dealer /> },
+      { path: 'lien-he', element: <Contact /> },
+      { path: 'dat-hang', element: <Order /> },
+      { path: 'dang-ky-dung-thu', element: <OrderTrial /> },
       { path: '', element: <Home /> },
     ]
   },

@@ -36,27 +36,25 @@ const CustomMenuItem = () => {
         },
         {
             icon: <LibraryBooksIcon />,
-            title: "Hướng dẫn sử dụng",
+            title: "Quản lý dữ liệu",
             isSelected: false,
             items: [
                 {
-                    title: "Tính năng",
-                    to: "/app/tinh-nang",
+                    title: "Liên hệ",
+                    to: "/app/lien-he",
                     isSelected: false
                 },
                 {
-                    title: "Lắp đặt",
-                    to: "/app/lap-dat",
+                    title: "Đặt hàng",
+                    to: "/app/dat-hang",
+                    isSelected: false
+                },
+                {
+                    title: "Đăng ký dùng thử",
+                    to: "/app/dang-ky-dung-thu",
                     isSelected: false
                 }
             ]
-        },
-        {
-            icon: <ContactPhoneIcon />,
-            title: "Liên hệ",
-            to: "/app/lien-he",
-            isSelected: false,
-            items: []
         },
         {
             icon: <ShieldIcon />,
@@ -68,7 +66,7 @@ const CustomMenuItem = () => {
         {
             icon: <InventoryIcon />,
             title: "Đại lý",
-            to: "/app/dai-ly",
+            to: "/app/he-thong-dai-ly",
             isSelected: false,
             items: []
         },

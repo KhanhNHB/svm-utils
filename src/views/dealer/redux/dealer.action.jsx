@@ -51,7 +51,7 @@ export function loadDealers() {
       if (res.ok) {
         const fetchData = res.json();
         fetchData.then(data => {
-             dispatch(setDealers(data.content));
+             dispatch(setDealers(data));
         })
       }
     })
