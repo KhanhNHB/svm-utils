@@ -7,6 +7,7 @@ import ModalProductDelete from '../product-modal/ModalProductDelete';
 
 import { useDispatch, useSelector } from "react-redux";
 import * as Actions from '../redux/product.action'
+import {host_url} from '../../../../common'
 
 const columns = [
   { id: 'no', label: 'No.', minWidth: 50 },

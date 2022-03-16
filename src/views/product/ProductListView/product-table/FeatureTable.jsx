@@ -5,6 +5,7 @@ import { Paper, Button, Table, TableBody, TableContainer, TableHead, TableRow, T
 import parse from 'html-react-parser';
 import * as Actions from '../redux/product.action'
 import ModalProductDelete from './../product-modal/ModalProductDelete';
+import {host_url} from '../../../../common'
 
 const columns = [
   { id: 'no', label: 'No.', minWidth: 50 },
@@ -194,9 +195,10 @@ export default function FeatureTable() {
                           </TableCell>
                         );
                       } else if(column.id == 'smallImage' || column.id == 'largeImage') {
+                        const url = host_url+value
                         return (
                           <TableCell align={column.align} key={column.id+index} style={{width:column.maxWidth}} >
-                               <img src={value} style={{width:'100%'}}/>                  
+                               <img src={url} style={{width:'100%'}}/>
                           </TableCell>
                         );
                       } else {

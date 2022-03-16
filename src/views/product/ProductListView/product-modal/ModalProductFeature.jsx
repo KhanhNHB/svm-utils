@@ -16,6 +16,7 @@ import API from '../../../../api/API';
 import '../css/product.css';
 import axios from 'axios'
 import * as Actions from '../redux/product.action'
+import {host_url} from '../../../../common'
 
 const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
 
@@ -330,7 +331,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
                                         Chọn hình slide
                                     </Button>
                                 </label> 
-                                <img src={smallUrl} style={{display:'block',maxWidth:'150px', height:'150px'}}/>
+                                <img src={host_url+smallUrl} style={{display:'block',maxWidth:'150px', height:'150px'}}/>
                                 <p style={{color: 'red'}}>{smallErr}</p>
                             </Grid>
                             {/* large image */}
@@ -352,7 +353,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
                                         Chọn hình nền
                                     </Button>
                                 </label> 
-                                <img src={largeUrl} style={{display:'block',maxWidth:'300px', height:'150px'}}/>
+                                <img src={host_url+largeUrl} style={{display:'block',maxWidth:'300px', height:'150px'}}/>
                                 <p style={{color: 'red'}}>{largeErr}</p>
                             </Grid>
                        

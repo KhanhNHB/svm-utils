@@ -7,6 +7,7 @@ import * as Actions from '../redux/dealer.action'
 import { UPLOAD_FILE } from '../../../api/endpoint';
 import '../css/dealer.css';
 import location from './location.json'
+import {host_url} from '../../../common'
 
 const DealerModal = ({ openDealer, handleCloseDealer }) => {
 
@@ -45,7 +46,13 @@ const DealerModal = ({ openDealer, handleCloseDealer }) => {
             const c = getCityCode(dealer.city)
             setCity(c)
             setDistrictByCity(c)
-            setDistrict(getDistCode(dealer.district))
+            const d = getDistCode(dealer.district)
+            console.log('d',d)
+            if(d!= undefined) {
+              console.log('d!',d)
+                setDistrict(d)
+            }
+
 
             setLat(dealer.lat)
             setLng(dealer.lng)
@@ -55,7 +62,6 @@ const DealerModal = ({ openDealer, handleCloseDealer }) => {
 
      useEffect(() => {
             if(dealerModalStatus == 'add'){
-                console.log('status: add')
                 setName('')
                 setAddress('')
                 setPhone('')
@@ -68,6 +74,21 @@ const DealerModal = ({ openDealer, handleCloseDealer }) => {
                 setLng('')
             }
     }, [dealerModalStatus]);
+
+    useEffect(() => {
+                if(!openDealer){
+                    setName('')
+                    setAddress('')
+                    setPhone('')
+                    setImage('')
+                    setThumbnail('')
+                    setRanks('')
+                    setDistrict('')
+                    setCity('')
+                    setLat('')
+                    setLng('')
+                }
+        }, [openDealer]);
 
     const handleValue = (event, typeValue) => {
         switch (typeValue) {
@@ -147,8 +168,12 @@ const DealerModal = ({ openDealer, handleCloseDealer }) => {
             return 1;
         } else {
             const cities = [...location]
-            const city = cities.filter(c => c.name == name)
-            return city[0].code;
+            const city = cities.filter(c => c.name.toLowerCase().match(name.toLowerCase()))
+            if(city !=undefined && city.length>0) {
+                return city[0].code;
+            } else {
+                return 1;
+            }
         }
 
     }
@@ -157,16 +182,21 @@ const DealerModal = ({ openDealer, handleCloseDealer }) => {
             return 1;
         } else {
             const distTemp = [...dist]
-            const dis = distTemp.filter(d => d.name == name)
-            return dis[0].code;
+            const dis = distTemp.filter(d => d.name.toLowerCase().match(name.toLowerCase()))
+            if(dis != undefined && dis.length>0) {
+                return dis[0].code;
+            } else {
+                return 1;
+            }
+
         }
     }
 
     const setDistrictByCity = (code) => {
+
         const cities = [...location]
         const city = cities.filter(c => c.code == code)
-        console.log('code', code)
-        console.log('city - dis: ', city.districts)
+        setDistrict(city[0].districts[0].code)
         setDist(city[0].districts)
     }
     return (
@@ -254,7 +284,7 @@ const DealerModal = ({ openDealer, handleCloseDealer }) => {
                                           {
                                             location.map(loc => {
                                                 return (
-                                                 <MenuItem value={loc.code} key={loc.code}>{loc.name}</MenuItem>
+                                                 <MenuItem value={loc.code} key={loc.code+loc.name}>{loc.name}</MenuItem>
                                                 )
                                             })
                                           }
@@ -275,7 +305,7 @@ const DealerModal = ({ openDealer, handleCloseDealer }) => {
                                         {
                                             dist !=undefined  &&  dist.map(dis => {
                                                 return (
-                                                 <MenuItem value={dis.code} key={dis.code}>{dis.name}</MenuItem>
+                                                 <MenuItem value={dis.code} key={dis.code+dis.name}>{dis.name}</MenuItem>
                                                 )
                                             })
                                           }
@@ -324,7 +354,7 @@ const DealerModal = ({ openDealer, handleCloseDealer }) => {
                                     </label>
                                 </Grid>
                                 <Grid item xs={12} sm={6} className="border-container">
-                                    <img src={thumbnail} style={{display:'block',maxWidth:'300px', height:'120px'}} id="thumbnailDealer"/>
+                                    <img src={host_url+thumbnail} style={{display:'block',maxWidth:'300px', height:'120px'}} id="thumbnailDealer"/>
                                      <p style={{color: 'red'}}>{thumbnailErr}</p>
                                 </Grid>
 

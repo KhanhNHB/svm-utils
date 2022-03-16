@@ -53,3 +53,5 @@ export const GENDER_ITEMS = [
     { id: 'Female', title: 'Female' },
     { id: '', title: 'Other' },
 ]
+
+export const host_url = 'http://localhost:8080/file/files/'

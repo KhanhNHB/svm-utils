@@ -14,6 +14,7 @@ import { UPLOAD_FILE } from './../../../../api/endpoint';
 import '../css/product.css';
 import axios from 'axios'
 import * as Actions from '../redux/product.action'
+import {host_url} from '../../../../common'
 
 const ModalProductImage = ({ openImage, handleCloseImage }) => {
     const dispatch = useDispatch();
@@ -165,7 +166,7 @@ const ModalProductImage = ({ openImage, handleCloseImage }) => {
                                             Chọn hình lớn
                                         </Button>
                                     </label> 
-                                    <img src={largeImageUrl} style={{display:'block',maxWidth:'150px', height:'150px'}} id="lgImage"/>
+                                    <img src={host_url + largeImageUrl} style={{display:'block',maxWidth:'150px', height:'150px'}} id="lgImage"/>
                                     <p style={{color: 'red'}}>{largeErr}</p>
                                 </Grid>
                             <Grid item xs={12} sm={12} md={6} mt={1} p={2}>
@@ -183,7 +184,7 @@ const ModalProductImage = ({ openImage, handleCloseImage }) => {
                                         Chọn hình nhỏ
                                     </Button>
                                 </label> 
-                                <img src={smallImageUrl} style={{display:'block',maxWidth:'150px', height:'150px'}} id="smImage"/>
+                                <img src={host_url + smallImageUrl} style={{display:'block',maxWidth:'150px', height:'150px'}} id="smImage"/>
                                 <p style={{color: 'red'}}>{smallErr}</p>
                             </Grid>
                         </Grid>

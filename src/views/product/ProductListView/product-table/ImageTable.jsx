@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow   } from '@mui/material';
 import * as Actions from '../redux/product.action'
 import ModalProductDelete from './../product-modal/ModalProductDelete';
+import {host_url} from '../../../../common'
 
 const columns = [
   { id: 'no', label: 'No.', minWidth: 50 },
@@ -122,7 +123,7 @@ export default function ImageTable() {
                       } if(column.id == 'smallImage' || column.id == 'largeImage') {
                         return (
                           <TableCell align={column.align} key={column.id+index} style={{width:column.maxWidth}}>
-                              <img src={value} style={{width:'100%'}}/>                                     
+                              <img src={host_url+ value} style={{width:'100%'}}/>
                           </TableCell>
                         );
                       }else {

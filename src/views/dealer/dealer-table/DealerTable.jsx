@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Actions from '../redux/dealer.action'
 import DealerModal from '../dealer-modal/DealerModal';
 import DealerModalDelete from '../dealer-modal/DealerModalDelete';
+import {host_url} from '../../../common'
 
 const columns = [
 { id: 'no', label: 'No.', minWidth: 50 },
@@ -168,7 +169,7 @@ export default function DealerTable() {
                       } if(column.id == 'image') {
                         return (
                           <TableCell align={column.align} key={column.id+index}>
-                              <img src={value} style={{maxWidth:'150px'}}/>
+                              <img src={host_url+value} style={{maxWidth:'150px'}}/>
                           </TableCell>
                         );
                       } else {
