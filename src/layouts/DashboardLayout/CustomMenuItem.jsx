@@ -39,6 +39,13 @@ const CustomMenuItem = () => {
         },
         {
             icon: <DashboardIcon />,
+            title: "Thông tin chung",
+            to: "/app/setting",
+            isSelected: false,
+            items: []
+        },
+        {
+            icon: <DashboardIcon />,
             title: "Sản phẩm",
             to: "/app/san-pham",
             isSelected: false,
