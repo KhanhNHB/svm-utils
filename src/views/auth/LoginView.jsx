@@ -13,7 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import API from '../../api/API';
 import {
   LOGIN_ENDPOINT,
-  PROFILE_ENDPOINT,
+  // PROFILE_ENDPOINT,
   ADMIN_ENDPOINT,
   HUB_MANAGER_ENDPOINT
 } from '../../api/endpoint';
@@ -59,9 +59,9 @@ const LoginView = () => {
 
   useEffect(() => {
 
+    Cookies.remove(USER_TOKEN);
     const readCookie = async () => {
       const user = Cookies.get(USER_TOKEN);
-
       // if (user) {
       //   const response = await API.post(`${PROFILE_ENDPOINT}`, {
       //     "access_token": user
@@ -109,11 +109,11 @@ const LoginView = () => {
       return;
     }
 
-    // dispatch(actLoadProfile(json.username));
+    dispatch(actLoadProfile(json.username));
     setIsLoading(false);
 
     Cookies.set(USER_TOKEN, json.token);
-    // dispatch(actSignIn(json.token));
+    dispatch(actSignIn(json.token));
     navigate('/app', { replace: true });
   }
 

@@ -66,7 +66,7 @@ const Account = () => {
       }
     }
 
-    fetchProfile();
+    // fetchProfile();
   }, [dispatch, navigate]);
 
   return (

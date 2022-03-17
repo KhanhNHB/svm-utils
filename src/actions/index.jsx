@@ -7,6 +7,104 @@ export const actSignIn = (userToken) => {
     };
 };
 
+export const actGetAllOnwerInsurance = (insurances) => {
+    return {
+        type: types.GET_ALL_ONWER_INSURANCE,
+        insurances,
+    }
+};
+
+export const actGetAllDealerInsurance = (insurances) => {
+    return {
+        type: types.GET_ALL_DEALER_INSURANCE,
+        insurances,
+    }
+};
+
+export const actGetHome = (home) => {
+    return {
+        type: types.GET_HOME,
+        home,
+    }
+};
+
+export const actGetHomeVision = (homeVision) => {
+    return {
+        type: types.GET_HOME_VISION,
+        homeVision,
+    }
+};
+
+export const actGetHomeFeature = (homeFeature) => {
+    return {
+        type: types.GET_HOME_FEATURE,
+        homeFeature,
+    }
+};
+
+export const actGetHomeSocialMedia = (homeSocialMedia) => {
+    return {
+        type: types.GET_HOME_SOCIAL_MEDIA,
+        homeSocialMedia,
+    }
+};
+
+export const actGetHomeFeatureDetail = (homeFeatureDetail) => {
+    return {
+        type: types.GET_HOME_FEATURE_DETAIL,
+        homeFeatureDetail,
+    }
+};
+
+export const actGetHomeEvaluate = (homeEvaluate) => {
+    return {
+        type: types.GET_HOME_EVALUATE,
+        homeEvaluate,
+    }
+};
+
+export const actGetHomeOffer = (homeOffer) => {
+    return {
+        type: types.GET_HOME_OFFER,
+        homeOffer,
+    }
+};
+
+export const actGetAllFeatureInstructionsByCategoryId = (instructions) => {
+    return {
+        type: types.GET_ALL_FEATURE_INSTRUCTIONS_BY_CATEGORY_ID,
+        instructions,
+    }
+};
+
+export const actGetAllSetupInstructionsByCategoryId = (instructions) => {
+    return {
+        type: types.GET_ALL_SETUP_INSTRUCTIONS_BY_CATEGORY_ID,
+        instructions,
+    }
+};
+
+export const actGetAllDiscountNewsByCategoryId = (news) => {
+    return {
+        type: types.GET_ALL_DISCOUNT_NEWS_BY_CATEGORY_ID,
+        news,
+    }
+};
+
+export const actGetAllProductNewsByCategoryId = (news) => {
+    return {
+        type: types.GET_ALL_PRODUCT_NEWS_BY_CATEGORY_ID,
+        news,
+    }
+};
+
+export const actGetAllEventNewsByCategoryId = (news) => {
+    return {
+        type: types.GET_ALL_EVENT_NEWS_BY_CATEGORY_ID,
+        news,
+    }
+};
+
 export const actGetAllInsurance = (insurances) => {
     return {
         type: types.GET_ALL_INSURANCE,

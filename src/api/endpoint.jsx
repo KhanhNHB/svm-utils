@@ -2,7 +2,20 @@ export const BASE_URL = "http://localhost:8080";
 // export const BASE_URL = "https://________";
 
 export const LOGIN_ENDPOINT = `${BASE_URL}/login`;
+
+export const HOME_ENDPOINT = `${BASE_URL}/home`;
+export const HOME_VISION_ENDPOINT = `${BASE_URL}/home-vision`;
+export const HOME_FEATURE_ENDPOINT = `${BASE_URL}/home-feature`;
+export const HOME_FEATURE_DETAIL_ENDPOINT = `${BASE_URL}/home-feature-detail`;
+export const HOME_EVALUATE_ENDPOINT = `${BASE_URL}/home-evaluate`;
+export const HOME_EVALUATE_STEP_ENDPOINT = `${BASE_URL}/home-evaluate-step`;
+export const HOME_SOCIAL_MEDIA_ENDPOINT = `${BASE_URL}/home-social-media`;
+export const HOME_SOCIAL_MEDIA_DETAIL_ENDPOINT = `${BASE_URL}/home-social-media-detail`;
+export const HOME_OFFER_ENDPOINT = `${BASE_URL}/home-offer`;
+
 export const INSURANCE_ENDPOINT = `${BASE_URL}/insurance`;
+export const INSTRUCTIONS_ENDPOINT = `${BASE_URL}/instructions`;
+export const NEWS_ENDPOINT = `${BASE_URL}/news`;
 
 export const ADMIN_ENDPOINT = `${BASE_URL}/admins`;
 export const CUSTOMER_ENDPOINT = `${BASE_URL}/customers`;

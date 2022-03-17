@@ -12,6 +12,16 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import ShieldIcon from '@mui/icons-material/Shield';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+import SellIcon from '@mui/icons-material/Sell';
+import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
+import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import FeaturedPlayListOutlinedIcon from '@mui/icons-material/FeaturedPlayListOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
+import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined';
+import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
 
 import { hasChildren } from "../../utils/menuUtils";
 import { Box } from "@mui/material";
@@ -33,6 +43,38 @@ const CustomMenuItem = () => {
             to: "/app/san-pham",
             isSelected: false,
             items: []
+        },
+        {
+            icon: <MenuBookOutlinedIcon />,
+            title: "Quản lý bài viết",
+            isSelected: false,
+            items: [
+                {
+                    title: "Tin khuyến mại",
+                    to: "/app/tin-khuyen-mai",
+                    isSelected: false
+                },
+                {
+                    title: "Tin sản phẩm",
+                    to: "/app/tin-san-pham",
+                    isSelected: false
+                },
+                {
+                    title: "Tin sự kiện",
+                    to: "/app/tin-su-kien",
+                    isSelected: false
+                },
+                {
+                    title: "Tính năng",
+                    to: "/app/tinh-nang",
+                    isSelected: false
+                },
+                {
+                    title: "Lắp đặt",
+                    to: "/app/lap-dat",
+                    isSelected: false
+                }
+            ]
         },
         {
             icon: <LibraryBooksIcon />,
@@ -57,11 +99,22 @@ const CustomMenuItem = () => {
             ]
         },
         {
-            icon: <ShieldIcon />,
-            title: "Bảo hành",
-            to: "/app/bao-hanh",
+            icon: <LocalPoliceOutlinedIcon />,
+            title: "Chính sách",
             isSelected: false,
-            items: []
+            items: [
+                {
+                    title: "Bảo hành",
+                    to: "/app/bao-hanh",
+                    isSelected: false,
+                    items: []
+                },
+                {
+                    title: "Chính sách đại lý",
+                    to: "/app/chinh-sach-dai-ly",
+                    isSelected: false
+                }
+            ]
         },
         {
             icon: <InventoryIcon />,
@@ -69,56 +122,8 @@ const CustomMenuItem = () => {
             to: "/app/he-thong-dai-ly",
             isSelected: false,
             items: []
-        },
-        {
-            icon: <NewspaperIcon />,
-            title: "Tin tức",
-            isSelected: false,
-            items: [
-                {
-                    icon: <NewspaperIcon />,
-                    title: "Tin khuyến mại",
-                    to: "/app/tin-khuyen-mai",
-                    isSelected: false
-                },
-                {
-                    title: "Tin sản phẩm",
-                    to: "/app/tin-san-pham",
-                    isSelected: false
-                },
-                {
-                    title: "Tin sự kiện",
-                    to: "/app/tin-su-kien",
-                    isSelected: false
-                }
-            ]
-        },
+        }
     ]);
-
-    // const handleSelectedPath = (pathname, to) => {
-    //     setMenu(menu => {
-    //         return menu.map(item => {
-    //             if (item.items.length) {
-    //                 item.items.map(child => {
-    //                     if (child.to === to) {
-    //                         child.isSelected = true;
-    //                         return { ...item, items: child };
-    //                     } else {
-    //                         child.isSelected = false;
-    //                         return { ...item, items: child };
-    //                     }
-    //                 })
-    //             } else {
-    //                 if (item.to === to) {
-    //                     item.isSelected = true;
-    //                 } else {
-    //                     item.isSelected = false;
-    //                 }
-    //             }
-    //             return item;
-    //         });
-    //     });
-    // };
 
     const SingleLevel = ({ item }) => {
         return (

@@ -9,7 +9,17 @@ import shipper from './shipper';
 import feature from "./feature";
 import assignHubStatus from './assignHubStatus';
 import assignOrderToShipperStatus from './assignOrderToShipperStatus';
+
 import insurance from './insurance';
+import news from './news';
+import instructions from "./instructions";
+import home from "./home";
+import homeVision from "./homeVision";
+import homeFeature from "./homeFeature";
+import homeFeatureDetail from "./homeFeatureDetail";
+import homeEvaluate from "./homeEvaluate";
+import homeSocialMedia from "./homeSocialMedia";
+import homeOffer from "./homeOffer";
 
 import product from '../views/product/ProductListView/redux/product.reducer';
 import contact from '../views/contact/redux/contact.reducer';
@@ -19,6 +29,15 @@ import dealer from '../views/dealer/redux/dealer.reducer'
 
 const appReducers = combineReducers({
         user,
+        home,
+        homeVision,
+        homeFeature,
+        homeFeatureDetail,
+        homeEvaluate,
+        homeSocialMedia,
+        homeOffer,
+        news,
+        instructions,
         shippers,
         hub,
         providers,
@@ -35,4 +54,5 @@ const appReducers = combineReducers({
         assignHubStatus,
         assignOrderToShipperStatus
 });
+
 export default appReducers;

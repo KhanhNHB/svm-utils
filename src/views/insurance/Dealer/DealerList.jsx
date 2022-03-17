@@ -15,7 +15,7 @@ import API from '../../../api/API';
 import { INSURANCE_ENDPOINT } from '../../../api/endpoint';
 import { useDispatch } from 'react-redux';
 import SunEditor from 'suneditor-react';
-import { actGetAllOnwerInsurance } from '../../../actions';
+import { actGetAllDealerInsurance } from '../../../actions';
 import Loading from "../../../components/Loading";
 import { handleInsuranceCategoryId } from '../../../utils/handleInsuranceCategoryId';
 import { useLocation } from 'react-router';
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const InsurancesList = ({ data }) => {
+const DealerList = ({ data }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [id, setId] = useState("");
@@ -87,32 +87,37 @@ const InsurancesList = ({ data }) => {
   const onSubmit = async () => {
     setLoading(true);
 
-    const body = {
-      id: id,
-      title: title,
-      content: content
-    };
+    try {
+      const body = {
+        id: id,
+        title: title,
+        content: content
+      };
 
-    const response = await API.put(`${INSURANCE_ENDPOINT}`, body);
-    if (response.ok) {
+      const response = await API.put(`${INSURANCE_ENDPOINT}`, body);
+      if (response.ok) {
 
-      const pathVariable = `category_id/` + handleInsuranceCategoryId(location.pathname);
-      const repsonseInsurance = await API.get(`${INSURANCE_ENDPOINT}/${pathVariable}`);
+        const pathVariable = `category_id/` + handleInsuranceCategoryId(location.pathname);
+        const repsonseInsurance = await API.get(`${INSURANCE_ENDPOINT}/${pathVariable}`);
 
-      if (repsonseInsurance.ok) {
-        const fetchData = await response.json();
-        const data = fetchData[0];
-        setMessage(`Lưu dữ liệu bảo hành thành công!`);
-        setOpenSnackbar(true);
-        dispatch(actGetAllOnwerInsurance(data));
+        if (repsonseInsurance.ok) {
+          const fetchData = await response.json();
+          const data = fetchData[0];
+          setMessage(`Lưu dữ liệu bảo hành thành công!`);
+          setOpenSnackbar(true);
+          dispatch(actGetAllDealerInsurance(data));
+        }
+      } else {
+
+        const patchData = await response.json();
+        if (patchData.message) {
+          setMessage(`Lưu dữ liệu bảo hành thất bại!`);
+        }
       }
-    } else {
+    } catch (err) {
 
-      const patchData = await response.json();
-      if (patchData.message) {
-        setMessage(`Lưu dữ liệu bảo hành thất bại!`);
-      }
     }
+
     setLoading(false);
   };
 
@@ -125,7 +130,7 @@ const InsurancesList = ({ data }) => {
               <Box
                 className={classes.text}
                 sx={{ fontSize: 24, textAlign: "center" }}>
-                Chính sách bảo hành
+                Chính sách đại lý
               </Box>
             </Grid>
             <Grid item xs={12} sm={12}>
@@ -215,4 +220,4 @@ const InsurancesList = ({ data }) => {
   );
 };
 
-export default InsurancesList;
+export default DealerList;

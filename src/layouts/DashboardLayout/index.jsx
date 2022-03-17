@@ -133,7 +133,7 @@ const DashboardLayout = () => {
                 }
             }
         };
-        readCookie();
+        // readCookie();
     }, [navigate, dispatch]);
 
     const handleSignOut = () => {

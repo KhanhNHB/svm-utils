@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   Grid,
-  Box,
-  Modal
+  Box
 } from '@mui/material';
-import InsurancesList from './InsurancesList';
 import { INSURANCE_ENDPOINT } from '../../../api/endpoint';
 import Cookies from 'js-cookie';
 import API from '../../../api/API';
@@ -13,11 +11,11 @@ import {
   USER_DEVICE_TOKEN,
   USER_TOKEN
 } from '../../../common';
-import { actGetAllOnwerInsurance } from '../../../actions';
+import { actGetAllDealerInsurance } from '../../../actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
-import Loading from '../../../components/Loading';
 import { handleInsuranceCategoryId } from "../../../utils/handleInsuranceCategoryId";
+import DealerList from './DealerList';
 
 const Copyright = () => {
   return (
@@ -27,7 +25,7 @@ const Copyright = () => {
   );
 }
 
-const Insurance = () => {
+const DealerView = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loadingModal, setLoadingModal] = useState(false);
@@ -38,14 +36,14 @@ const Insurance = () => {
 
     const fetchInsurances = async () => {
       setLoadingModal(true);
-
       try {
         const pathVariable = `category_id/` + handleInsuranceCategoryId(location.pathname);
         const response = await API.get(`${INSURANCE_ENDPOINT}/${pathVariable}`);
         if (response.ok) {
           const fetchData = await response.json();
           const data = fetchData[0];
-          dispatch(actGetAllOnwerInsurance(data));
+
+          dispatch(actGetAllDealerInsurance(data));
         } else {
           if (response.status === RESPONSE_STATUS.FORBIDDEN) {
             Cookies.remove(USER_TOKEN);
@@ -61,7 +59,6 @@ const Insurance = () => {
     }
 
     fetchInsurances();
-
 
     // const readCookie = async () => {
     //   const token = Cookies.get(USER_TOKEN);
@@ -85,11 +82,8 @@ const Insurance = () => {
     <Box>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <InsurancesList data={data} />
+          <DealerList data={data} />
         </Grid>
-        <Modal open={loadingModal}>
-          <Loading />
-        </Modal>
         <Grid item xs={12}>
           <Copyright sx={{ pt: 4 }} />
         </Grid>
@@ -98,4 +92,4 @@ const Insurance = () => {
   );
 };
 
-export default Insurance;
+export default DealerView;

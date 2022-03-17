@@ -169,7 +169,7 @@ const Toolbar = ({ onHandleFileUpload, onHandleFileChange, user, ...rest }) => {
             style={{ color: 'white', marginLeft: 10 }}
           >
             Import Excel
-          </Button>
+        </Button>
         </Box>
         : null
       }

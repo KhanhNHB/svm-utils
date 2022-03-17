@@ -49,7 +49,7 @@ const Dealer = () => {
           <DealerModal
               openDealer={openDealer}
               handleCloseDealer={(e) => {handleOpenDealer(e)}}
-          /> */}
+          />
           </Paper>
         </Grid>
         </Grid>
