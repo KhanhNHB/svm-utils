@@ -142,7 +142,7 @@ const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
                                 <FormControl size='medium' sx={{ width: '100%' }}>
                                     <InputLabel>Id Video Youtube</InputLabel>
                                     <OutlinedInput
-                                        value={product.videoUrl}
+                                        value={videoUrl}
                                         onChange={e => handleValue(e,'videoUrl')}
                                         label="Id Video Youtube"
                                     />
