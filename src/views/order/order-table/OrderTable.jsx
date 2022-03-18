@@ -18,6 +18,24 @@ const columns = [
   align: 'center'
 },
 {
+  id: 'city',
+  label: 'Tỉnh/TP',
+  minWidth: 170,
+  align: 'center'
+},
+{
+  id: 'district',
+  label: 'Quận/Huyện',
+  minWidth: 170,
+  align: 'center'
+},
+{
+  id: 'ranks',
+  label: 'Hạng đại lý',
+  minWidth: 170,
+  align: 'center'
+},
+{
   id: 'manufacturerCar',
   label: 'Hãng xe',
   minWidth: 170,
@@ -26,6 +44,12 @@ const columns = [
 {
     id: 'productName',
     label: 'Tên sản phẩm',
+    minWidth: 170,
+    align: 'center'
+},
+{
+    id: 'date',
+    label: 'Ngày tạo',
     minWidth: 170,
     align: 'center'
 }
@@ -46,12 +70,17 @@ export default function OrderTable() {
   const mappingOrders = (orders) => {
     let newOrders = [...orders]
     let orderNew = newOrders.map((order, index)=> {
+      let newDate = new Date(order.createdDate);
       return {
            no: index+1,
            name: order.name,
            phone: order.phone,
+           city: order.city,
+           district: order.district,
+           ranks: order.ranks,
            manufacturerCar: order.manufacturerCar,
-           productName: order.productName
+           productName: order.productName,
+           date: newDate!=undefined ? newDate.toLocaleString() : ''
 
     }
     })

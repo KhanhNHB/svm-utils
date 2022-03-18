@@ -86,7 +86,7 @@ const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
                                             <FormControl size='medium' sx={{ width: '100%' }}>
                                                 <InputLabel>Tên sản phẩm</InputLabel>
                                                 <OutlinedInput
-                                                    value={product.name}
+                                                    value={name}
                                                     onChange={e => handleValue(e,'name')}
                                                     label="Tên sản phẩm"
                                                 />
@@ -96,7 +96,7 @@ const ModalProductDetail = ({ openDetail, handleCloseDetail }) => {
                                             <FormControl size='medium' sx={{ width: '100%' }}>
                                                 <InputLabel >Giá sản phẩm</InputLabel>
                                                 <OutlinedInput
-                                                    value={product.price}
+                                                    value={price}
                                                     onChange={e => handleValue(e,'price')}
                                                     label="Giá sản phẩm"
                                                 />

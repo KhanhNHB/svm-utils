@@ -331,7 +331,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
                                         Chọn hình slide
                                     </Button>
                                 </label> 
-                                <img src={host_url+smallUrl} style={{display:'block',maxWidth:'150px', height:'150px'}}/>
+                                <img src={smallUrl != '' ? host_url+smallUrl : '/image-default.png'} style={{display:'block',maxWidth:'150px', height:'150px', padding:'10px'}}/>
                                 <p style={{color: 'red'}}>{smallErr}</p>
                             </Grid>
                             {/* large image */}
@@ -353,7 +353,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
                                         Chọn hình nền
                                     </Button>
                                 </label> 
-                                <img src={host_url+largeUrl} style={{display:'block',maxWidth:'300px', height:'150px'}}/>
+                                <img src={largeUrl != '' ? host_url+largeUrl : '/image-default.png'} style={{display:'block',maxWidth:'300px', height:'150px', padding:'10px'}}/>
                                 <p style={{color: 'red'}}>{largeErr}</p>
                             </Grid>
                        

@@ -166,7 +166,7 @@ const ModalProductImage = ({ openImage, handleCloseImage }) => {
                                             Chọn hình lớn
                                         </Button>
                                     </label> 
-                                    <img src={host_url + largeImageUrl} style={{display:'block',maxWidth:'150px', height:'150px'}} id="lgImage"/>
+                                    <img src={largeImageUrl != '' ? host_url + largeImageUrl : '/image-default.png'} style={{display:'block',maxWidth:'150px', height:'150px', padding:'10px'}} id="lgImage"/>
                                     <p style={{color: 'red'}}>{largeErr}</p>
                                 </Grid>
                             <Grid item xs={12} sm={12} md={6} mt={1} p={2}>
@@ -184,7 +184,7 @@ const ModalProductImage = ({ openImage, handleCloseImage }) => {
                                         Chọn hình nhỏ
                                     </Button>
                                 </label> 
-                                <img src={host_url + smallImageUrl} style={{display:'block',maxWidth:'150px', height:'150px'}} id="smImage"/>
+                                <img src={smallImageUrl != '' ? host_url + smallImageUrl : '/image-default.png'} style={{display:'block',maxWidth:'150px', height:'150px', padding:'10px'}} id="smImage"/>
                                 <p style={{color: 'red'}}>{smallErr}</p>
                             </Grid>
                         </Grid>
