@@ -7,20 +7,11 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import HomeIcon from '@mui/icons-material/Home';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
+import InfoIcon from '@mui/icons-material/Info';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import NewspaperIcon from '@mui/icons-material/Newspaper';
-import ShieldIcon from '@mui/icons-material/Shield';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
-import SellIcon from '@mui/icons-material/Sell';
-import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
-import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
-import EventNoteIcon from '@mui/icons-material/EventNote';
-import FeaturedPlayListOutlinedIcon from '@mui/icons-material/FeaturedPlayListOutlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
-import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined';
 import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
 
 import { hasChildren } from "../../utils/menuUtils";
@@ -38,8 +29,8 @@ const CustomMenuItem = () => {
             items: []
         },
         {
-            icon: <DashboardIcon />,
-            title: "Thông tin chung",
+            icon: <InfoIcon />,
+            title: "Thông tin liên hệ",
             to: "/app/setting",
             isSelected: false,
             items: []
@@ -57,26 +48,31 @@ const CustomMenuItem = () => {
             isSelected: false,
             items: [
                 {
+                    icon: <ArrowRightIcon />,
                     title: "Tin khuyến mại",
                     to: "/app/tin-khuyen-mai",
                     isSelected: false
                 },
                 {
+                    icon: <ArrowRightIcon />,
                     title: "Tin sản phẩm",
                     to: "/app/tin-san-pham",
                     isSelected: false
                 },
                 {
+                    icon: <ArrowRightIcon />,
                     title: "Tin sự kiện",
                     to: "/app/tin-su-kien",
                     isSelected: false
                 },
                 {
+                    icon: <ArrowRightIcon />,
                     title: "Tính năng",
                     to: "/app/tinh-nang",
                     isSelected: false
                 },
                 {
+                    icon: <ArrowRightIcon />,
                     title: "Lắp đặt",
                     to: "/app/lap-dat",
                     isSelected: false
@@ -89,16 +85,19 @@ const CustomMenuItem = () => {
             isSelected: false,
             items: [
                 {
+                    icon: <ArrowRightIcon />,
                     title: "Liên hệ",
                     to: "/app/lien-he",
                     isSelected: false
                 },
                 {
+                    icon: <ArrowRightIcon />,
                     title: "Đặt hàng",
                     to: "/app/dat-hang",
                     isSelected: false
                 },
                 {
+                    icon: <ArrowRightIcon />,
                     title: "Đăng ký dùng thử",
                     to: "/app/dang-ky-dung-thu",
                     isSelected: false
@@ -111,12 +110,14 @@ const CustomMenuItem = () => {
             isSelected: false,
             items: [
                 {
-                    title: "Bảo hành",
+                    icon: <ArrowRightIcon />,
+                    title: "Chính sách bảo hành",
                     to: "/app/bao-hanh",
                     isSelected: false,
                     items: []
                 },
                 {
+                    icon: <ArrowRightIcon />,
                     title: "Chính sách đại lý",
                     to: "/app/chinh-sach-dai-ly",
                     isSelected: false
@@ -192,7 +193,7 @@ const CustomMenuItem = () => {
                                 fontFamily: "Manrope, sans-serif",
                                 fontSize: 14,
                                 fontWeight: "bold",
-                                color: "black",
+                                color: "black"
                             }}
                         >
                             {item.title}
@@ -208,8 +209,8 @@ const CustomMenuItem = () => {
                         }
                     </Box>
                 </ListItem>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
+                <Collapse in={open} timeout="auto" unmountOnExit >
+                    <List component="div" disablePadding style={{ paddingLeft: 10 }}>
                         {children.map((child, key) => (
                             <MenuItem key={key} item={child} />
                         ))}

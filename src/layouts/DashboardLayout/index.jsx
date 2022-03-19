@@ -150,11 +150,11 @@ const DashboardLayout = () => {
         <ThemeProvider theme={mdTheme}>
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
-                <AppBar position="absolute" open={open}>
+                <AppBar position="absolute" open={open} >
                     <Toolbar
                         sx={{
                             pr: 100, // keep right padding when drawer closed
-
+                            backgroundColor: 'rgb(21, 48, 90)'
                         }}
                     >
                         <IconButton
@@ -176,7 +176,7 @@ const DashboardLayout = () => {
                             noWrap
                             sx={{ flexGrow: 1 }}
                         >
-                            SVM Utils
+                            SVM Portal
                         </Typography>
                         <IconButton color="inherit">
                             <LogoutIcon style={{ color: 'white' }} onClick={() => handleSignOut()} />
