@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Button,
     Box,
@@ -7,7 +7,16 @@ import {
     Container,
 } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
-import { host_url } from '../../../common';
+import axios from 'axios';
+import { NEWS_ENDPOINT, UPLOAD_FILE } from '../../../../api/endpoint';
+import { host_url, RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../../common';
+import { handleNewCategoryId } from '../../../../utils/handleNewCategoryId';
+import { Navigate, useLocation, useNavigate } from 'react-router';
+import { actGetAllDiscountNewsByCategoryId } from '../../../../actions';
+import API from '../../../../api/API';
+import Cookies from 'js-cookie';
+import Loading from '../../../../components/Loading';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,16 +50,61 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const SetupEditor = ({
-    instructions,
-    imageMessageError,
-    handleChangeTitle,
-    handleChangeContent,
-    handleChangeImage,
-    onSubmit,
-    onClose
-}) => {
+const FeatureModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
     const classes = useStyles();
+    const dispatch = useDispatch;
+    const navigate = useNavigate();
+
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [image, setImage] = useState("");
+    const [imageMessageError, setImageMessageError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const location = useLocation();
+
+    const handleChangeTitle = title => {
+        setTitle(title);
+    }
+
+    const handleChangeContent = event => {
+        setContent(event.target.value);
+    }
+
+    const handleChangeImage = event => {
+        const image = event.target.files[0]
+        const formData = new FormData();
+        formData.append('file', image);
+
+        axios.post(UPLOAD_FILE, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data;boundary=---',
+                'Access-Control-Allow-Origin': '*'
+            },
+        })
+            .then(res => {
+                setImage(res.data.url);
+                setImageMessageError('')
+            })
+            .catch(err => {
+                setImageMessageError('Tải hình ảnh thất bại, mời thử lại!')
+                setImageMessageError('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
+            });
+    }
+
+    const handleOnClose = () => {
+        setTitle("");
+        setContent("");
+        setImage("");
+        onClose();
+    };
+
+    const handleCreate = async () => {
+        onSubmit(title, content, image);
+
+        setTitle("");
+        setContent("");
+        setImage("");
+    };
 
     return (
         <Container maxWidth="lg" sx={{ marginTop: 4 }}>
@@ -71,7 +125,7 @@ const SetupEditor = ({
                             fullWidth
                             placeholder="Tiêu đề"
                             name="name"
-                            value={instructions.title}
+                            value={title}
                             onChange={e => handleChangeTitle(e.target.value)}
                             variant="outlined"
                             className={classes.title}
@@ -93,7 +147,7 @@ const SetupEditor = ({
                                     resize: 'none',
                                 }}
                                 onChange={handleChangeContent}
-                                value={instructions.content}
+                                value={content}
                             />
                         </form>
                     </Grid>
@@ -131,7 +185,7 @@ const SetupEditor = ({
                                 </Button>
                             </label>
                             <Box sx={{ margin: "auto" }}>
-                                <img src={instructions.image ? (host_url + instructions.image) : ""} style={{ display: 'block', maxWidth: '277px', height: '277px' }} />
+                                <img src={image ? (host_url + image) : ""} style={{ display: 'block', maxWidth: '277px', height: '277px' }} />
                             </Box>
                             <p color='error'>{imageMessageError}</p>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>
@@ -143,17 +197,17 @@ const SetupEditor = ({
                                 <Button
                                     color="primary"
                                     variant="contained"
-                                    onClick={onSubmit}
-                                    disabled={!instructions ? true : false}
+                                    onClick={() => handleCreate()}
+                                    disabled={(!title && !content) ? true : false}
                                     style={{ color: 'white', maxWidth: 120, minWidth: 120 }}>
-                                    Lưu lại
+                                    Tạo mới
                                 </Button>
                             </Box>
                             <Box className={classes.actions}>
                                 <Button
                                     color="primary"
                                     variant="outlined"
-                                    onClick={onClose}
+                                    onClick={() => handleOnClose()}
                                     style={{ maxWidth: 120, minWidth: 120 }}
                                 >
                                     Đóng
@@ -164,7 +218,7 @@ const SetupEditor = ({
                 </Grid>
             </Box>
         </Container>
-    );
-};
+    )
+}
 
-export default SetupEditor;
+export default FeatureModal

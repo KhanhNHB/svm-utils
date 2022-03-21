@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -16,95 +16,24 @@ import {
   Button
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { useDispatch } from 'react-redux';
-import LinesEllipsis from 'react-lines-ellipsis';
-import parse from "html-react-parser";
-import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API from '../../../api/API';
-import {
-  RESPONSE_STATUS,
-  USER_DEVICE_TOKEN,
-  USER_TOKEN
-} from '../../../common/index';
 import { actGetAllEventNewsByCategoryId } from '../../../actions';
 import { NEWS_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
 import Loading from '../../../components/Loading';
-import DiscountNewsEditor from './EventNewsEditor';
+import { host_url } from '../../../common/index';
 import { handleNewCategoryId } from '../../../utils/handleNewCategoryId';
+import EventNewModal from './Modal/EventNewModal';
+import EventNewsEditor from './EventNewsEditor';
 
 const columns = [
-  { id: 'id', label: 'Id', minWidth: 120, align: 'left' },
-  { id: 'title', label: 'Tiêu đề', minWidth: 200, align: 'left' },
-  { id: 'image', label: 'Hình ảnh', minWidth: 200, align: 'left' }
+  { id: 'no', label: 'No.', minWidth: 50 },
+  { id: 'title', label: 'Tiêu đề', minWidth: 200 },
+  { id: 'image', label: 'Hình ảnh', minWidth: 200 },
+  { id: 'action', label: 'Action', minWidth: 200 },
 ];
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-
-const EnhancedTableHead = (props) => {
-  const { order, orderBy, onRequestSort, user } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        {columns.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            padding={headCell.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            align={headCell.align}
-            style={{ minWidth: headCell.minWidth }}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-        <TableCell align={"left"} style={{ minWidth: 200 }}>Action</TableCell>
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  orderBy: PropTypes.string.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-};
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -136,72 +65,68 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EventNewList = ({ className, data, ...rest }) => {
+const EventNewList = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [order, setOrder] = useState('asc');
+
+  const data = useSelector(state => state.news.news);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   const [news, setNews] = useState("");
 
+  const [openAddModal, setOpenAddModal] = useState(false);
   const [imageMessageError, setImageMessageError] = useState("");
-  const [orderBy, setOrderBy] = useState('id');
-
   const [selectNews, setSelectNews] = useState(false);
   const [loadingModal, setLoadingModal] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
-  
-  const handleClickNewsItem = (news) => {
-    setNews(news);
-    setSelectNews(true);
-  };
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+
+      const pathVariable = `category_id/` + handleNewCategoryId(location.pathname);
+      const response = await API.get(`${NEWS_ENDPOINT}/all/${pathVariable}`);
+      if (response.ok) {
+        const fetchData = await response.json();
+        dispatch(actGetAllEventNewsByCategoryId(fetchData));
+      }
+
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [dispatch]);
+
+  const mappingDealers = (data) => {
+    let dealerNew = [...data].map((item, index) => {
+      return {
+        no: index + 1,
+        id: item.id,
+        title: item.title,
+        content: item.content,
+        image: item.image,
+        action: item.id,
+        is_active: item.is_active,
+        createdDate: item.createdDate
+      }
+    })
+    return dealerNew;
+  }
+
+  const rows = mappingDealers(data);
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
     setOpenSnackbar(false);
-  };
-
-  const _hanleRowTableData = (column, value, newsItem) => {
-    switch (column) {
-      case 'image':
-        return (
-          <img alt="News Image" style={{ height: 45, width: 60 }} src={value
-            ? value
-            : 'image-default.png'} />
-        );
-      case 'content': {
-        return (
-          <LinesEllipsis
-            text={parse(value)}
-            maxLine='3'
-            ellipsis='...'
-            trimRight
-            basedOn='letters'
-          />
-        );
-      };
-      case 'title':
-        return (
-          <LinesEllipsis
-            text={parse(value)}
-            maxLine='3'
-            ellipsis='...'
-            trimRight
-            basedOn='letters'
-          />
-        );
-      default:
-        return value;
-    }
   };
 
   const handleChangeTitle = title => {
@@ -242,32 +167,30 @@ const EventNewList = ({ className, data, ...rest }) => {
       });
   }
 
-  const onSubmit = async () => {
+  const handleSubmitEdit = async () => {
     setLoadingModal(true);
+
     const data = {
       id: news.id,
       title: news.title,
       content: news.content,
-      image: news.image
+      image: news.image,
+      news_category_id: handleNewCategoryId(location.pathname),
+      is_active: news.is_active
     };
 
     const response = await API.put(`${NEWS_ENDPOINT}`, data);
     if (response.ok) {
+      setLoading(true);
+
       const pathVariable = `category_id/` + handleNewCategoryId(location.pathname);
-      const res = await API.get(`${NEWS_ENDPOINT}/${pathVariable}`);
-      if (res.ok) {
-        const fetchData = await res.json();
-        const data = { news: fetchData };
-        setMessage(`Cập nhật tin tức thành công!`);
-        setOpenSnackbar(true);
-        dispatch(actGetAllEventNewsByCategoryId(data));
-      } else {
-        if (response.status === RESPONSE_STATUS.FORBIDDEN) {
-          Cookies.remove(USER_TOKEN);
-          Cookies.remove(USER_DEVICE_TOKEN);
-          navigate('/', { replace: true });
-        }
+      const response = await API.get(`${NEWS_ENDPOINT}/all/${pathVariable}`);
+      if (response.ok) {
+        const fetchData = await response.json();
+        dispatch(actGetAllEventNewsByCategoryId(fetchData));
       }
+
+      setLoading(false);
     } else {
       setMessage(`Cập nhật tin tức thất bại!`);
       setOpenSnackbar(true);
@@ -278,87 +201,179 @@ const EventNewList = ({ className, data, ...rest }) => {
   }
 
   const onClose = () => {
-    setNews("");
-    setImageMessageError("");
     setSelectNews(false);
   };
 
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const handleChangePage = async (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleDelete = async (event, news) => {
+    setLoadingModal(true);
+
+    const response = await API.delete(`${NEWS_ENDPOINT}/id/${news.id}`);
+    if (response.ok) {
+      setLoading(true);
+
+      const pathVariable = `category_id/` + handleNewCategoryId(location.pathname);
+      const response = await API.get(`${NEWS_ENDPOINT}/all/${pathVariable}`);
+      if (response.ok) {
+        const fetchData = await response.json();
+        dispatch(actGetAllEventNewsByCategoryId(fetchData));
+      }
+
+      setLoading(false);
+    } else {
+      setMessage(`Ẩn tin tức thất bại!`);
+      setOpenSnackbar(true);
+    }
+
+    setLoadingModal(false);
+  }
+
+  const handleCreate = async (title, content, image) => {
+
+    const data = {
+      title: title,
+      content: content,
+      image: image,
+      news_category_id: handleNewCategoryId(location.pathname)
+    };
+
+    const response = await API.post(`${NEWS_ENDPOINT}`, data);
+
+    if (response.ok) {
+      setLoading(true);
+
+      const pathVariable = `category_id/` + handleNewCategoryId(location.pathname);
+      const response = await API.get(`${NEWS_ENDPOINT}/all/${pathVariable}`);
+      if (response.ok) {
+        const fetchData = await response.json();
+        dispatch(actGetAllEventNewsByCategoryId(fetchData));
+      }
+
+      setLoading(false);
+    } else {
+      handleMessage(`Tạo mới tin tức thất bại!`);
+      handleSnackbar();
+    }
+
+    setOpenAddModal(!openAddModal);
+  };
+
+  const handleEdit = (event, news) => {
+    setNews(news);
+    setSelectNews(true);
+  }
+
+  const handleAddItem = () => {
+    setOpenAddModal(true);
+  }
+
+  const handleMessage = (message) => {
+    setMessage(message);
+  }
+
+  const handleSnackbar = () => {
+    setOpenSnackbar(true);
+  }
+
   return (
     <Box>
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={handleAddItem}
+        style={{ color: 'white' }}
+      >
+        Tạo tin tức
+      </Button>
       <Box>
         <TableContainer className={classes.container}>
-          <Table aria-label="sticky table">
-            <EnhancedTableHead
-              classes={classes}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              key={1}
-            />
-            {(data && data.news.news && data.news.news.length) &&
-              <TableBody>
-                {stableSort(data.news.news, getComparator(order, orderBy)).map((news, index) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={news.id}
-                    >
-                      {columns.map((column, index) => {
-                        const value = _hanleRowTableData(column.id, news[column.id], news);
+          <Table stickyHeader-label="sticky table">
+            <TableHead>
+              <TableRow>
+                {columns.map((column, index) => (
+                  <TableCell
+                    key={index + column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {
+                loading
+                  ? <Loading />
+                  : (data && data.length &&
+                    rows
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row, index) => {
                         return (
-                          <TableCell
-                            align={column.align}
-                            id={index}
-                            key={index}
-                          >
-                            {value}
-                          </TableCell>
+                          <TableRow hover role="checkbox" tabIndex={-1} key={row.id + index}>
+                            {columns.map((column, index) => {
+                              const value = row[column.id];
+                              if (column.id == 'action') {
+                                return (
+                                  <TableCell align={column.align} key={column.id + index + row.createdDate}>
+                                    <Button onClick={(e) => { handleDelete(e, row) }} color='error'>Ẩn</Button>
+                                    <Button onClick={(e) => { handleEdit(e, row) }} color='success'>Sửa</Button>
+                                  </TableCell>
+                                );
+                              } if (column.id == 'image') {
+                                return (
+                                  <TableCell align={column.align} key={column.id + index + row.createdDate}>
+                                    <img src={host_url + value} style={{ maxWidth: '150px' }} />
+                                  </TableCell>
+                                );
+                              } else {
+                                return (
+                                  <TableCell align={column.align} key={column.id + index + row.createdDate}>
+                                    {value}
+                                  </TableCell>
+                                );
+                              }
+                            })}
+                          </TableRow>
                         );
-                      })}
-                      <TableCell align={"left"}>
-                        <Button
-                          variant="contained"
-                          size="medium"
-                          sx={{
-                            maxWidth: 120,
-                            maxHeight: 38,
-                            minWidth: 120,
-                            minHeight: 38
-                          }}
-                          onClick={() => handleClickNewsItem(news)}
-                        >
-                          Chỉnh sửa
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            }
+                      })
+                  )
+              }
+            </TableBody>
           </Table>
         </TableContainer>
-        {(data && data.news.news && data.news.news.length) && (
-          <TablePagination
-            rowsPerPageOptions={[0]}
-            component="div"
-            count={data.news.news.length}
-            rowsPerPage={10}
-            page={0}
-            onChangePage={() => { }}
-          />
-        )}
+        {
+          data && data.length && (
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={data.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          )
+        }
       </Box>
+
       <Modal open={selectNews}>
-        <Box sx={{ marginTop: 4 }}>
-          <DiscountNewsEditor
+        <Box>
+          <EventNewsEditor
             news={news}
             imageMessageError={imageMessageError}
             handleChangeTitle={handleChangeTitle}
             handleChangeContent={handleChangeContent}
             handleChangeImage={handleChangeImage}
-            onSubmit={onSubmit}
+            onSubmit={handleSubmitEdit}
             onClose={onClose}
           />
         </Box>
@@ -377,8 +392,16 @@ const EventNewList = ({ className, data, ...rest }) => {
           {message}
         </Alert>
       </Snackbar>
-      <Modal open={loadingModal}>
+      <Modal open={loadingModal} sx={{ margin: "auto" }}>
         <Loading />
+      </Modal>
+      <Modal open={openAddModal}>
+        <EventNewModal
+          handleMessage={handleMessage}
+          handleSnackbar={handleSnackbar}
+          onSubmit={handleCreate}
+          onClose={() => setOpenAddModal(!openAddModal)}
+        />
       </Modal>
     </Box>
   );

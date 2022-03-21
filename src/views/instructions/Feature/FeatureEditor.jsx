@@ -4,10 +4,10 @@ import {
     Box,
     Grid,
     TextField,
-    Container
+    Container,
 } from '@mui/material';
-import SunEditor from 'suneditor-react';
 import { makeStyles } from '@material-ui/styles';
+import { host_url } from '../../../common';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,7 +53,7 @@ const FeatureEditor = ({
     const classes = useStyles();
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" sx={{ marginTop: 4 }}>
             <Box
                 sx={{
                     borderRadius: 2,
@@ -131,7 +131,7 @@ const FeatureEditor = ({
                                 </Button>
                             </label>
                             <Box sx={{ margin: "auto" }}>
-                                <img src={instructions.image} style={{ display: 'block', maxWidth: '277px', height: '277px' }} />
+                                <img src={instructions.image ? (host_url + instructions.image) : ""} style={{ display: 'block', maxWidth: '277px', height: '277px' }} />
                             </Box>
                             <p color='error'>{imageMessageError}</p>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>

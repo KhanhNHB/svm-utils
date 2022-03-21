@@ -18,6 +18,7 @@ import DiscountNewList from './EventNewList';
 import Loading from '../../../components/Loading';
 import { handleNewCategoryId } from '../../../utils/handleNewCategoryId';
 import { makeStyles } from '@mui/styles';
+import EventNewList from './EventNewList';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -65,48 +66,6 @@ const EventNewListView = () => {
   const data = useSelector(state => state.news);
   const location = useLocation();
 
-  useEffect(() => {
-    const fetchNewsByCategory = async () => {
-      setLoading(true);
-
-      const pathVariable = `category_id/` + handleNewCategoryId(location.pathname);
-
-      const response = await API.get(`${NEWS_ENDPOINT}/${pathVariable}`);
-      if (response.ok) {
-        const fetchData = await response.json();
-        const data = { news: fetchData };
-        dispatch(actGetAllEventNewsByCategoryId(data));
-      } else {
-        if (response.status === RESPONSE_STATUS.FORBIDDEN) {
-          Cookies.remove(USER_TOKEN);
-          Cookies.remove(USER_DEVICE_TOKEN);
-          navigate('/', { replace: true });
-        }
-      }
-
-      setLoading(false);
-    }
-
-    fetchNewsByCategory();
-
-    // const readCookie = async () => {
-    //   const user = Cookies.get(USER_TOKEN);
-    //   if (user) {
-    //     const response = await API.post(`${PROFILE_ENDPOINT}`, {
-    //       "access_token": user
-    //     });
-
-    //     if (response.ok) {
-    //       const fetchData = await response.json();
-    //       setUser(fetchData.data);
-    //       fetchShipper(fetchData.data);
-    //       dispatch(actLoadProfile(fetchData.data));
-    //     }
-    //   }
-    // };
-    // readCookie();
-  }, [dispatch, navigate]);
-
   return (
     <Box>
       <Grid container spacing={3}>
@@ -117,14 +76,11 @@ const EventNewListView = () => {
             fontFamily: "Manrope, sans-serif",
             textAlign: "center"
           }}>
-            Tin Tức Khuyến Mại
+            Tin Tức Sự Kiện
           </Box>
         </Grid>
         <Grid item xs={12}>
-          {loading
-            ? <Loading />
-            : <DiscountNewList data={data} />
-          }
+          <EventNewList />
         </Grid>
         <Grid item xs={12}>
           <Copyright sx={{ pt: 4 }} />
