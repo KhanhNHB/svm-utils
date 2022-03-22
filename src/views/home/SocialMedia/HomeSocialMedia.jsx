@@ -199,8 +199,6 @@ const HomeSocialMedia = ({ homeId }) => {
         setOpenSnackbar(false);
     };
 
-    console.log(homeSocialMedia);
-
     const _hanleRowTableData = (column, value, newsItem) => {
         switch (column) {
             case 'image':

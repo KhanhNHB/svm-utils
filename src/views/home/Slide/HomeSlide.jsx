@@ -24,6 +24,7 @@ import { actGetHome, actGetHomeVision } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from 'js-cookie';
 import Loading from '../../../components/Loading';
+import SunEditor from 'suneditor-react';
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -62,11 +63,7 @@ const HomeSlide = ({ home }) => {
     const dispatch = useDispatch();
 
     const [title, setTitle] = useState(home.title ? home.title : "");
-    const [contentRAM, setContentRAM] = useState(home.contentRam ? home.contentRam : "");
-    const [contentROM, setContentROM] = useState(home.contentRom ? home.contentRom : "");
-    const [contentCPU, setContentCPU] = useState(home.contentCpu ? home.contentCpu : "");
-    const [contentGPU, setContentGPU] = useState(home.contentGpu ? home.contentGpu : "");
-    const [contentHDH, setContentHDH] = useState(home.contentHdh ? home.contentHdh : "");
+    const [content, setContent] = useState(home.content ? home.content : "");
 
     const [smallImageOne, setSmallImageOne] = useState(home.smallImageOne ? home.smallImageOne : "");
     const [smallImageTwo, setSmallImageTwo] = useState(home.smallImageTwo ? home.smallImageTwo : "");
@@ -82,26 +79,6 @@ const HomeSlide = ({ home }) => {
 
     const handleChangeTitle = title => {
         setTitle(title);
-    };
-
-    const handleChangeContentRAM = (content) => {
-        setContentRAM(content);
-    };
-
-    const handleChangeContentROM = (content) => {
-        setContentROM(content);
-    };
-
-    const handleChangeContentCPU = (content) => {
-        setContentCPU(content);
-    };
-
-    const handleChangeContentGPU = (content) => {
-        setContentGPU(content);
-    };
-
-    const handleChangeContentHDH = (content) => {
-        setContentHDH(content);
     };
 
     const handleChangeSmallImageOne = (event) => {
@@ -173,11 +150,7 @@ const HomeSlide = ({ home }) => {
         const data = {
             id: home.id,
             title: title,
-            contentRam: contentRAM,
-            contentRom: contentROM,
-            contentCpu: contentCPU,
-            contentGpu: contentGPU,
-            contentHdh: contentHDH,
+            content: content,
             smallImageOne: smallImageOne,
             smallImageTwo: smallImageTwo,
             smallImageThree: smallImageThree
@@ -255,83 +228,31 @@ const HomeSlide = ({ home }) => {
                     className={classes.title}
                 />
             </Grid>
-            <Grid item xs={12} sm={2.4}>
-                <Box className={classes.text}>RAM</Box>
-                <TextField
-                    fullWidth
-                    placeholder="RAM"
-                    name="ram"
-                    type="number"
-                    value={contentRAM}
-                    onChange={e => handleChangeContentRAM(e.target.value)}
-                    variant="outlined"
-                    className={classes.title}
-                />
-                <Box className={classes.text}>GB</Box>
-            </Grid>
-            <Grid item xs={12} sm={2.4}>
-                <Box sx={{ style: "flex" }}>
-                    <Box className={classes.text}>ROM</Box>
-                    <TextField
-                        fullWidth
-                        placeholder="RAM"
-                        name="ram"
-                        type="number"
-                        value={contentROM}
-                        onChange={e => handleChangeContentROM(e.target.value)}
-                        variant="outlined"
-                        className={classes.title}
+            <Grid item xs={12} sm={12}>
+                <Box>
+                    <Box className={classes.text}>Cấu Hình</Box>
+                    <SunEditor
+                        id='cấu hình'
+                        autoFocus={true}
+                        height='300px'
+                        width='100%'
+                        setContents={content}
+                        onChange={setContent}
+                        setOptions={{
+                            buttonList: [
+                                [
+                                    'undo',
+                                    'redo',
+                                    "bold",
+                                    "underline",
+                                    "italic",
+                                    "formatBlock",
+
+                                ]
+                            ]
+                        }}
+                        setDefaultStyle="font-size: 16px; font-family: Manrope, sans-serif; font-weight: 500;"
                     />
-                    <Box className={classes.text}>GB</Box>
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={2.4}>
-                <Box sx={{ style: "flex" }}>
-                    <Box className={classes.text}>CPU</Box>
-                    <TextField
-                        fullWidth
-                        placeholder="CPU"
-                        type="number"
-                        name="ram"
-                        value={contentCPU}
-                        onChange={e => handleChangeContentCPU(e.target.value)}
-                        variant="outlined"
-                        className={classes.title}
-                    />
-                    <Box className={classes.text}>GHZ</Box>
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={2.4}>
-                <Box sx={{ style: "flex" }}>
-                    <Box className={classes.text}>GPU</Box>
-                    <TextField
-                        sx={{ display: "flex" }}
-                        fullWidth
-                        placeholder="GPU"
-                        type="number"
-                        name="GPU"
-                        value={contentGPU}
-                        onChange={e => handleChangeContentGPU(e.target.value)}
-                        variant="outlined"
-                        className={classes.title}
-                    />
-                    <Box className={classes.text}>ADRENO</Box>
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={2.4}>
-                <Box sx={{ style: "flex" }}>
-                    <Box className={classes.text}>HĐH</Box>
-                    <TextField
-                        fullWidth
-                        placeholder="HĐH"
-                        name="HĐH"
-                        type="number"
-                        value={contentHDH}
-                        onChange={e => handleChangeContentHDH(e.target.value)}
-                        variant="outlined"
-                        className={classes.title}
-                    />
-                    <Box className={classes.text}>Android</Box>
                 </Box>
             </Grid>
             <Grid item xs={12} sm={12} sx={{ marginTop: 10 }}></Grid>
