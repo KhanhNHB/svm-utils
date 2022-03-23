@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Alert,
     Box,
     Button,
-    Container,
-    Divider,
     Grid,
     Modal,
     Snackbar,
     TextField
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { HOME_ENDPOINT, HOME_VISION_ENDPOINT, UPLOAD_FILE } from "../../../api/endpoint";
+import { HOME_ENDPOINT, HOME_SLIDE_ENDPOINT, UPLOAD_FILE } from "../../../api/endpoint";
 import API from '../../../api/API';
 import {
+    host_url,
     RESPONSE_STATUS,
     USER_DEVICE_TOKEN,
     USER_TOKEN
 } from '../../../common';
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router";
-import { actGetHome, actGetHomeVision } from "../../../actions";
+import { useNavigate } from "react-router";
+import { actGetHome, actGetHomeSlide } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from 'js-cookie';
 import Loading from '../../../components/Loading';
 import SunEditor from 'suneditor-react';
+import SaveIcon from '@mui/icons-material/Save';
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -50,8 +50,12 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     text: {
-        fontSize: 18,
-        fontWeight: "bold",
+        fontSize: 16,
+        fontFamily: "Manrope, sans-serif"
+    },
+    content: {
+        fontSize: 15,
+        color: "black",
         fontFamily: "Manrope, sans-serif"
     }
 }));
@@ -61,111 +65,69 @@ const HomeSlide = ({ home }) => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const homeSlideImage = useSelector(state => state.homeSlide.homeSlide);
 
     const [title, setTitle] = useState(home.title ? home.title : "");
     const [content, setContent] = useState(home.content ? home.content : "");
 
-    const [smallImageOne, setSmallImageOne] = useState(home.smallImageOne ? home.smallImageOne : "");
-    const [smallImageTwo, setSmallImageTwo] = useState(home.smallImageTwo ? home.smallImageTwo : "");
-    const [smallImageThree, setSmallImageThree] = useState(home.smallImageThree ? home.smallImageThree : "");
-
-    const [smallImageOneMessageError, setSmallImageOneMessageError] = useState('');
-    const [smallImageTwoMessageError, setSmallImageTwoMessageError] = useState('');
-    const [smallImageThreeMessageError, setSmallImageThreeMessageError] = useState('');
+    const [largeImageMessageError, setLargeImageMessageError] = useState({ id: -1, message: "" });
+    const [smallImageMessageError, setSmallImageMessageError] = useState({ id: -1, message: "" });
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
 
+    useEffect(() => {
+        const fetchHomeSlide = async () => {
+            setLoading(true);
+
+            try {
+                const response = await API.get(`${HOME_SLIDE_ENDPOINT}/home_id/${home.id}`);
+                if (response.ok) {
+                    const fetchData = await response.json();
+                    const data = fetchData;
+
+                    dispatch(actGetHomeSlide(data));
+                } else {
+                    if (response.status === RESPONSE_STATUS.FORBIDDEN) {
+                        Cookies.remove(USER_TOKEN);
+                        Cookies.remove(USER_DEVICE_TOKEN);
+                        navigate('/', { replace: true });
+                    }
+                }
+            } catch (err) {
+
+            }
+
+            setLoading(false);
+        };
+
+        fetchHomeSlide();
+    }, []);
+
     const handleChangeTitle = title => {
         setTitle(title);
-    };
-
-    const handleChangeSmallImageOne = (event) => {
-        const image = event.target.files[0]
-        const formData = new FormData();
-        formData.append('file', image);
-
-        axios.post(UPLOAD_FILE, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data;boundary=---',
-                'Access-Control-Allow-Origin': '*'
-            },
-        })
-            .then(res => {
-                setSmallImageOne(res.data.url);
-                setSmallImageOneMessageError('');
-            })
-            .catch(err => {
-                setSmallImageOne("");
-                setSmallImageOneMessageError('Tải hình ảnh slide 1 thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại!');
-            });
     }
 
-    const handleChangeSmallImageTwo = (event) => {
-        const image = event.target.files[0]
-        const formData = new FormData();
-        formData.append('file', image);
-
-        axios.post(UPLOAD_FILE, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data;boundary=---',
-                'Access-Control-Allow-Origin': '*'
-            },
-        })
-            .then(res => {
-                setSmallImageTwo(res.data.url);
-                setSmallImageTwoMessageError('');
-            })
-            .catch(err => {
-                setSmallImageTwo("");
-                setSmallImageTwoMessageError('Tải hình ảnh slide 2 thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại!');
-            });
-    }
-
-    const handleChangeSmallImageThree = (event) => {
-        const image = event.target.files[0]
-        const formData = new FormData();
-        formData.append('file', image);
-
-        axios.post(UPLOAD_FILE, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data;boundary=---',
-                'Access-Control-Allow-Origin': '*'
-            },
-        })
-            .then(res => {
-                setSmallImageThree(res.data.url);
-                setSmallImageThreeMessageError('');
-            })
-            .catch(err => {
-                setSmallImageThree("");
-                setSmallImageThreeMessageError('Tải hình ảnh slide 3 thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại!');
-            });
-    }
-
-    const onSubmit = async () => {
+    const onSubmitHome = async () => {
         setLoading(true);
 
         const data = {
             id: home.id,
             title: title,
-            content: content,
-            smallImageOne: smallImageOne,
-            smallImageTwo: smallImageTwo,
-            smallImageThree: smallImageThree
+            content: content
         };
 
         const response = await API.put(`${HOME_ENDPOINT}`, data);
 
         if (response.ok) {
             try {
-                const res = await API.get(`${HOME_ENDPOINT}?isActive=${true}`);
+                const res = await API.get(`${HOME_ENDPOINT}`);
                 if (res.ok) {
                     const fetchData = await res.json();
                     const data = fetchData;
                     dispatch(actGetHome(data));
-                    setMessage(`Cập nhật trang chủ thành công!`);
+                    setMessage(`Cập nhật nội dung trang chủ thành công!`);
                     setOpenSnackbar(true);
                 } else {
                     if (response.status === RESPONSE_STATUS.FORBIDDEN) {
@@ -178,13 +140,105 @@ const HomeSlide = ({ home }) => {
 
             }
         } else {
-            setMessage(`Cập nhật trang chủ thất bại!`);
-            setOpenSnackbar(true);
+            setMessage(`Cập nhật nội dung trang chủ thất bại!`);
             setOpenSnackbar(true);
         }
 
         setLoading(false);
-    }
+    };
+
+    const onSubmitHomeSlide = async (id, homeId, smallImage, largeImage) => {
+        setLoading(true);
+
+        const data = {
+            id: id,
+            homeId: homeId,
+            smallImage: smallImage,
+            largeImage: largeImage
+        };
+
+        const response = await API.put(`${HOME_SLIDE_ENDPOINT}`, data);
+
+        if (response.ok) {
+            try {
+                const res = await API.get(`${HOME_SLIDE_ENDPOINT}`);
+                if (res.ok) {
+                    const fetchData = await res.json();
+                    const data = fetchData;
+                    dispatch(actGetHomeSlide(data));
+                    setMessage(`Cập nhật slide trang chủ thành công!`);
+                    setOpenSnackbar(true);
+                } else {
+                    if (response.status === RESPONSE_STATUS.FORBIDDEN) {
+                        Cookies.remove(USER_TOKEN);
+                        Cookies.remove(USER_DEVICE_TOKEN);
+                        navigate('/', { replace: true });
+                    }
+                }
+            } catch (err) {
+
+            }
+        } else {
+            setMessage(`Cập nhật slide trang chủ thất bại!`);
+            setOpenSnackbar(true);
+        }
+
+        setLoading(false);
+    };
+
+    const handleChangeLargeImage = async (event, slideId) => {
+        const image = event.target.files[0]
+        const formData = new FormData();
+        formData.append('file', image);
+
+        axios.post(UPLOAD_FILE, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data;boundary=---',
+                'Access-Control-Allow-Origin': '*'
+            },
+        }).then(res => {
+            const homeSlide = [...homeSlideImage];
+            const result = homeSlide.map(item => {
+                if (item.id === slideId) {
+                    return { ...item, largeImage: res.data.url };
+                }
+
+                return item;
+            });
+
+            dispatch(actGetHomeSlide(result));
+            setLargeImageMessageError({ id: -1, message: "" });
+        }).catch(err => {
+            setLargeImageMessageError({ id: slideId, message: 'Tải hình ảnh nền thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại!' });
+        });
+    };
+
+    const handleChangeSmallImage = async (event, slideId) => {
+        const image = event.target.files[0]
+        const formData = new FormData();
+        formData.append('file', image);
+
+        axios.post(UPLOAD_FILE, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data;boundary=---',
+                'Access-Control-Allow-Origin': '*'
+            },
+        }).then(res => {
+            const homeSlide = [...homeSlideImage];
+            const result = homeSlide.map(item => {
+                if (item.id === slideId) {
+                    return { ...item, smallImage: res.data.url };
+                }
+
+                return item;
+            });
+
+            dispatch(actGetHomeSlide(result));
+            setSmallImageMessageError({ id: -1, message: "" });
+        }).catch(err => {
+            setSmallImageMessageError({ id: slideId, message: 'Tải hình ảnh slide thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại!' });
+        });
+    };
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
@@ -210,7 +264,7 @@ const HomeSlide = ({ home }) => {
                             background: 'linear-gradient(#00AFEC, #005FBE)',
                             fontSize: 16
                         }}
-                        onClick={() => onSubmit()}
+                        onClick={() => onSubmitHome()}
                     >
                         Lưu lại
                     </Button>
@@ -255,122 +309,129 @@ const HomeSlide = ({ home }) => {
                     />
                 </Box>
             </Grid>
-            <Grid item xs={12} sm={12} sx={{ marginTop: 10 }}></Grid>
-            <Grid item xs={12} sm={4}>
-                <Box className={classes.text}>Hình slide 1</Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        height: "93%",
-                        backgroundImage: !smallImageOne && 'url("/image-default.png")',
-                        backgroundRepeat: 'no-repeat, repeat',
-                        backgroundPosition: 'center'
-                    }}
+            <Grid item xs={12} sm={12} sx={{ marginTop: 10 }}>
+                <Box className={classes.text} sx={{ fontSize: 24, color: "black" }}>Hình ảnh</Box>
+            </Grid>
+            {homeSlideImage.length && homeSlideImage.map((slide, index) => (
+                <Grid
+                    item
+                    xs={12}
+                    sm={4}
+                    key={index}
                 >
-                    <Button
-                        variant="raised"
-                        component="label"
+                    <Box
                         sx={{
-                            background: 'wheat !important',
-                            color: 'black !important'
+                            display: "flex",
+                            flexDirection: "column",
+                            border: "1px dashed #ccc",
+                            color: "#fff",
+                            padding: 2,
+                            backgroundColor: "#fff"
                         }}
                     >
-                        Chọn hình ảnh
-                        <input
-                            accept="image/*"
-                            className='ip'
-                            style={{ display: 'none' }}
-                            id="raised-button-file-small"
-                            onChange={handleChangeSmallImageOne}
-                            multiple
-                            type="file"
-                        />
-                    </Button>
-                    <Box sx={{ margin: "auto" }}>
-                        <img src={smallImageOne} style={{ display: 'block', maxWidth: '150px', height: '150px' }} />
+                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
+                            <Box
+                                className={classes.content}>
+                                Hình nền {index + 1}
+                            </Box>
+                            <Button
+                                variant="contained"
+                                startIcon={<SaveIcon size={14} />}
+                                style={{
+                                    dispaly: "flex",
+                                    alignItems: "center",
+                                    maxWidth: 120,
+                                    maxHeight: 30,
+                                    minWidth: 120,
+                                    minHeight: 30,
+                                    display: "flex",
+                                    textTransform: 'none',
+                                    background: 'linear-gradient(#00AFEC, #005FBE)',
+                                    fontSize: 14
+                                }}
+                                onClick={() => onSubmitHomeSlide(slide.id, slide.homeId, slide.smallImage, slide.largeImage)}
+                            >
+                                Lưu lại
+                            </Button>
+                        </Box>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                height: "93%",
+                                backgroundImage: !slide.largeImage && 'url("/image-default.png")',
+                                backgroundRepeat: 'no-repeat, repeat',
+                                backgroundPosition: 'center'
+                            }}
+                        >
+                            <Button
+                                variant="raised"
+                                component="label"
+                                sx={{
+                                    background: 'wheat !important',
+                                    color: 'black !important'
+                                }}
+                            >
+                                Chọn hình ảnh
+                                <input
+                                    accept="image/*"
+                                    className='ip'
+                                    style={{ display: 'none' }}
+                                    id="raised-button-file-small"
+                                    onChange={(e) => handleChangeLargeImage(e, slide.id)}
+                                    multiple
+                                    type="file"
+                                />
+                            </Button>
+                            <Box sx={{ margin: "auto" }}>
+                                <img
+                                    src={slide.largeImage ? host_url + slide.largeImage : ""}
+                                    style={{ display: 'block', maxWidth: '100%', height: '250px' }}
+                                />
+                                <p style={{ color: 'red' }}>{largeImageMessageError.id === slide.id ? largeImageMessageError.message : ""}</p>
+                            </Box>
+                        </Box>
+                        <Box className={classes.text}>Hình slide {index + 1}</Box>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                height: "93%",
+                                backgroundImage: !slide.smallImage && 'url("/image-default.png")',
+                                backgroundRepeat: 'no-repeat, repeat',
+                                backgroundPosition: 'center'
+                            }}
+                        >
+                            <Button
+                                variant="raised"
+                                component="label"
+                                sx={{
+                                    background: 'wheat !important',
+                                    color: 'black !important'
+                                }}
+                            >
+                                Chọn hình ảnh
+                                <input
+                                    accept="image/*"
+                                    className='ip'
+                                    style={{ display: 'none' }}
+                                    id="raised-button-file-small"
+                                    onChange={(e) => handleChangeSmallImage(e, slide.id)}
+                                    multiple
+                                    type="file"
+                                />
+                            </Button>
+                            <Box sx={{ margin: "auto" }}>
+                                <img
+                                    src={slide.smallImage ? host_url + slide.smallImage : ""}
+                                    style={{ display: 'block', maxWidth: '150px', height: '150px' }}
+                                />
+                            </Box>
+                            <p style={{ color: 'red' }}>{smallImageMessageError.id === slide.id ? smallImageMessageError.message : ""}</p>
+                        </Box>
                     </Box>
-                    <p color='error'>{smallImageOneMessageError}</p>
-                    <p style={{ color: 'red' }}>{smallImageOneMessageError}</p>
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-                <Box className={classes.text}>Hình slide 2</Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        height: "93%",
-                        backgroundImage: !smallImageTwo && 'url("/image-default.png")',
-                        backgroundRepeat: 'no-repeat, repeat',
-                        backgroundPosition: 'center'
-                    }}
-                >
-                    <Button
-                        variant="raised"
-                        component="label"
-                        sx={{
-                            background: 'wheat !important',
-                            color: 'black !important'
-                        }}
-                    >
-                        Chọn hình ảnh
-                        <input
-                            accept="image/*"
-                            className='ip'
-                            style={{ display: 'none' }}
-                            id="raised-button-file-small"
-                            onChange={handleChangeSmallImageTwo}
-                            multiple
-                            type="file"
-                        />
-                    </Button>
-                    <Box sx={{ margin: "auto" }}>
-                        <img src={smallImageTwo} style={{ display: 'block', maxWidth: '150px', height: '150px' }} />
-                    </Box>
-                    <p color='error'>{smallImageTwoMessageError}</p>
-                    <p style={{ color: 'red' }}>{smallImageTwoMessageError}</p>
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-                <Box className={classes.text}>Hình slide 3</Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        height: "93%",
-                        backgroundImage: !smallImageThree && 'url("/image-default.png")',
-                        backgroundRepeat: 'no-repeat, repeat',
-                        backgroundPosition: 'center'
-                    }}
-                >
-
-                    <Button
-                        variant="raised"
-                        component="label"
-                        sx={{
-                            background: 'wheat !important',
-                            color: 'black !important'
-                        }}
-                    >
-                        Chọn hình ảnh
-                        <input
-                            accept="image/*"
-                            className='ip'
-                            style={{ display: 'none' }}
-                            id="raised-button-file-small"
-                            onChange={handleChangeSmallImageThree}
-                            multiple
-                            type="file"
-                        />
-                    </Button>
-                    <Box sx={{ margin: "auto" }}>
-                        <img src={smallImageThree} style={{ display: 'block', maxWidth: '150px', height: '150px' }} />
-                    </Box>
-                    <p color='error'>{smallImageThreeMessageError}</p>
-                    <p style={{ color: 'red' }}>{smallImageThreeMessageError}</p>
-                </Box>
-            </Grid>
+                </Grid>
+            ))}
             <Snackbar
                 anchorOrigin={{
                     vertical: 'top',

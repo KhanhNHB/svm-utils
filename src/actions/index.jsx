@@ -28,6 +28,13 @@ export const actGetHome = (home) => {
     }
 };
 
+export const actGetHomeSlide = (homeSlide) => {
+    return {
+        type: types.GET_HOME_SLIDE,
+        homeSlide,
+    }
+};
+
 export const actGetHomeVision = (homeVision) => {
     return {
         type: types.GET_HOME_VISION,

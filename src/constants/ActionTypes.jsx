@@ -1,6 +1,7 @@
 export const SIGN_IN = 'SIGN_IN';
 
 export const GET_HOME = 'GET_HOME';
+export const GET_HOME_SLIDE = 'GET_HOME_SLIDE';
 export const GET_HOME_VISION = 'GET_HOME_VISION';
 export const GET_HOME_FEATURE = 'GET_HOME_FEATURE';
 export const GET_HOME_FEATURE_DETAIL = 'GET_HOME_FEATURE_DETAIL';
