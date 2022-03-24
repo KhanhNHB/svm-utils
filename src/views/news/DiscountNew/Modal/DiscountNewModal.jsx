@@ -83,7 +83,7 @@ const DiscountNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) 
         })
             .then(res => {
                 setImage(res.data.url);
-                setImageMessageError('')
+                setImageMessageError('');
             })
             .catch(err => {
                 setImageMessageError('Tải hình ảnh thất bại, mời thử lại!')
@@ -100,11 +100,9 @@ const DiscountNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) 
 
     const handleCreate = async () => {
         onSubmit(title, content, image);
-
-        setTitle("");
-        setContent("");
-        setImage("");
     };
+
+    console.log(image);
 
     return (
         <Container maxWidth="lg" sx={{ marginTop: 4 }}>
@@ -187,7 +185,6 @@ const DiscountNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) 
                             <Box sx={{ margin: "auto" }}>
                                 <img src={image ? (host_url + image) : ""} style={{ display: 'block', maxWidth: '277px', height: '277px' }} />
                             </Box>
-                            <p color='error'>{imageMessageError}</p>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>
                         </Box>
                     </Grid>

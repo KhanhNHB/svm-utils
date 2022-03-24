@@ -20,12 +20,11 @@ import {
 import { makeStyles } from '@mui/styles';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
-import SunEditor from 'suneditor-react';
-import { actGetHomeFeature, actGetHomeFeatureDetail, actGetHomeVision } from '../../../actions';
+import { useNavigate } from 'react-router';
+import { actGetHomeFeature } from '../../../actions';
 import API from '../../../api/API';
 import { HOME_FEATURE_DETAIL_ENDPOINT, HOME_FEATURE_ENDPOINT, HOME_VISION_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
-import { RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../common';
+import { host_url, RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../common';
 import parse from "html-react-parser";
 import LinesEllipsis from 'react-lines-ellipsis';
 import Loading from '../../../components/Loading';
@@ -206,7 +205,7 @@ const HomeFeature = ({ homeId }) => {
                     <img
                         alt="News Image"
                         style={{ height: 45, width: 60 }}
-                        src={value ? value : 'image-default.png'}
+                        src={value ? host_url + value : 'image-default.png'}
                     />
                 );
             case 'title':

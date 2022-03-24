@@ -10,6 +10,7 @@ import SunEditor from 'suneditor-react';
 import { makeStyles } from '@material-ui/styles';
 import { UPLOAD_FILE } from '../../../api/endpoint';
 import axios from 'axios';
+import { host_url } from '../../../common';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -57,8 +58,6 @@ const HomeFeatureEditor = ({
     const [title, setTitle] = useState(featureDetail.title ? featureDetail.title : "");
     const [content, setContent] = useState(featureDetail.content ? featureDetail.content : "");
 
-    console.log(featureDetail);
-
     const handleChangeImage = event => {
         const image = event.target.files[0]
         const formData = new FormData();
@@ -81,9 +80,10 @@ const HomeFeatureEditor = ({
             });
     }
 
-    const handleChangeIcon = (value) => {
-        setIcon(value);
+    const handleChangeIcon = (event) => {
+        setIcon(event.target.value);
     };
+
     const handleChangeTitle = (title) => {
         setTitle(title);
     };
@@ -119,20 +119,23 @@ const HomeFeatureEditor = ({
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <Box className={classes.text}>SVG Icon</Box>
-                        <SunEditor
-                            autoFocus={false}
-                            height={300}
-                            setContents={icon}
-                            onChange={handleChangeIcon}
-                            showToolbar={true}
-                            setOptions={{
-                                buttonList: [
-                                    [
-                                        'fullScreen'
-                                    ]
-                                ]
-                            }}
-                        />
+                        <form>
+                            <textarea
+                                style={{
+                                    width: '100%',
+                                    height: '330px',
+                                    padding: '12px 20px',
+                                    boxSizing: 'border-box',
+                                    border: '2px solid #ccc',
+                                    borderRadius: '4px',
+                                    backgroundColor: '#f8f8f8',
+                                    fontSize: '16px',
+                                    resize: 'none',
+                                }}
+                                onChange={handleChangeIcon}
+                                value={icon}
+                            />
+                        </form>
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <Box className={classes.text}>Nội dung</Box>
@@ -186,9 +189,8 @@ const HomeFeatureEditor = ({
                                 />
                             </Button>
                             <Box sx={{ margin: "auto" }}>
-                                <img src={image} style={{ display: 'block', maxWidth: '277px', height: '277px' }} />
+                                <img src={host_url + image} style={{ display: 'block', maxWidth: '277px', height: '277px' }} />
                             </Box>
-                            <p color='error'>{imageMessageError}</p>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>
                         </Box>
                     </Grid>
