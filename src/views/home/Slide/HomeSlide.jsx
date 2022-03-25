@@ -32,7 +32,12 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2)
     },
     container: {
-        maxHeight: 700,
+        display: "flex",
+        flexDirection: "column",
+        border: "1px dashed #ccc",
+        color: "#fff",
+        padding: "18px",
+        backgroundColor: "#fff"
     },
     modal: {
         display: 'flex',
@@ -50,8 +55,15 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     text: {
+        fontSize: 13,
+        fontFamily: "Manrope, sans-serif",
+        color: "black"
+    },
+    title: {
         fontSize: 16,
-        fontFamily: "Manrope, sans-serif"
+        fontFamily: "Manrope, sans-serif",
+        color: "black",
+        fontWeight: "bold"
     },
     content: {
         fontSize: 15,
@@ -248,190 +260,211 @@ const HomeSlide = ({ home }) => {
     };
 
     return (
-        <>
+        <Grid container>
             <Grid item sx={12} sm={12}>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Box className={classes.text} sx={{ fontSize: 24, color: "black" }}>Nội dung</Box>
-                    <Button
-                        variant="contained"
-                        style={{
-                            maxWidth: 160,
-                            maxHeight: 40,
-                            minWidth: 160,
-                            minHeight: 40,
-                            display: "flex",
-                            textTransform: 'none',
-                            background: 'linear-gradient(#00AFEC, #005FBE)',
-                            fontSize: 16
-                        }}
-                        onClick={() => onSubmitHome()}
-                    >
-                        Lưu lại
-                    </Button>
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-                <Box className={classes.text}>Tiêu đề</Box>
-                <TextField
-                    fullWidth
-                    placeholder="Tiêu đề"
-                    name="tiêu để"
-                    value={title}
-                    onChange={e => handleChangeTitle(e.target.value)}
-                    variant="outlined"
-                    className={classes.title}
-                />
-            </Grid>
-            <Grid item xs={12} sm={12}>
-                <Box>
-                    <Box className={classes.text}>Cấu Hình</Box>
-                    <SunEditor
-                        id='cấu hình'
-                        autoFocus={true}
-                        height='300px'
-                        width='100%'
-                        setContents={content}
-                        onChange={setContent}
-                        setOptions={{
-                            buttonList: [
-                                [
-                                    'undo',
-                                    'redo',
-                                    "bold",
-                                    "underline",
-                                    "italic",
-                                    "formatBlock",
-
-                                ]
-                            ]
-                        }}
-                        setDefaultStyle="font-size: 16px; font-family: Manrope, sans-serif; font-weight: 500;"
-                    />
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={12} sx={{ marginTop: 10 }}>
-                <Box className={classes.text} sx={{ fontSize: 24, color: "black" }}>Hình ảnh</Box>
-            </Grid>
-            {homeSlideImage.length && homeSlideImage.map((slide, index) => (
-                <Grid
-                    item
-                    xs={12}
-                    sm={4}
-                    key={index}
-                >
+                <Box className={classes.container}>
                     <Box
                         sx={{
                             display: "flex",
-                            flexDirection: "column",
-                            border: "1px dashed #ccc",
-                            color: "#fff",
-                            padding: 2,
-                            backgroundColor: "#fff"
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: 3,
                         }}
                     >
-                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
-                            <Box
-                                className={classes.content}>
-                                Hình nền {index + 1}
-                            </Box>
-                            <Button
-                                variant="contained"
-                                startIcon={<SaveIcon size={14} />}
-                                style={{
-                                    dispaly: "flex",
-                                    alignItems: "center",
-                                    maxWidth: 120,
-                                    maxHeight: 30,
-                                    minWidth: 120,
-                                    minHeight: 30,
-                                    display: "flex",
-                                    textTransform: 'none',
-                                    background: 'linear-gradient(#00AFEC, #005FBE)',
-                                    fontSize: 14
-                                }}
-                                onClick={() => onSubmitHomeSlide(slide.id, slide.homeId, slide.smallImage, slide.largeImage)}
-                            >
-                                Lưu lại
-                            </Button>
-                        </Box>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                height: "93%",
-                                backgroundImage: !slide.largeImage && 'url("/image-default.png")',
-                                backgroundRepeat: 'no-repeat, repeat',
-                                backgroundPosition: 'center'
-                            }}
-                        >
-                            <Button
-                                variant="raised"
-                                component="label"
-                                sx={{
-                                    background: 'wheat !important',
-                                    color: 'black !important'
-                                }}
-                            >
-                                Chọn hình ảnh
-                                <input
-                                    accept="image/*"
-                                    className='ip'
-                                    style={{ display: 'none' }}
-                                    id="raised-button-file-small"
-                                    onChange={(e) => handleChangeLargeImage(e, slide.id)}
-                                    multiple
-                                    type="file"
-                                />
-                            </Button>
-                            <Box sx={{ margin: "auto" }}>
-                                <img
-                                    src={slide.largeImage ? host_url + slide.largeImage : ""}
-                                    style={{ display: 'block', maxWidth: '100%', height: '250px' }}
-                                />
-                                <p style={{ color: 'red' }}>{largeImageMessageError.id === slide.id ? largeImageMessageError.message : ""}</p>
-                            </Box>
-                        </Box>
-                        <Box className={classes.text}>Hình slide {index + 1}</Box>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                height: "93%",
-                                backgroundImage: !slide.smallImage && 'url("/image-default.png")',
-                                backgroundRepeat: 'no-repeat, repeat',
-                                backgroundPosition: 'center'
-                            }}
-                        >
-                            <Button
-                                variant="raised"
-                                component="label"
-                                sx={{
-                                    background: 'wheat !important',
-                                    color: 'black !important'
-                                }}
-                            >
-                                Chọn hình ảnh
-                                <input
-                                    accept="image/*"
-                                    className='ip'
-                                    style={{ display: 'none' }}
-                                    id="raised-button-file-small"
-                                    onChange={(e) => handleChangeSmallImage(e, slide.id)}
-                                    multiple
-                                    type="file"
-                                />
-                            </Button>
-                            <Box sx={{ margin: "auto" }}>
-                                <img
-                                    src={slide.smallImage ? host_url + slide.smallImage : ""}
-                                    style={{ display: 'block', maxWidth: '150px', height: '150px' }}
-                                />
-                            </Box>
-                            <p style={{ color: 'red' }}>{smallImageMessageError.id === slide.id ? smallImageMessageError.message : ""}</p>
+                        <Box className={classes.title}>
+                            Nội dung
                         </Box>
                     </Box>
-                </Grid>
-            ))}
+                    <TextField
+                        fullWidth
+                        placeholder="Tiêu đề"
+                        label="Tiêu đề"
+                        name="tiêu đề"
+                        value={title}
+                        onChange={e => handleChangeTitle(e.target.value)}
+                        variant="outlined"
+                        className={classes.title}
+                        sx={{
+                            marginBottom: 3,
+                        }}
+                    />
+                    <Box>
+                        <Box className={classes.text}>Cấu Hình</Box>
+                        <SunEditor
+                            id='cấu hình'
+                            autoFocus={true}
+                            height='300px'
+                            width='100%'
+                            setContents={content}
+                            onChange={setContent}
+                            setOptions={{
+                                buttonList: [
+                                    [
+                                        'undo',
+                                        'redo',
+                                        "bold",
+                                        "underline",
+                                        "italic",
+                                        "formatBlock",
+
+                                    ]
+                                ]
+                            }}
+                            setDefaultStyle="font-size: 16px; font-family: Manrope, sans-serif; font-weight: 500;"
+                        />
+                    </Box>
+                    <Box sx={{ marginTop: 3}}>
+                        <Button
+                            variant="contained"
+                            startIcon={<SaveIcon size={14} />}
+                            style={{
+                                dispaly: "flex",
+                                alignItems: "center",
+                                maxWidth: 130,
+                                maxHeight: 35,
+                                minWidth: 130,
+                                minHeight: 35,
+                                display: "flex",
+                                textTransform: 'none',
+                                background: 'linear-gradient(#00AFEC, #005FBE)',
+                                fontSize: 14
+                            }}
+                            onClick={() => onSubmitHome()}
+                        >
+                            Lưu lại
+                        </Button>
+                    </Box>
+                </Box>
+            </Grid>
+            <Grid item xs={12} sm={12} sx={{ marginTop: 5 }}>
+                <Box className={classes.container}>
+                    <Box className={classes.title} sx={{ marginBottom: 3 }}>Hình ảnh</Box>
+                    <Grid container spacing={3}>
+                        {homeSlideImage.length && homeSlideImage.map((slide, index) => {
+                            return <Grid
+                                item
+                                xs={12}
+                                sm={4}
+                                key={index}
+                            >
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        border: "1px dashed #ccc",
+                                        color: "#fff",
+                                        padding: 2,
+                                        backgroundColor: "#fff"
+                                    }}
+                                >
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
+                                        <Box className={classes.text} sx={{ fontSize: 14, fontWeight: "bold" }}>
+                                            Hình nền {index + 1}
+                                        </Box>
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<SaveIcon size={14} />}
+                                            style={{
+                                                dispaly: "flex",
+                                                alignItems: "center",
+                                                maxWidth: 130,
+                                                maxHeight: 35,
+                                                minWidth: 130,
+                                                minHeight: 35,
+                                                display: "flex",
+                                                textTransform: 'none',
+                                                background: 'linear-gradient(#00AFEC, #005FBE)',
+                                                fontSize: 14
+                                            }}
+                                            onClick={() => onSubmitHomeSlide(slide.id, slide.homeId, slide.smallImage, slide.largeImage)}
+                                        >
+                                            Lưu lại
+                                        </Button>
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            height: "93%",
+                                            backgroundImage: !slide.largeImage && 'url("/image-default.png")',
+                                            backgroundRepeat: 'no-repeat, repeat',
+                                            backgroundPosition: 'center',
+                                            marginBottom: 5
+                                        }}
+                                    >
+                                        <Button
+                                            variant="raised"
+                                            component="label"
+                                            sx={{
+                                                background: 'wheat !important',
+                                                color: 'black !important'
+                                            }}
+                                        >
+                                            Chọn hình ảnh
+                                            <input
+                                                accept="image/*"
+                                                className='ip'
+                                                style={{ display: 'none' }}
+                                                id="raised-button-file-small"
+                                                onChange={(e) => handleChangeLargeImage(e, slide.id)}
+                                                multiple
+                                                type="file"
+                                            />
+                                        </Button>
+                                        <Box sx={{ margin: "auto" }}>
+                                            <img
+                                                src={slide.largeImage ? host_url + slide.largeImage : ""}
+                                                style={{ display: 'block', maxWidth: '100%', height: '250px' }}
+                                            />
+                                            <p style={{ color: 'red' }}>{largeImageMessageError.id === slide.id ? largeImageMessageError.message : ""}</p>
+                                        </Box>
+                                    </Box>
+                                    <Box className={classes.text} sx={{ marginBottom: 1 }}>
+                                        Hình slide {index + 1}
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            height: "93%",
+                                            backgroundImage: !slide.smallImage && 'url("/image-default.png")',
+                                            backgroundRepeat: 'no-repeat, repeat',
+                                            backgroundPosition: 'center'
+                                        }}
+                                    >
+                                        <Button
+                                            variant="raised"
+                                            component="label"
+                                            sx={{
+                                                background: 'wheat !important',
+                                                color: 'black !important'
+                                            }}
+                                        >
+                                            Chọn hình ảnh
+                                            <input
+                                                accept="image/*"
+                                                className='ip'
+                                                style={{ display: 'none' }}
+                                                id="raised-button-file-small"
+                                                onChange={(e) => handleChangeSmallImage(e, slide.id)}
+                                                multiple
+                                                type="file"
+                                            />
+                                        </Button>
+                                        <Box sx={{ margin: "auto" }}>
+                                            <img
+                                                src={slide.smallImage ? host_url + slide.smallImage : ""}
+                                                style={{ display: 'block', maxWidth: '150px', height: '150px' }}
+                                            />
+                                        </Box>
+                                        <p style={{ color: 'red' }}>{smallImageMessageError.id === slide.id ? smallImageMessageError.message : ""}</p>
+                                    </Box>
+                                </Box>
+                            </Grid>
+                        })}
+                    </Grid>
+                </Box>
+            </Grid>
             <Snackbar
                 anchorOrigin={{
                     vertical: 'top',
@@ -449,7 +482,7 @@ const HomeSlide = ({ home }) => {
             <Modal open={loading}>
                 <Loading />
             </Modal>
-        </>
+        </Grid>
     )
 }
 

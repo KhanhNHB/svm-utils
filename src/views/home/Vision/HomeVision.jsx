@@ -20,7 +20,6 @@ import { makeStyles } from '@mui/styles';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
-import SunEditor from 'suneditor-react';
 import { actGetHomeVision } from '../../../actions';
 import API from '../../../api/API';
 import { HOME_VISION_ENDPOINT } from '../../../api/endpoint';
@@ -29,10 +28,11 @@ import parse from "html-react-parser";
 import LinesEllipsis from 'react-lines-ellipsis';
 import Loading from '../../../components/Loading';
 import HomeVisionEditor from './HomeVisionEditor';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const columns = [
-    { id: 'id', label: 'Id', minWidth: 120, align: 'left' },
-    { id: 'title', label: 'Tiêu đề', minWidth: 400, align: 'left' }
+    { id: 'id', label: 'Id', minWidth: 350, align: 'left' },
+    { id: 'title', label: 'Tiêu đề', minWidth: 465, align: 'left' }
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -88,7 +88,7 @@ const EnhancedTableHead = (props) => {
                         </TableSortLabel>
                     </TableCell>
                 ))}
-                <TableCell align={"center"} style={{ minWidth: 150 }}>Action</TableCell>
+                <TableCell style={{ minWidth: 50 }}>Action</TableCell>
             </TableRow>
         </TableHead>
     );
@@ -107,7 +107,12 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2)
     },
     container: {
-        maxHeight: 700,
+        display: "flex",
+        flexDirection: "column",
+        border: "1px dashed #ccc",
+        color: "#fff",
+        padding: "18px",
+        backgroundColor: "#fff"
     },
     modal: {
         display: 'flex',
@@ -128,7 +133,13 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 18,
         fontWeight: "bold",
         fontFamily: "Manrope, sans-serif"
-    }
+    },
+    title: {
+        fontSize: 16,
+        fontFamily: "Manrope, sans-serif",
+        color: "black",
+        fontWeight: "bold"
+    },
 }));
 
 const HomeVision = ({ homeId }) => {
@@ -148,12 +159,6 @@ const HomeVision = ({ homeId }) => {
     const [loadingModal, setLoadingModal] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [message, setMessage] = useState('');
-    const location = useLocation();
-
-    const [titleOne, setTitleOne] = useState('');
-    const [contentOne, setContentOne] = useState('');
-    const [titleTwo, setTitleTwo] = useState('');
-    const [contentTwo, setContentTwo] = useState('');
 
     useEffect(() => {
         const fetchHomeVision = async () => {
@@ -271,74 +276,82 @@ const HomeVision = ({ homeId }) => {
     };
 
     return (
-        <>
-            <Grid item sx={12} sm={12}>
-                <Box className={classes.text} sx={{ fontSize: 24, marginTop: 5 }}>Hỗ trợ</Box>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-                <TableContainer className={classes.container}>
-                    <Table aria-label="sticky table">
-                        <EnhancedTableHead
-                            classes={classes}
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                            key={1}
-                        />
-                        {(homeVision && homeVision.length) &&
-                            <TableBody>
-                                {stableSort(homeVision, getComparator(order, orderBy)).map((item, index) => {
-                                    return (
-                                        <TableRow
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={item.id}
-                                        >
-                                            {columns.map((column, index) => {
-                                                const value = _hanleRowTableData(column.id, item[column.id], item);
-                                                return (
-                                                    <TableCell
-                                                        align={column.align}
-                                                        id={index}
-                                                        key={index}
+        <Grid container>
+            <Grid item xs={12} sm={12} sx={{ marginTop: 5 }}>
+                <Box className={classes.container}>
+                    <Box className={classes.title} sx={{ marginBottom: 3 }}>
+                        Hỗ trợ
+                    </Box>
+                    <TableContainer className={classes.container}>
+                        <Table aria-label="sticky table">
+                            <EnhancedTableHead
+                                classes={classes}
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort}
+                                key={1}
+                            />
+                            {(homeVision && homeVision.length) &&
+                                <TableBody>
+                                    {stableSort(homeVision, getComparator(order, orderBy)).map((item, index) => {
+                                        return (
+                                            <TableRow
+                                                hover
+                                                role="checkbox"
+                                                tabIndex={-1}
+                                                key={item.id}
+                                            >
+                                                {columns.map((column, index) => {
+                                                    const value = _hanleRowTableData(column.id, item[column.id], item);
+                                                    return (
+                                                        <TableCell
+                                                            align={column.align}
+                                                            id={index}
+                                                            key={index}
+                                                        >
+                                                            {value}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                                <TableCell>
+                                                    <Button
+                                                        variant="contained"
+                                                        startIcon={<EditOutlinedIcon size={14} />}
+                                                        sx={{
+                                                            dispaly: "flex",
+                                                            alignItems: "center",
+                                                            maxWidth: 130,
+                                                            maxHeight: 35,
+                                                            minWidth: 130,
+                                                            minHeight: 35,
+                                                            display: "flex",
+                                                            textTransform: 'none',
+                                                            background: 'linear-gradient(#00AFEC, #005FBE)',
+                                                            fontSize: 14
+                                                        }}
+                                                        onClick={() => handleClicItem(item)}
                                                     >
-                                                        {value}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                            <TableCell align={"right"}>
-                                                <Button
-                                                    variant="contained"
-                                                    size="medium"
-                                                    sx={{
-                                                        maxWidth: 120,
-                                                        maxHeight: 38,
-                                                        minWidth: 120,
-                                                        minHeight: 38
-                                                    }}
-                                                    onClick={() => handleClicItem(item)}
-                                                >
-                                                    Chỉnh sửa
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        }
-                    </Table>
-                </TableContainer>
-                {(homeVision && homeVision.length) && (
-                    <TablePagination
-                        rowsPerPageOptions={[0]}
-                        component="div"
-                        count={homeVision.length}
-                        rowsPerPage={10}
-                        page={0}
-                        onChangePage={() => { }}
-                    />
-                )}
+                                                        Chỉnh sửa
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            }
+                        </Table>
+                    </TableContainer>
+                    {(homeVision && homeVision.length) && (
+                        <TablePagination
+                            rowsPerPageOptions={[0]}
+                            component="div"
+                            count={homeVision.length}
+                            rowsPerPage={10}
+                            page={0}
+                            onChangePage={() => { }}
+                        />
+                    )}
+                </Box>
                 <Modal open={selectVision}>
                     <Box sx={{ marginTop: 4 }}>
                         <HomeVisionEditor
@@ -368,7 +381,7 @@ const HomeVision = ({ homeId }) => {
                     <Loading />
                 </Modal>
             </Grid>
-        </>
+        </Grid>
     )
 }
 

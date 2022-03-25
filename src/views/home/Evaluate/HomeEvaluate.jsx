@@ -30,6 +30,8 @@ import LinesEllipsis from 'react-lines-ellipsis';
 import Loading from '../../../components/Loading';
 import VideoCard from '../../../components/VideoCard';
 import HomeEvaluateEditor from './HomeEvaluateEditor';
+import SaveIcon from '@mui/icons-material/Save';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const columns = [
     { id: 'id', label: 'Id', minWidth: 50, align: 'left' },
@@ -90,7 +92,7 @@ const EnhancedTableHead = (props) => {
                         </TableSortLabel>
                     </TableCell>
                 ))}
-                <TableCell align={"center"} style={{ minWidth: 150 }}>Action</TableCell>
+                <TableCell style={{ minWidth: 150 }}>Action</TableCell>
             </TableRow>
         </TableHead>
     );
@@ -109,7 +111,12 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2)
     },
     container: {
-        maxHeight: 700,
+        display: "flex",
+        flexDirection: "column",
+        border: "1px dashed #ccc",
+        color: "#fff",
+        padding: "18px",
+        backgroundColor: "#fff"
     },
     modal: {
         display: 'flex',
@@ -127,8 +134,19 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     text: {
-        fontSize: 18,
-        fontWeight: "bold",
+        fontSize: 13,
+        fontFamily: "Manrope, sans-serif",
+        color: "black"
+    },
+    title: {
+        fontSize: 16,
+        fontFamily: "Manrope, sans-serif",
+        color: "black",
+        fontWeight: "bold"
+    },
+    content: {
+        fontSize: 15,
+        color: "black",
         fontFamily: "Manrope, sans-serif"
     }
 }));
@@ -300,121 +318,150 @@ const HomeEvaluate = ({ homeId }) => {
     }
 
     return (
-        <>
-            <Grid item sx={12} sm={12}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
-                    <Box className={classes.text} sx={{ fontSize: 24 }}>Đánh giá</Box>
-                    <Button
-                        variant="contained"
-                        style={{
-                            maxWidth: 160,
-                            maxHeight: 40,
-                            minWidth: 160,
-                            minHeight: 40,
+        <Grid container>
+            <Grid item xs={12} sm={12} sx={{ marginTop: 5 }}>
+                <Box className={classes.container}>
+                    <Box
+                        sx={{
                             display: "flex",
-                            textTransform: 'none',
-                            background: 'linear-gradient(#00AFEC, #005FBE)',
-                            fontSize: 16
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: 3
                         }}
-                        onClick={() => onSubmitEvaluate()}
                     >
-                        Lưu lại
-                    </Button>
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-                <Box sx={{ display: "flex", flexDirection: "column" }}>
-                    <Box className={classes.text}>Tiêu đề</Box>
-                    <TextField
-                        fullWidth
-                        placeholder="Tiêu đề"
-                        name="tiêu để"
-                        value={homeEvaluate.evaluateTitle}
-                        onChange={e => handleChangeTitle(e.target.value)}
-                        variant="outlined"
-                        className={classes.title}
-                    />
-                    <Box className={classes.text} sx={{ marginTop: 4 }}>Link video</Box>
-                    <Box sx={{ display: "flex" }}>
-                        <TextField
-                            fullWidth
-                            placeholder="Tiêu đề"
-                            name="tiêu để"
-                            value={homeEvaluate.videoUrl}
-                            onChange={e => handleChangeVideoUrl(e.target.value)}
-                            variant="outlined"
-                            className={classes.title}
-                        />
+                        <Box className={classes.title}>
+                            Đánh giá
+                        </Box>
                     </Box>
-                    <Box sx={{ display: "flex" }}>
-                        <VideoCard videoUrl={homeEvaluate.videoUrl} />
-                    </Box>
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={8}>
-                <TableContainer className={classes.container}>
-                    <Table aria-label="sticky table">
-                        <EnhancedTableHead
-                            classes={classes}
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                            key={1}
-                        />
-                        {(homeEvaluate.homeEvaluateSteps && homeEvaluate.homeEvaluateSteps.length) &&
-                            <TableBody>
-                                {stableSort(homeEvaluate.homeEvaluateSteps, getComparator(order, orderBy)).map((item, index) => {
-                                    return (
-                                        <TableRow
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={item.id}
-                                        >
-                                            {columns.map((column, index) => {
-                                                const value = _hanleRowTableData(column.id, item[column.id], item);
+                    <Grid container>
+                        <Grid item xs={12} sm={4.2}>
+                            <Box
+                                className={classes.container}
+                                sx={{ display: "flex", flexDirection: "column" }}
+                            >
+                                <TextField
+                                    fullWidth
+                                    placeholder="Tiêu đề"
+                                    label="tiêu đề"
+                                    name="tiêu để"
+                                    value={homeEvaluate.evaluateTitle}
+                                    onChange={e => handleChangeTitle(e.target.value)}
+                                    variant="outlined"
+                                    className={classes.title}
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                                <Box sx={{ display: "flex", marginTop: 5 }}>
+                                    <TextField
+                                        fullWidth
+                                        placeholder="Video"
+                                        label="link video"
+                                        name="video"
+                                        value={homeEvaluate.videoUrl}
+                                        onChange={e => handleChangeVideoUrl(e.target.value)}
+                                        variant="outlined"
+                                        className={classes.title}
+                                    />
+                                </Box>
+                                <Box sx={{ display: "flex" }}>
+                                    <VideoCard videoUrl={homeEvaluate.videoUrl} />
+                                </Box>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={0.1}></Grid>
+                        <Grid item xs={12} sm={7.7}>
+                            <TableContainer className={classes.container}>
+                                <Table aria-label="sticky table">
+                                    <EnhancedTableHead
+                                        classes={classes}
+                                        order={order}
+                                        orderBy={orderBy}
+                                        onRequestSort={handleRequestSort}
+                                        key={1}
+                                    />
+                                    {(homeEvaluate.homeEvaluateSteps && homeEvaluate.homeEvaluateSteps.length) &&
+                                        <TableBody>
+                                            {stableSort(homeEvaluate.homeEvaluateSteps, getComparator(order, orderBy)).map((item, index) => {
                                                 return (
-                                                    <TableCell
-                                                        align={column.align}
-                                                        id={index}
-                                                        key={index}
+                                                    <TableRow
+                                                        hover
+                                                        role="checkbox"
+                                                        tabIndex={-1}
+                                                        key={item.id}
                                                     >
-                                                        {value}
-                                                    </TableCell>
+                                                        {columns.map((column, index) => {
+                                                            const value = _hanleRowTableData(column.id, item[column.id], item);
+                                                            return (
+                                                                <TableCell
+                                                                    align={column.align}
+                                                                    id={index}
+                                                                    key={index}
+                                                                >
+                                                                    {value}
+                                                                </TableCell>
+                                                            );
+                                                        })}
+                                                        <TableCell>
+                                                            <Button
+                                                                variant="contained"
+                                                                startIcon={<EditOutlinedIcon size={14} />}
+                                                                sx={{
+                                                                    dispaly: "flex",
+                                                                    alignItems: "center",
+                                                                    maxWidth: 130,
+                                                                    maxHeight: 35,
+                                                                    minWidth: 130,
+                                                                    minHeight: 35,
+                                                                    display: "flex",
+                                                                    textTransform: 'none',
+                                                                    background: 'linear-gradient(#00AFEC, #005FBE)',
+                                                                    fontSize: 14
+                                                                }}
+                                                                onClick={() => handleClicItem(item)}
+                                                            >
+                                                                Chỉnh sửa
+                                                            </Button>
+                                                        </TableCell>
+                                                    </TableRow>
                                                 );
                                             })}
-                                            <TableCell align={"left"}>
-                                                <Button
-                                                    variant="contained"
-                                                    size="medium"
-                                                    sx={{
-                                                        maxWidth: 120,
-                                                        maxHeight: 38,
-                                                        minWidth: 120,
-                                                        minHeight: 38
-                                                    }}
-                                                    onClick={() => handleClicItem(item)}
-                                                >
-                                                    Chỉnh sửa
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        }
-                    </Table>
-                </TableContainer>
-                {homeEvaluate.homeEvaluateSteps && homeEvaluate.homeEvaluateSteps.length && (
-                    <TablePagination
-                        rowsPerPageOptions={[0]}
-                        component="div"
-                        count={homeEvaluate.homeEvaluateSteps.length}
-                        rowsPerPage={10}
-                        page={0}
-                        onChangePage={() => { }}
-                    />
-                )}
+                                        </TableBody>
+                                    }
+                                </Table>
+                            </TableContainer>
+                            {homeEvaluate.homeEvaluateSteps && homeEvaluate.homeEvaluateSteps.length && (
+                                <TablePagination
+                                    rowsPerPageOptions={[0]}
+                                    component="div"
+                                    count={homeEvaluate.homeEvaluateSteps.length}
+                                    rowsPerPage={10}
+                                    page={0}
+                                    onChangePage={() => { }}
+                                />
+                            )}
+                        </Grid>
+                    </Grid>
+                    <Box>
+                        <Button
+                            variant="contained"
+                            startIcon={<SaveIcon size={14} />}
+                            style={{
+                                dispaly: "flex",
+                                alignItems: "center",
+                                maxWidth: 130,
+                                maxHeight: 35,
+                                minWidth: 130,
+                                minHeight: 35,
+                                display: "flex",
+                                textTransform: 'none',
+                                background: 'linear-gradient(#00AFEC, #005FBE)',
+                                fontSize: 14
+                            }}
+                            onClick={() => onSubmitEvaluate()}
+                        >
+                            Lưu lại
+                        </Button>
+                    </Box>
+                </Box>
             </Grid>
             <Modal open={selectEvaluateStep}>
                 <Box sx={{ marginTop: 4 }}>
@@ -442,7 +489,7 @@ const HomeEvaluate = ({ homeId }) => {
             <Modal open={loadingModal}>
                 <Loading />
             </Modal>
-        </>
+        </Grid>
     )
 }
 

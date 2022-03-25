@@ -23,18 +23,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { actGetHomeFeature } from '../../../actions';
 import API from '../../../api/API';
-import { HOME_FEATURE_DETAIL_ENDPOINT, HOME_FEATURE_ENDPOINT, HOME_VISION_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
+import { HOME_FEATURE_DETAIL_ENDPOINT, HOME_FEATURE_ENDPOINT } from '../../../api/endpoint';
 import { host_url, RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../common';
 import parse from "html-react-parser";
 import LinesEllipsis from 'react-lines-ellipsis';
 import Loading from '../../../components/Loading';
 import HomeFeatureEditor from './HomeFeatureEditor';
-import axios from 'axios';
+import SaveIcon from '@mui/icons-material/Save';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const columns = [
-    { id: 'id', label: 'Id', minWidth: 150, align: 'left' },
+    { id: 'id', label: 'Id', minWidth: 50, align: 'left' },
     { id: 'icon', label: 'SVG Icon', minWidth: 250, align: 'left' },
-    { id: 'image', label: 'Hình ảnh', minWidth: 200, align: 'left' },
+    { id: 'image', label: 'Hình ảnh', minWidth: 150, align: 'left' },
     { id: 'title', label: 'Tiêu đề', minWidth: 300, align: 'left' }
 ];
 
@@ -91,7 +92,7 @@ const EnhancedTableHead = (props) => {
                         </TableSortLabel>
                     </TableCell>
                 ))}
-                <TableCell align={"left"}>Action</TableCell>
+                <TableCell style={{ minWidth: 50 }}>Action</TableCell>
             </TableRow>
         </TableHead>
     );
@@ -110,7 +111,12 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2)
     },
     container: {
-        maxHeight: 700,
+        display: "flex",
+        flexDirection: "column",
+        border: "1px dashed #ccc",
+        color: "#fff",
+        padding: "18px",
+        backgroundColor: "#fff"
     },
     modal: {
         display: 'flex',
@@ -128,8 +134,19 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     text: {
-        fontSize: 18,
-        fontWeight: "bold",
+        fontSize: 13,
+        fontFamily: "Manrope, sans-serif",
+        color: "black"
+    },
+    title: {
+        fontSize: 16,
+        fontFamily: "Manrope, sans-serif",
+        color: "black",
+        fontWeight: "bold"
+    },
+    content: {
+        fontSize: 15,
+        color: "black",
         fontFamily: "Manrope, sans-serif"
     }
 }));
@@ -199,7 +216,7 @@ const HomeFeature = ({ homeId }) => {
     const _hanleRowTableData = (column, value) => {
         switch (column) {
             case 'icon':
-                return value;
+                return value.length > 50 ? value.substring(0, 50) + "..." : value;
             case 'image':
                 return (
                     <img
@@ -299,105 +316,127 @@ const HomeFeature = ({ homeId }) => {
     };
 
     return (
-        <>
-            <Grid item sx={12} sm={12}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
-                    <Box className={classes.text} sx={{ fontSize: 24 }}>Tính năng</Box>
-                    <Button
-                        variant="contained"
-                        style={{
-                            maxWidth: 160,
-                            maxHeight: 40,
-                            minWidth: 160,
-                            minHeight: 40,
+        <Grid container>
+            <Grid item xs={12} sm={12} sx={{ marginTop: 5 }}>
+                <Box className={classes.container}>
+                    <Box
+                        sx={{
                             display: "flex",
-                            textTransform: 'none',
-                            background: 'linear-gradient(#00AFEC, #005FBE)',
-                            fontSize: 16
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: 3
                         }}
-                        onClick={() => onSubmitFeature()}
                     >
-                        Lưu lại
-                    </Button>
-                </Box>
-
-            </Grid>
-            <Grid item xs={12} sm={12}>
-                <Box className={classes.text}>Tiêu đề</Box>
-                <TextField
-                    fullWidth
-                    placeholder="Tiêu đề"
-                    name="tiêu để"
-                    value={homeFeature.featureTitle}
-                    onChange={e => handleChangeTitle(e.target.value)}
-                    variant="outlined"
-                    className={classes.title}
-                />
-            </Grid>
-            <Grid item xs={12} sm={12}>
-                <TableContainer className={classes.container}>
-                    <Table aria-label="sticky table">
-                        <EnhancedTableHead
-                            classes={classes}
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                            key={1}
-                        />
-                        {(homeFeature.homeFeatureDetail && homeFeature.homeFeatureDetail.length) &&
-                            <TableBody>
-                                {stableSort(homeFeature.homeFeatureDetail, getComparator(order, orderBy)).map((item, index) => {
-                                    return (
-                                        <TableRow
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={item.id}
-                                        >
-                                            {columns.map((column, index) => {
-                                                const value = _hanleRowTableData(column.id, item[column.id]);
-                                                return (
-                                                    <TableCell
-                                                        align={column.align}
-                                                        id={index}
-                                                        key={index}
-                                                    >
-                                                        {value}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                            <TableCell align={"left"}>
-                                                <Button
-                                                    variant="contained"
-                                                    size="medium"
-                                                    sx={{
-                                                        maxWidth: 120,
-                                                        maxHeight: 38,
-                                                        minWidth: 120,
-                                                        minHeight: 38
-                                                    }}
-                                                    onClick={() => handleClicItem(item)}
-                                                >
-                                                    Chỉnh sửa
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        }
-                    </Table>
-                </TableContainer>
-                {homeFeature.homeFeatureDetail && homeFeature.homeFeatureDetail.length && (
-                    <TablePagination
-                        rowsPerPageOptions={[0]}
-                        component="div"
-                        count={homeFeature.homeFeatureDetail.length}
-                        rowsPerPage={10}
-                        page={0}
-                        onChangePage={() => { }}
+                        <Box className={classes.title}>
+                            Tính năng
+                        </Box>
+                    </Box>
+                    <TextField
+                        fullWidth
+                        placeholder="Tiêu đề"
+                        label="Tiêu đề"
+                        name="tiêu đề"
+                        value={homeFeature.featureTitle}
+                        onChange={e => handleChangeTitle(e.target.value)}
+                        variant="outlined"
+                        className={classes.title}
+                        sx={{
+                            marginBottom: 3,
+                        }}
+                        InputLabelProps={{ shrink: true }}
                     />
-                )}
+                    <TableContainer className={classes.container}>
+                        <Table aria-label="sticky table">
+                            <EnhancedTableHead
+                                classes={classes}
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort}
+                                key={1}
+                            />
+                            {(homeFeature.homeFeatureDetail && homeFeature.homeFeatureDetail.length) &&
+                                <TableBody>
+                                    {stableSort(homeFeature.homeFeatureDetail, getComparator(order, orderBy)).map((item, index) => {
+                                        return (
+                                            <TableRow
+                                                hover
+                                                role="checkbox"
+                                                tabIndex={-1}
+                                                key={item.id}
+                                            >
+                                                {columns.map((column, index) => {
+                                                    const value = _hanleRowTableData(column.id, item[column.id]);
+                                                    return (
+                                                        <TableCell
+                                                            align={column.align}
+                                                            id={index}
+                                                            key={index}
+                                                        >
+                                                            {value}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                                <TableCell align={"left"}>
+                                                    <Button
+                                                        variant="contained"
+                                                        startIcon={<EditOutlinedIcon size={14} />}
+                                                        size="medium"
+                                                        sx={{
+                                                            dispaly: "flex",
+                                                            alignItems: "center",
+                                                            maxWidth: 130,
+                                                            maxHeight: 35,
+                                                            minWidth: 130,
+                                                            minHeight: 35,
+                                                            display: "flex",
+                                                            textTransform: 'none',
+                                                            background: 'linear-gradient(#00AFEC, #005FBE)',
+                                                            fontSize: 14
+                                                        }}
+                                                        onClick={() => handleClicItem(item)}
+                                                    >
+                                                        Chỉnh sửa
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            }
+                        </Table>
+                    </TableContainer>
+                    {homeFeature.homeFeatureDetail && homeFeature.homeFeatureDetail.length && (
+                        <TablePagination
+                            rowsPerPageOptions={[0]}
+                            component="div"
+                            count={homeFeature.homeFeatureDetail.length}
+                            rowsPerPage={10}
+                            page={0}
+                            onChangePage={() => { }}
+                        />
+                    )}
+                    <Box>
+                        <Button
+                            variant="contained"
+                            startIcon={<SaveIcon size={14} />}
+                            style={{
+                                dispaly: "flex",
+                                alignItems: "center",
+                                maxWidth: 130,
+                                maxHeight: 35,
+                                minWidth: 130,
+                                minHeight: 35,
+                                display: "flex",
+                                textTransform: 'none',
+                                background: 'linear-gradient(#00AFEC, #005FBE)',
+                                fontSize: 14
+                            }}
+                            onClick={() => onSubmitFeature()}
+                        >
+                            Lưu lại
+                        </Button>
+                    </Box>
+                </Box>
             </Grid>
             <Modal open={selectFeatureDetail}>
                 <Box sx={{ marginTop: 4 }}>
@@ -425,7 +464,7 @@ const HomeFeature = ({ homeId }) => {
             <Modal open={loading}>
                 <Loading />
             </Modal>
-        </>
+        </Grid>
     )
 }
 

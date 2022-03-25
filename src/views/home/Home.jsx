@@ -103,14 +103,14 @@ export default function Home() {
             </Box>
             {!loading
                 ? (
-                    <Grid container spacing={3}>
+                    <Box>
                         {home && <HomeSlide home={home} />}
                         {home && <HomeVision homeId={home.id} />}
                         {home && <HomeFeature homeId={home.id} />}
                         {home && <HomeEvaluate homeId={home.id} />}
                         {home && <HomeSocialMedia homeId={home.id} />}
                         {home && <HomeOffer homeId={home.id} />}
-                    </Grid>
+                    </Box>
                 )
                 : (
                     <Loading />

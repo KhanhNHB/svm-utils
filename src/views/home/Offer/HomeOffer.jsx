@@ -16,6 +16,8 @@ import API from '../../../api/API';
 import { HOME_OFFER_ENDPOINT } from '../../../api/endpoint';
 import { RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../common';
 import Loading from '../../../components/Loading';
+import SaveIcon from '@mui/icons-material/Save';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -23,7 +25,12 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2)
     },
     container: {
-        maxHeight: 700,
+        display: "flex",
+        flexDirection: "column",
+        border: "1px dashed #ccc",
+        color: "#fff",
+        padding: "18px",
+        backgroundColor: "#fff"
     },
     modal: {
         display: 'flex',
@@ -41,8 +48,19 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     text: {
-        fontSize: 18,
-        fontWeight: "bold",
+        fontSize: 13,
+        fontFamily: "Manrope, sans-serif",
+        color: "black"
+    },
+    title: {
+        fontSize: 16,
+        fontFamily: "Manrope, sans-serif",
+        color: "black",
+        fontWeight: "bold"
+    },
+    content: {
+        fontSize: 15,
+        color: "black",
         fontFamily: "Manrope, sans-serif"
     }
 }));
@@ -135,43 +153,58 @@ const HomeOffer = ({ homeId }) => {
     }
 
     return (
-        <>
-            <Grid item sx={12} sm={12}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
-                    <Box className={classes.text} sx={{ fontSize: 24 }}>Trải nghiệm</Box>
-                    <Button
-                        variant="contained"
-                        style={{
-                            maxWidth: 160,
-                            maxHeight: 40,
-                            minWidth: 160,
-                            minHeight: 40,
+        <Grid container>
+            <Grid item xs={12} sm={12} sx={{ marginTop: 5 }}>
+                <Box className={classes.container}>
+                    <Box
+                        sx={{
                             display: "flex",
-                            textTransform: 'none',
-                            background: 'linear-gradient(#00AFEC, #005FBE)',
-                            fontSize: 16
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: 3
                         }}
-                        onClick={() => onSubmit()}
                     >
-                        Lưu lại
-                    </Button>
+                        <Box className={classes.title}>
+                            Trải nghiệm
+                        </Box>
+                    </Box>
+                    {
+                        !homeOffer
+                            ? <Loading />
+                            : <TextField
+                                fullWidth
+                                placeholder="Tiêu đề"
+                                label="tiêu đề"
+                                name="tiêu để"
+                                value={homeOffer.title}
+                                onChange={e => handleChangeTitle(e.target.value)}
+                                variant="outlined"
+                                className={classes.title}
+                                InputLabelProps={{ shrink: true }} F
+                            />
+                    }
+                    <Box sx={{ marginTop: 3 }}>
+                        <Button
+                            variant="contained"
+                            startIcon={<SaveIcon size={14} />}
+                            style={{
+                                dispaly: "flex",
+                                alignItems: "center",
+                                maxWidth: 130,
+                                maxHeight: 35,
+                                minWidth: 130,
+                                minHeight: 35,
+                                display: "flex",
+                                textTransform: 'none',
+                                background: 'linear-gradient(#00AFEC, #005FBE)',
+                                fontSize: 14
+                            }}
+                            onClick={() => onSubmit()}
+                        >
+                            Lưu lại
+                        </Button>
+                    </Box>
                 </Box>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-                <Box className={classes.text}>Tiêu đề</Box>
-                {
-                    !homeOffer
-                        ? <Loading />
-                        : <TextField
-                            fullWidth
-                            placeholder="Tiêu đề"
-                            name="tiêu để"
-                            value={homeOffer.title}
-                            onChange={e => handleChangeTitle(e.target.value)}
-                            variant="outlined"
-                            className={classes.title}
-                        />
-                }
             </Grid>
             <Snackbar
                 anchorOrigin={{
@@ -187,7 +220,7 @@ const HomeOffer = ({ homeId }) => {
                     {message}
                 </Alert>
             </Snackbar>
-        </>
+        </Grid>
     )
 }
 

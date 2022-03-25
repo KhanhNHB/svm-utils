@@ -21,16 +21,16 @@ import { makeStyles } from '@mui/styles';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
-import SunEditor from 'suneditor-react';
-import { actGetHomeFeature, actGetHomeFeatureDetail, actGetHomeSocialMedia, actGetHomeVision } from '../../../actions';
+import { actGetHomeSocialMedia } from '../../../actions';
 import API from '../../../api/API';
-import { HOME_FEATURE_DETAIL_ENDPOINT, HOME_FEATURE_ENDPOINT, HOME_SOCIAL_MEDIA_DETAIL_ENDPOINT, HOME_SOCIAL_MEDIA_ENDPOINT, HOME_VISION_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
+import { HOME_SOCIAL_MEDIA_DETAIL_ENDPOINT, HOME_SOCIAL_MEDIA_ENDPOINT, HOME_VISION_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
 import { RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../common';
 import parse from "html-react-parser";
 import LinesEllipsis from 'react-lines-ellipsis';
 import Loading from '../../../components/Loading';
 import HomeSocialMediaEditor from './HomeSocialMediaEditor';
-import axios from 'axios';
+import SaveIcon from '@mui/icons-material/Save';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const columns = [
     { id: 'id', label: 'Id', minWidth: 50, align: 'left' },
@@ -110,7 +110,12 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2)
     },
     container: {
-        maxHeight: 700,
+        display: "flex",
+        flexDirection: "column",
+        border: "1px dashed #ccc",
+        color: "#fff",
+        padding: "18px",
+        backgroundColor: "#fff"
     },
     modal: {
         display: 'flex',
@@ -128,8 +133,19 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     text: {
-        fontSize: 18,
-        fontWeight: "bold",
+        fontSize: 13,
+        fontFamily: "Manrope, sans-serif",
+        color: "black"
+    },
+    title: {
+        fontSize: 16,
+        fontFamily: "Manrope, sans-serif",
+        color: "black",
+        fontWeight: "bold"
+    },
+    content: {
+        fontSize: 15,
+        color: "black",
         fontFamily: "Manrope, sans-serif"
     }
 }));
@@ -308,137 +324,162 @@ const HomeSocialMedia = ({ homeId }) => {
 
 
     return (
-        <>
-            <Grid item sx={12} sm={12}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
-                    <Box className={classes.text} sx={{ fontSize: 24 }}>Truyền thông</Box>
+        <Grid container>
+            <Grid item xs={12} sm={12} sx={{ marginTop: 5 }}>
+                <Box className={classes.container}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: 3
+                        }}
+                    >
+                        <Box className={classes.title}>
+                            Truyền thông
+                        </Box>
+                    </Box>
+                    <TextField
+                        fullWidth
+                        placeholder="Tiêu đề"
+                        label="tiêu đề"
+                        name="tiêu để"
+                        value={homeSocialMedia.title}
+                        onChange={e => handleChangeTitle(e.target.value)}
+                        variant="outlined"
+                        className={classes.title}
+                        InputLabelProps={{ shrink: true }}
+                    />
+                    <Grid container sx={{ marginTop: 3 }}>
+                        <Grid item xs={12} sm={4.2}>
+                            <Box
+                                className={classes.container}
+                                sx={{ display: "flex", flexDirection: "column" }}
+                            >
+                                <TextField
+                                    fullWidth
+                                    placeholder="Tiêu đề gần đây"
+                                    label="tiêu đề gần đây"
+                                    name="tiêu đề gần đây"
+                                    value={homeSocialMedia.titleRecent}
+                                    onChange={e => handleChangeTitleRecent(e.target.value)}
+                                    variant="outlined"
+                                    className={classes.title}
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                                <Box className={classes.text} sx={{ marginTop: 2.5 }}>Nội dung gần đây</Box>
+                                <form>
+                                    <textarea
+                                        style={{
+                                            width: '100%',
+                                            height: '220px',
+                                            padding: '12px 20px',
+                                            boxSizing: 'border-box',
+                                            border: '1px solid lightgrey',
+                                            borderRadius: '4px',
+                                            backgroundColor: 'white',
+                                            fontSize: '16px',
+                                            resize: 'none',
+                                        }}
+                                        onChange={e => handleChangeContentRecent(e.target.value)}
+                                        value={homeSocialMedia.contentRecent}
+                                    />
+                                </form>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={0.1}></Grid>
+                        <Grid item xs={12} sm={7.7}>
+                            <TableContainer className={classes.container} sx={{ height: 360 }}>
+                                <Table aria-label="sticky table">
+                                    <EnhancedTableHead
+                                        classes={classes}
+                                        order={order}
+                                        orderBy={orderBy}
+                                        onRequestSort={handleRequestSort}
+                                        key={1}
+                                    />
+                                    {(homeSocialMedia.homeSocialMediaDetails && homeSocialMedia.homeSocialMediaDetails.length) &&
+                                        <TableBody>
+                                            {stableSort(homeSocialMedia.homeSocialMediaDetails, getComparator(order, orderBy)).map((item, index) => {
+                                                return (
+                                                    <TableRow
+                                                        hover
+                                                        role="checkbox"
+                                                        tabIndex={-1}
+                                                        key={item.id}
+                                                    >
+                                                        {columns.map((column, index) => {
+                                                            const value = _hanleRowTableData(column.id, item[column.id], item);
+                                                            return (
+                                                                <TableCell
+                                                                    align={column.align}
+                                                                    id={index}
+                                                                    key={index}
+                                                                >
+                                                                    {value}
+                                                                </TableCell>
+                                                            );
+                                                        })}
+                                                        <TableCell align={"left"}>
+                                                            <Button
+                                                                variant="contained"
+                                                                startIcon={<EditOutlinedIcon size={14} />}
+                                                                sx={{
+                                                                    dispaly: "flex",
+                                                                    alignItems: "center",
+                                                                    maxWidth: 130,
+                                                                    maxHeight: 35,
+                                                                    minWidth: 130,
+                                                                    minHeight: 35,
+                                                                    display: "flex",
+                                                                    textTransform: 'none',
+                                                                    background: 'linear-gradient(#00AFEC, #005FBE)',
+                                                                    fontSize: 14
+                                                                }}
+                                                                onClick={() => handleClicItem(item)}
+                                                            >
+                                                                Chỉnh sửa
+                                                            </Button>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                );
+                                            })}
+                                        </TableBody>
+                                    }
+                                </Table>
+                            </TableContainer>
+                            {homeSocialMedia.homeSocialMediaDetails && homeSocialMedia.homeSocialMediaDetails.length && (
+                                <TablePagination
+                                    rowsPerPageOptions={[0]}
+                                    component="div"
+                                    count={homeSocialMedia.homeSocialMediaDetails.length}
+                                    rowsPerPage={10}
+                                    page={0}
+                                    onChangePage={() => { }}
+                                />
+                            )}
+                        </Grid>
+                    </Grid>
                     <Button
                         variant="contained"
+                        startIcon={<SaveIcon size={14} />}
                         style={{
-                            maxWidth: 160,
-                            maxHeight: 40,
-                            minWidth: 160,
-                            minHeight: 40,
+                            dispaly: "flex",
+                            alignItems: "center",
+                            maxWidth: 130,
+                            maxHeight: 35,
+                            minWidth: 130,
+                            minHeight: 35,
                             display: "flex",
                             textTransform: 'none',
                             background: 'linear-gradient(#00AFEC, #005FBE)',
-                            fontSize: 16
+                            fontSize: 14
                         }}
                         onClick={() => onSubmitSocialMedia()}
                     >
                         Lưu lại
                     </Button>
                 </Box>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-                <Box className={classes.text}>Tiêu đề</Box>
-                <TextField
-                    fullWidth
-                    placeholder="Tiêu đề"
-                    name="tiêu để"
-                    value={homeSocialMedia.title}
-                    onChange={e => handleChangeTitle(e.target.value)}
-                    variant="outlined"
-                    className={classes.title}
-                />
-            </Grid>
-
-            <Grid item xs={12} sm={4}>
-                <Box sx={{ display: "flex", flexDirection: "column" }}>
-                    <Box className={classes.text}>Tiêu đề gần đây</Box>
-                    <TextField
-                        fullWidth
-                        placeholder="Tiêu đề gần đây"
-                        name="tiêu để"
-                        value={homeSocialMedia.titleRecent}
-                        onChange={e => handleChangeTitleRecent(e.target.value)}
-                        variant="outlined"
-                        className={classes.title}
-                    />
-                    <Box className={classes.text} sx={{ marginTop: 5 }}>Nội dung gần đây</Box>
-                    <form>
-                        <textarea
-                            style={{
-                                width: '100%',
-                                height: '220px',
-                                padding: '12px 20px',
-                                boxSizing: 'border-box',
-                                border: '2px solid #ccc',
-                                borderRadius: '4px',
-                                backgroundColor: '#f8f8f8',
-                                fontSize: '16px',
-                                resize: 'none',
-                            }}
-                            onChange={e => handleChangeContentRecent(e.target.value)}
-                            value={homeSocialMedia.contentRecent}
-                        />
-                    </form>
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={8}>
-                <TableContainer className={classes.container} sx={{ height: 360 }}>
-                    <Table aria-label="sticky table">
-                        <EnhancedTableHead
-                            classes={classes}
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                            key={1}
-                        />
-                        {(homeSocialMedia.homeSocialMediaDetails && homeSocialMedia.homeSocialMediaDetails.length) &&
-                            <TableBody>
-                                {stableSort(homeSocialMedia.homeSocialMediaDetails, getComparator(order, orderBy)).map((item, index) => {
-                                    return (
-                                        <TableRow
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={item.id}
-                                        >
-                                            {columns.map((column, index) => {
-                                                const value = _hanleRowTableData(column.id, item[column.id], item);
-                                                return (
-                                                    <TableCell
-                                                        align={column.align}
-                                                        id={index}
-                                                        key={index}
-                                                    >
-                                                        {value}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                            <TableCell align={"left"}>
-                                                <Button
-                                                    variant="contained"
-                                                    size="medium"
-                                                    sx={{
-                                                        maxWidth: 120,
-                                                        maxHeight: 38,
-                                                        minWidth: 120,
-                                                        minHeight: 38
-                                                    }}
-                                                    onClick={() => handleClicItem(item)}
-                                                >
-                                                    Chỉnh sửa
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        }
-                    </Table>
-                </TableContainer>
-                {homeSocialMedia.homeSocialMediaDetails && homeSocialMedia.homeSocialMediaDetails.length && (
-                    <TablePagination
-                        rowsPerPageOptions={[0]}
-                        component="div"
-                        count={homeSocialMedia.homeSocialMediaDetails.length}
-                        rowsPerPage={10}
-                        page={0}
-                        onChangePage={() => { }}
-                    />
-                )}
             </Grid>
             <Modal open={selectSocialMediaDetail}>
                 <Box sx={{ marginTop: 4 }}>
@@ -466,7 +507,7 @@ const HomeSocialMedia = ({ homeId }) => {
             <Modal open={loadingModal}>
                 <Loading />
             </Modal>
-        </>
+        </Grid >
     )
 }
 
