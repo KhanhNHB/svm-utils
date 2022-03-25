@@ -74,6 +74,7 @@ export default function ProductTable() {
     dispatch(Actions.setDeleteType('product'))
     dispatch(Actions.setProductId(id))
     handleClose('delete', id);
+
   }
   
   const handleEdit = (event, id) => {
@@ -81,25 +82,30 @@ export default function ProductTable() {
     dispatch(Actions.loadProduct(id))
     dispatch(Actions.setProductId(id))
     if(curentProd === product){
-      handleClose('detail', id);
+        setTimeout(() => {
+          handleClose('detail', id);
+        }, 300);
     } else {
-      setTimeout(() => {
+        setTimeout(() => {
         handleClose('detail', id);
-      }, 100);
+        }, 500);
     }
     
   }
   const handleFeature = (event, id) => {
     dispatch(Actions.loadProductFeatures(id))
     dispatch(Actions.setProductId(id))
+    setTimeout(() => {
+         handleClose('feature', id);
+    }, 500);
 
-    handleClose('feature', id);
-  
   }
   const handleImage = (event, id) => {
     dispatch(Actions.loadProductImages(id))
     dispatch(Actions.setProductId(id))
-    handleClose('image', id);
+    setTimeout(() => {
+         handleClose('image', id);
+    }, 500);
   }
   
   const handleClose = (typeModal, id) => {
@@ -122,7 +128,7 @@ export default function ProductTable() {
   };
 
   return (
-    <Paper sx={{ width: '80%', height:'100%', overflow: 'hidden' }}>
+    <Paper sx={{ width: '100%', height:'100%', overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 800 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>

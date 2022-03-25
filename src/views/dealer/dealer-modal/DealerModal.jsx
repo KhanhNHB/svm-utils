@@ -53,7 +53,6 @@ const DealerModal = ({ openDealer, handleCloseDealer }) => {
                 setDistrict(d)
             }
 
-
             setLat(dealer.lat)
             setLng(dealer.lng)
         }
@@ -252,10 +251,10 @@ const DealerModal = ({ openDealer, handleCloseDealer }) => {
                                             onChange={e => handleValue(e,'rank')}
                                           >
 
-                                            <MenuItem value={1}>1</MenuItem>
-                                            <MenuItem value={2}>2</MenuItem>
-                                            <MenuItem value={3}>3</MenuItem>
-                                            <MenuItem value={4}>4</MenuItem>
+                                            <MenuItem value={'Hạng 1'}>Hạng 1</MenuItem>
+                                            <MenuItem value={'Hạng 2'}>Hạng 2</MenuItem>
+                                            <MenuItem value={'Hạng 3'}>Hạng 3</MenuItem>
+                                            <MenuItem value={'Hạng 4'}>Hạng 4</MenuItem>
 
                                           </Select>
                                     </FormControl>
