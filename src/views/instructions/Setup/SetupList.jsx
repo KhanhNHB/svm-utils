@@ -19,12 +19,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API from '../../../api/API';
 import { host_url } from '../../../common/index';
-import { actGetAllSetupInstructionsByCategoryId } from '../../../actions';
+import { actGetAllFeatureInstructionsByCategoryId } from '../../../actions';
 import { INSTRUCTIONS_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
 import Loading from '../../../components/Loading';
 import { handleInstructionsCategoryId } from '../../../utils/handleInstructionsCategoryId';
-import SetupModal from './Modal/SetupModal';
 import SetupEditor from './SetupEditor';
+import SetupModal from './Modal/SetupModal';
+import AddIcon from '@mui/icons-material/Add';
 
 const columns = [
   { id: 'no', label: 'No.', minWidth: 50 },
@@ -94,7 +95,7 @@ const SetupList = () => {
 
       if (response.ok) {
         const fetchData = await response.json();
-        dispatch(actGetAllSetupInstructionsByCategoryId(fetchData));
+        dispatch(actGetAllFeatureInstructionsByCategoryId(fetchData));
       }
 
       setLoading(false);
@@ -110,6 +111,7 @@ const SetupList = () => {
         id: item.id,
         title: item.title,
         content: item.content,
+        description: item.description,
         image: item.image,
         action: item.id,
         is_active: item.is_active,
@@ -137,6 +139,12 @@ const SetupList = () => {
   const handleChangeContent = event => {
     setInstructions((instructions) => {
       return { ...instructions, content: event.target.value };
+    });
+  }
+
+  const handleChangeDescription = description => {
+    setInstructions((instructions) => {
+      return { ...instructions, description: description };
     });
   }
 
@@ -173,6 +181,7 @@ const SetupList = () => {
       id: instructions.id,
       title: instructions.title,
       content: instructions.content,
+      description: instructions.description,
       image: instructions.image,
       instructions_category_id: handleInstructionsCategoryId(location.pathname),
       is_active: instructions.is_active
@@ -186,7 +195,7 @@ const SetupList = () => {
       const response = await API.get(`${INSTRUCTIONS_ENDPOINT}/all/${pathVariable}`);
       if (response.ok) {
         const fetchData = await response.json();
-        dispatch(actGetAllSetupInstructionsByCategoryId(fetchData));
+        dispatch(actGetAllFeatureInstructionsByCategoryId(fetchData));
       }
 
       setLoading(false);
@@ -223,7 +232,7 @@ const SetupList = () => {
       const response = await API.get(`${INSTRUCTIONS_ENDPOINT}/all/${pathVariable}`);
       if (response.ok) {
         const fetchData = await response.json();
-        dispatch(actGetAllSetupInstructionsByCategoryId(fetchData));
+        dispatch(actGetAllFeatureInstructionsByCategoryId(fetchData));
       }
 
       setLoading(false);
@@ -235,11 +244,12 @@ const SetupList = () => {
     setLoadingModal(false);
   }
 
-  const handleCreate = async (title, content, image) => {
+  const handleCreate = async (title, content, description, image) => {
 
     const data = {
       title: title,
       content: content,
+      description: description,
       image: image,
       instructions_category_id: handleInstructionsCategoryId(location.pathname)
     };
@@ -253,7 +263,7 @@ const SetupList = () => {
       const response = await API.get(`${INSTRUCTIONS_ENDPOINT}/all/${pathVariable}`);
       if (response.ok) {
         const fetchData = await response.json();
-        dispatch(actGetAllSetupInstructionsByCategoryId(fetchData));
+        dispatch(actGetAllFeatureInstructionsByCategoryId(fetchData));
       }
 
       setLoading(false);
@@ -288,6 +298,7 @@ const SetupList = () => {
         color="primary"
         variant="contained"
         onClick={handleAddItem}
+        startIcon={<AddIcon size={14} />}
         style={{ color: 'white' }}
       >
         Tạo hướng dẫn
@@ -371,6 +382,7 @@ const SetupList = () => {
             imageMessageError={imageMessageError}
             handleChangeTitle={handleChangeTitle}
             handleChangeContent={handleChangeContent}
+            handleChangeDescription={handleChangeDescription}
             handleChangeImage={handleChangeImage}
             onSubmit={handleSubmitEdit}
             onClose={onClose}

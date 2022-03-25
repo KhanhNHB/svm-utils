@@ -8,15 +8,13 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
-import { NEWS_ENDPOINT, UPLOAD_FILE } from '../../../../api/endpoint';
-import { host_url, RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../../common';
-import { handleNewCategoryId } from '../../../../utils/handleNewCategoryId';
-import { Navigate, useLocation, useNavigate } from 'react-router';
-import { actGetAllDiscountNewsByCategoryId } from '../../../../actions';
-import API from '../../../../api/API';
-import Cookies from 'js-cookie';
-import Loading from '../../../../components/Loading';
+import { UPLOAD_FILE } from '../../../../api/endpoint';
+import { host_url, } from '../../../../common';
+import { useLocation, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
+import SunEditor from 'suneditor-react';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,16 +34,20 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         justifyContent: 'space-between',
     },
-    title: {
-        color: "red",
-        display: "flex",
-        fontSize: 24,
+    text: {
+        fontSize: 13,
         fontFamily: "Manrope, sans-serif",
+        color: "black"
+    },
+    title: {
+        fontSize: 16,
+        fontFamily: "Manrope, sans-serif",
+        color: "black",
         fontWeight: "bold"
     },
-    text: {
-        fontSize: 18,
-        fontWeight: "bold",
+    content: {
+        fontSize: 15,
+        color: "black",
         fontFamily: "Manrope, sans-serif"
     }
 }));
@@ -57,6 +59,7 @@ const ProductNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) =
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [description, setDescription] = useState("");
     const [image, setImage] = useState("");
     const [imageMessageError, setImageMessageError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -69,6 +72,10 @@ const ProductNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) =
     const handleChangeContent = event => {
         setContent(event.target.value);
     }
+
+    const handleChangeDescription = (description) => {
+        setDescription(description);
+    };
 
     const handleChangeImage = event => {
         const image = event.target.files[0]
@@ -83,31 +90,28 @@ const ProductNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) =
         })
             .then(res => {
                 setImage(res.data.url);
-                setImageMessageError('')
+                setImageMessageError('');
             })
             .catch(err => {
                 setImageMessageError('Tải hình ảnh thất bại, mời thử lại!')
                 setImageMessageError('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
             });
-    }
+    };
 
     const handleOnClose = () => {
         setTitle("");
         setContent("");
+        setDescription("");
         setImage("");
         onClose();
     };
 
     const handleCreate = async () => {
-        onSubmit(title, content, image);
-
-        setTitle("");
-        setContent("");
-        setImage("");
+        onSubmit(title, content, description, image);
     };
 
     return (
-        <Container maxWidth="lg" sx={{ marginTop: 4 }}>
+        <Container maxWidth="lg" sx={{ marginTop: 4, height: 600, overflowY: "auto" }}>
             <Box
                 sx={{
                     borderRadius: 2,
@@ -120,19 +124,20 @@ const ProductNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) =
             >
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={12}>
-                        <Box className={classes.text}>Tiêu đề</Box>
                         <TextField
                             fullWidth
                             placeholder="Tiêu đề"
-                            name="name"
+                            label="tiêu đề"
+                            name="tiêu đề"
                             value={title}
                             onChange={e => handleChangeTitle(e.target.value)}
                             variant="outlined"
                             className={classes.title}
+                            InputLabelProps={{ shrink: true }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <Box className={classes.text}>Nội dung</Box>
+                        <Box className={classes.title}>Nội dung</Box>
                         <form>
                             <textarea
                                 style={{
@@ -142,7 +147,7 @@ const ProductNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) =
                                     boxSizing: 'border-box',
                                     border: '2px solid #ccc',
                                     borderRadius: '4px',
-                                    backgroundColor: '#f8f8f8',
+                                    backgroundColor: 'white',
                                     fontSize: '16px',
                                     resize: 'none',
                                 }}
@@ -187,9 +192,38 @@ const ProductNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) =
                             <Box sx={{ margin: "auto" }}>
                                 <img src={image ? (host_url + image) : ""} style={{ display: 'block', maxWidth: '277px', height: '277px' }} />
                             </Box>
-                            <p color='error'>{imageMessageError}</p>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>
                         </Box>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                        <Box className={classes.title}>Chi tiết</Box>
+                        <SunEditor
+                            autoFocus={false}
+                            height={800}
+                            setContents={description}
+                            onChange={handleChangeDescription}
+                            showToolbar={true}
+                            setOptions={{
+                                buttonList: [
+                                    [
+                                        'undo',
+                                        'redo',
+                                        'link',
+                                        'fullScreen',
+                                        "bold",
+                                        "underline",
+                                        "italic",
+                                        "strike",
+                                        "list",
+                                        "align",
+                                        "fontSize",
+                                        "formatBlock",
+                                        "table",
+                                        "image"
+                                    ]
+                                ]
+                            }}
+                        />
                     </Grid>
                     <Grid item xs={12} sm={12}>
                         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -199,7 +233,21 @@ const ProductNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) =
                                     variant="contained"
                                     onClick={() => handleCreate()}
                                     disabled={(!title && !content) ? true : false}
-                                    style={{ color: 'white', maxWidth: 120, minWidth: 120 }}>
+                                    startIcon={<AddIcon size={14} />}
+                                    style={{ color: 'white' }}
+                                    sx={{
+                                        dispaly: "flex",
+                                        alignItems: "center",
+                                        maxWidth: 130,
+                                        maxHeight: 35,
+                                        minWidth: 130,
+                                        minHeight: 35,
+                                        display: "flex",
+                                        textTransform: 'none',
+                                        background: 'linear-gradient(#00AFEC, #005FBE)',
+                                        fontSize: 14
+                                    }}
+                                >
                                     Tạo mới
                                 </Button>
                             </Box>
@@ -208,7 +256,13 @@ const ProductNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) =
                                     color="primary"
                                     variant="outlined"
                                     onClick={() => handleOnClose()}
-                                    style={{ maxWidth: 120, minWidth: 120 }}
+                                    startIcon={<CloseIcon size={14} />}
+                                    style={{
+                                        maxWidth: 130,
+                                        maxHeight: 35,
+                                        minWidth: 130,
+                                        minHeight: 35
+                                    }}
                                 >
                                     Đóng
                                 </Button>
@@ -221,4 +275,4 @@ const ProductNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) =
     )
 }
 
-export default ProductNewModal;
+export default ProductNewModal

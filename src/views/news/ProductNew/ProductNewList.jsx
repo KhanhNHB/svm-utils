@@ -19,12 +19,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API from '../../../api/API';
 import { host_url } from '../../../common/index';
-import { actGetAllProductNewsByCategoryId } from '../../../actions';
+import { actGetAllDiscountNewsByCategoryId } from '../../../actions';
 import { NEWS_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
 import Loading from '../../../components/Loading';
+import ProductNewsEditor from './ProductNewsEditor';
 import { handleNewCategoryId } from '../../../utils/handleNewCategoryId';
-import ProductNewModal from "./Modal/ProductNewModal";
-import ProductNewsEditor from "./ProductNewsEditor";
+import ProductNewModal from './Modal/ProductNewModal';
+import AddIcon from '@mui/icons-material/Add';
 
 const columns = [
   { id: 'no', label: 'No.', minWidth: 50 },
@@ -93,7 +94,7 @@ const ProductNewList = () => {
       const response = await API.get(`${NEWS_ENDPOINT}/all/${pathVariable}`);
       if (response.ok) {
         const fetchData = await response.json();
-        dispatch(actGetAllProductNewsByCategoryId(fetchData));
+        dispatch(actGetAllDiscountNewsByCategoryId(fetchData));
       }
 
       setLoading(false);
@@ -109,6 +110,7 @@ const ProductNewList = () => {
         id: item.id,
         title: item.title,
         content: item.content,
+        description: item.description,
         image: item.image,
         action: item.id,
         is_active: item.is_active,
@@ -136,6 +138,12 @@ const ProductNewList = () => {
   const handleChangeContent = event => {
     setNews((news) => {
       return { ...news, content: event.target.value };
+    });
+  }
+
+  const handleChangeDescription = description => {
+    setNews((news) => {
+      return { ...news, description: description };
     });
   }
 
@@ -172,6 +180,7 @@ const ProductNewList = () => {
       id: news.id,
       title: news.title,
       content: news.content,
+      description: news.description,
       image: news.image,
       news_category_id: handleNewCategoryId(location.pathname),
       is_active: news.is_active
@@ -185,7 +194,7 @@ const ProductNewList = () => {
       const response = await API.get(`${NEWS_ENDPOINT}/all/${pathVariable}`);
       if (response.ok) {
         const fetchData = await response.json();
-        dispatch(actGetAllProductNewsByCategoryId(fetchData));
+        dispatch(actGetAllDiscountNewsByCategoryId(fetchData));
       }
 
       setLoading(false);
@@ -222,7 +231,7 @@ const ProductNewList = () => {
       const response = await API.get(`${NEWS_ENDPOINT}/all/${pathVariable}`);
       if (response.ok) {
         const fetchData = await response.json();
-        dispatch(actGetAllProductNewsByCategoryId(fetchData));
+        dispatch(actGetAllDiscountNewsByCategoryId(fetchData));
       }
 
       setLoading(false);
@@ -234,11 +243,12 @@ const ProductNewList = () => {
     setLoadingModal(false);
   }
 
-  const handleCreate = async (title, content, image) => {
+  const handleCreate = async (title, content, description, image) => {
 
     const data = {
       title: title,
       content: content,
+      description: description,
       image: image,
       news_category_id: handleNewCategoryId(location.pathname)
     };
@@ -252,7 +262,7 @@ const ProductNewList = () => {
       const response = await API.get(`${NEWS_ENDPOINT}/all/${pathVariable}`);
       if (response.ok) {
         const fetchData = await response.json();
-        dispatch(actGetAllProductNewsByCategoryId(fetchData));
+        dispatch(actGetAllDiscountNewsByCategoryId(fetchData));
       }
 
       setLoading(false);
@@ -287,6 +297,7 @@ const ProductNewList = () => {
         color="primary"
         variant="contained"
         onClick={handleAddItem}
+        startIcon={<AddIcon size={14} />}
         style={{ color: 'white' }}
       >
         Tạo tin tức
@@ -370,6 +381,7 @@ const ProductNewList = () => {
             imageMessageError={imageMessageError}
             handleChangeTitle={handleChangeTitle}
             handleChangeContent={handleChangeContent}
+            handleChangeDescription={handleChangeDescription}
             handleChangeImage={handleChangeImage}
             onSubmit={handleSubmitEdit}
             onClose={onClose}

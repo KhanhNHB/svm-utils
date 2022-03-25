@@ -25,6 +25,7 @@ import Loading from '../../../components/Loading';
 import { handleInstructionsCategoryId } from '../../../utils/handleInstructionsCategoryId';
 import FeatureEditor from './FeatureEditor';
 import FeatureModal from './Modal/FeatureModal';
+import AddIcon from '@mui/icons-material/Add';
 
 const columns = [
   { id: 'no', label: 'No.', minWidth: 50 },
@@ -110,6 +111,7 @@ const FeatureList = () => {
         id: item.id,
         title: item.title,
         content: item.content,
+        description: item.description,
         image: item.image,
         action: item.id,
         is_active: item.is_active,
@@ -137,6 +139,12 @@ const FeatureList = () => {
   const handleChangeContent = event => {
     setInstructions((instructions) => {
       return { ...instructions, content: event.target.value };
+    });
+  }
+
+  const handleChangeDescription = description => {
+    setInstructions((instructions) => {
+      return { ...instructions, description: description };
     });
   }
 
@@ -173,6 +181,7 @@ const FeatureList = () => {
       id: instructions.id,
       title: instructions.title,
       content: instructions.content,
+      description: instructions.description,
       image: instructions.image,
       instructions_category_id: handleInstructionsCategoryId(location.pathname),
       is_active: instructions.is_active
@@ -235,11 +244,12 @@ const FeatureList = () => {
     setLoadingModal(false);
   }
 
-  const handleCreate = async (title, content, image) => {
+  const handleCreate = async (title, content, description, image) => {
 
     const data = {
       title: title,
       content: content,
+      description: description,
       image: image,
       instructions_category_id: handleInstructionsCategoryId(location.pathname)
     };
@@ -288,6 +298,7 @@ const FeatureList = () => {
         color="primary"
         variant="contained"
         onClick={handleAddItem}
+        startIcon={<AddIcon size={14} />}
         style={{ color: 'white' }}
       >
         Tạo hướng dẫn
@@ -371,6 +382,7 @@ const FeatureList = () => {
             imageMessageError={imageMessageError}
             handleChangeTitle={handleChangeTitle}
             handleChangeContent={handleChangeContent}
+            handleChangeDescription={handleChangeDescription}
             handleChangeImage={handleChangeImage}
             onSubmit={handleSubmitEdit}
             onClose={onClose}

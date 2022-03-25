@@ -19,6 +19,8 @@ import { actGetAllOnwerInsurance } from '../../../actions';
 import Loading from "../../../components/Loading";
 import { handleInsuranceCategoryId } from '../../../utils/handleInsuranceCategoryId';
 import { useLocation } from 'react-router';
+import SaveIcon from '@mui/icons-material/Save';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -177,14 +179,19 @@ const InsurancesList = ({ data }) => {
             <Grid item xs={12} sm={12}>
               <Button
                 variant="contained"
-                style={{
-                  maxWidth: 160,
-                  maxHeight: 40,
-                  minWidth: 160,
-                  minHeight: 40,
+                startIcon={<EditOutlinedIcon size={14} />}
+                size="medium"
+                sx={{
+                  dispaly: "flex",
+                  alignItems: "center",
+                  maxWidth: 130,
+                  maxHeight: 35,
+                  minWidth: 130,
+                  minHeight: 35,
                   display: "flex",
                   textTransform: 'none',
-                  background: 'linear-gradient(#00AFEC, #005FBE)'
+                  background: 'linear-gradient(#00AFEC, #005FBE)',
+                  fontSize: 14
                 }}
                 onClick={() => onSubmit()}
               >

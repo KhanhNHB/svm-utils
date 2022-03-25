@@ -25,6 +25,7 @@ import Loading from '../../../components/Loading';
 import DiscountNewsEditor from './DiscountNewsEditor';
 import { handleNewCategoryId } from '../../../utils/handleNewCategoryId';
 import DiscountNewModal from './Modal/DiscountNewModal';
+import AddIcon from '@mui/icons-material/Add';
 
 const columns = [
   { id: 'no', label: 'No.', minWidth: 50 },
@@ -109,6 +110,7 @@ const DiscountNewList = () => {
         id: item.id,
         title: item.title,
         content: item.content,
+        description: item.description,
         image: item.image,
         action: item.id,
         is_active: item.is_active,
@@ -136,6 +138,12 @@ const DiscountNewList = () => {
   const handleChangeContent = event => {
     setNews((news) => {
       return { ...news, content: event.target.value };
+    });
+  }
+
+  const handleChangeDescription = description => {
+    setNews((news) => {
+      return { ...news, description: description };
     });
   }
 
@@ -172,6 +180,7 @@ const DiscountNewList = () => {
       id: news.id,
       title: news.title,
       content: news.content,
+      description: news.description,
       image: news.image,
       news_category_id: handleNewCategoryId(location.pathname),
       is_active: news.is_active
@@ -234,11 +243,12 @@ const DiscountNewList = () => {
     setLoadingModal(false);
   }
 
-  const handleCreate = async (title, content, image) => {
+  const handleCreate = async (title, content, description, image) => {
 
     const data = {
       title: title,
       content: content,
+      description: description,
       image: image,
       news_category_id: handleNewCategoryId(location.pathname)
     };
@@ -287,6 +297,7 @@ const DiscountNewList = () => {
         color="primary"
         variant="contained"
         onClick={handleAddItem}
+        startIcon={<AddIcon size={14} />}
         style={{ color: 'white' }}
       >
         Tạo tin tức
@@ -370,6 +381,7 @@ const DiscountNewList = () => {
             imageMessageError={imageMessageError}
             handleChangeTitle={handleChangeTitle}
             handleChangeContent={handleChangeContent}
+            handleChangeDescription={handleChangeDescription}
             handleChangeImage={handleChangeImage}
             onSubmit={handleSubmitEdit}
             onClose={onClose}
