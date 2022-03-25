@@ -360,6 +360,7 @@ const HomeEvaluate = ({ homeId }) => {
                                         onChange={e => handleChangeVideoUrl(e.target.value)}
                                         variant="outlined"
                                         className={classes.title}
+                                        InputLabelProps={{ shrink: true }}
                                     />
                                 </Box>
                                 <Box sx={{ display: "flex" }}>
