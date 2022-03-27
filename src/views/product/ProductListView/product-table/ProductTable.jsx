@@ -4,7 +4,7 @@ import ModalProductDetail from '../product-modal/ModalProductDetail';
 import ModalProductFeature from '../product-modal/ModalProductFeature';
 import ModalProductImage from '../product-modal/ModalProductImage';
 import ModalProductDelete from '../product-modal/ModalProductDelete';
-
+import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_RANGE } from '../../../../common/index';
 import { useDispatch, useSelector } from "react-redux";
 import * as Actions from '../redux/product.action'
 
@@ -23,42 +23,41 @@ const columns = [
     minWidth: 170,
     align: 'center'
   }
-  
+
 ];
 
 export default function ProductTable() {
   const dispatch = useDispatch();
-  const currentId = useSelector((state)=> state.product.currentProductId)
-  const product = useSelector((state)=> state.product.product)
-  const products = useSelector((state)=> state.product.products)
+  const product = useSelector((state) => state.product.product)
+  const products = useSelector((state) => state.product.products)
 
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_PAGE_SIZE);
   const [openDetail, setOpenDetail] = useState(false);
   const [openFeature, setOpenFeature] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openImage, setOpenImage] = useState(false);
-  
-  
+
+
 
   useEffect(() => {
     dispatch(Actions.loadProducts())
-  
+
   }, [dispatch]);
 
   const mappingProducts = (products) => {
     let newProds = [...products]
-    let productNames = newProds.map((product, index)=> {
+    let productNames = newProds.map((product, index) => {
       return {
-        no: index+1,
+        no: index + 1,
         id: product.id,
         name: product.name,
         action: product.id
-    }
+      }
     })
     return productNames;
   }
-  
+
   const rows = mappingProducts(products)
 
   const handleChangePage = (event, newPage) => {
@@ -76,27 +75,27 @@ export default function ProductTable() {
     handleClose('delete', id);
 
   }
-  
+
   const handleEdit = (event, id) => {
-    const curentProd = {...product}
+    const curentProd = { ...product }
     dispatch(Actions.loadProduct(id))
     dispatch(Actions.setProductId(id))
-    if(curentProd === product){
-        setTimeout(() => {
-          handleClose('detail', id);
-        }, 300);
-    } else {
-        setTimeout(() => {
+    if (curentProd === product) {
+      setTimeout(() => {
         handleClose('detail', id);
-        }, 500);
+      }, 300);
+    } else {
+      setTimeout(() => {
+        handleClose('detail', id);
+      }, 500);
     }
-    
+
   }
   const handleFeature = (event, id) => {
     dispatch(Actions.loadProductFeatures(id))
     dispatch(Actions.setProductId(id))
     setTimeout(() => {
-         handleClose('feature', id);
+      handleClose('feature', id);
     }, 500);
 
   }
@@ -104,10 +103,10 @@ export default function ProductTable() {
     dispatch(Actions.loadProductImages(id))
     dispatch(Actions.setProductId(id))
     setTimeout(() => {
-         handleClose('image', id);
+      handleClose('image', id);
     }, 500);
   }
-  
+
   const handleClose = (typeModal, id) => {
     switch (typeModal) {
       case 'delete':
@@ -128,14 +127,14 @@ export default function ProductTable() {
   };
 
   return (
-    <Paper sx={{ width: '100%', height:'100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 800 }}>
+    <Paper sx={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+      <TableContainer>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               {columns.map((column, index) => (
                 <TableCell
-                  key={index+column.id}
+                  key={index + column.id}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                 >
@@ -147,28 +146,28 @@ export default function ProductTable() {
           <TableBody>
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => {                
+              .map((row, index) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id+index}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id + index}>
                     {columns.map((column, index) => {
-                      const value = row[column.id]                    
-                      if(column.id == 'action') {
+                      const value = row[column.id]
+                      if (column.id === 'action') {
                         return (
-                          <TableCell align={column.align} key={column.id+index}>
-                              <Button onClick={(e)=> {handleDelete(e, value)}} color='error'>Ẩn</Button>
-                              <Button onClick={(e)=> {handleEdit(e, value)}} color='success'>Chỉnh sửa chi tiết</Button>
-                              <Button onClick={(e)=> {handleFeature(e, value)}} color='info'>Thêm tính năng</Button>
-                              <Button onClick={(e)=> {handleImage(e, value)}} color='secondary'>Thêm hình hiển thị</Button>
+                          <TableCell align={column.align} key={column.id + index}>
+                            <Button onClick={(e) => { handleDelete(e, value) }} color='error'>Ẩn</Button>
+                            <Button onClick={(e) => { handleEdit(e, value) }} color='success'>Chỉnh sửa chi tiết</Button>
+                            <Button onClick={(e) => { handleFeature(e, value) }} color='info'>Thêm tính năng</Button>
+                            <Button onClick={(e) => { handleImage(e, value) }} color='secondary'>Thêm hình hiển thị</Button>
                           </TableCell>
                         );
                       } else {
                         return (
-                          <TableCell align={column.align} key={column.id+index}>
+                          <TableCell align={column.align} key={column.id + index}>
                             {value}
                           </TableCell>
                         );
-                      }                   
-                      
+                      }
+
                     })}
                   </TableRow>
                 );
@@ -177,7 +176,7 @@ export default function ProductTable() {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={DEFAULT_PAGE_RANGE}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}
@@ -186,24 +185,24 @@ export default function ProductTable() {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
 
-    <ModalProductDetail
+      <ModalProductDetail
         openDetail={openDetail}
-        handleCloseDetail={() => { handleClose('detail')}}
-    />
-    <ModalProductFeature
+        handleCloseDetail={() => { handleClose('detail') }}
+      />
+      <ModalProductFeature
         openFeature={openFeature}
-        handleCloseFeature={() => { handleClose('feature')}}
-    />
-     <ModalProductImage
+        handleCloseFeature={() => { handleClose('feature') }}
+      />
+      <ModalProductImage
         openImage={openImage}
-        handleCloseImage={() => { handleClose('image')}}
-    />
+        handleCloseImage={() => { handleClose('image') }}
+      />
 
-    <ModalProductDelete
+      <ModalProductDelete
         openDelete={openDelete}
-        handleCloseDelete={() => { handleClose('delete')}}
-    />
+        handleCloseDelete={() => { handleClose('delete') }}
+      />
     </Paper>
-    
+
   );
 }

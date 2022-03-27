@@ -1,9 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import DashboardLayout from './layouts/DashboardLayout/index';
-import ShipperListView from './views/shipper/ShipperListView/index';
 import LoginView from './views/auth/LoginView';
-import ShippingArea from './views/hub';
 import Home from './views/home/Home';
 import Products from './views/product/ProductListView/Products';
 import Dealer from './views/dealer/Dealer';

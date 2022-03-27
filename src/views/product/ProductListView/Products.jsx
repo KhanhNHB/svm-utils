@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import {Grid, Button, Paper, Box} from '@mui/material';
-import { useDispatch, useSelector } from "react-redux";
-
+import React, { useState } from 'react';
+import { Button, Box, Container } from '@mui/material';
+import { useDispatch } from "react-redux";
 import ProductTable from './product-table/ProductTable';
 import ModalProductDetail from './product-modal/ModalProductDetail';
 import * as Actions from './redux/product.action';
-
 import './css/product.css'
 
 const Products = () => {
@@ -20,39 +18,27 @@ const Products = () => {
   }
 
   return (
-    <Box>
-      <Grid  container spacing={3}>
-        {/* Chart */}
-        <Grid item xs={12} md={12} lg={12}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              minHeight: 1000
-            }}
-          >
-          <Grid item xs={12} md={12} lg={12}>
-            <Button
-                  className='button-add-product'            
-                  background='info'
-                  variant='contained'
-                  onClick={(e) => handleAdd(e)}             
-              >Thêm mới sản phẩm</Button>
-          </Grid>
-          <Grid item xs={12} md={12} lg={12} mt={5}>
-            <ProductTable/>
-          </Grid>
-          
-          <ModalProductDetail
-              openDetail={openDetail}
-              handleCloseDetail={(e) => {handleAdd(e)}}
-          />
-          </Paper>
-        </Grid>
-        </Grid>
-       
-    </Box>
+    <Container maxWidth="xl" style={{ paddingTop: 20, paddingBottom: 50 }}>
+      <Box sx={{ textAlign: "center" }}>
+        <h1>Quản lý sản phẩm</h1>
+      </Box>
+
+      <Button
+        className='button-add-product'
+        background='info'
+        variant='contained'
+        onClick={(e) => handleAdd(e)}
+      >Thêm mới sản phẩm
+      </Button>
+
+      <ProductTable />
+
+      <ModalProductDetail
+        openDetail={openDetail}
+        handleCloseDetail={(e) => { handleAdd(e) }}
+      />
+
+    </Container >
   );
 };
 

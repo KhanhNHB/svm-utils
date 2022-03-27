@@ -1,8 +1,3 @@
-export const GENDER = {
-    FEMALE: "Female",
-    MALE: "Male"
-}
-
 export const USER_TOKEN = 'USER_TOKEN';
 export const USER_DEVICE_TOKEN = 'USER_DEVICE_TOKEN';
 
@@ -15,43 +10,9 @@ export const ROLE = {
     HUB_MANAGER: 2,
     SHIPPER: 3,
     CUSTOMER: 4
-}
+};
 
-export const STATUS = {
-    PENDING: "Pending",
-    AVAILABLE: "Available",
-    TERMINAL: "Terminal"
-}
+export const host_url = 'https://image.webby.vn/uploads/';
 
-export const INVOICE_STATUS = {
-    ACTIVE: 'ACTIVE',
-    DEACTIVE: 'DEACTIVE'
-}
-
-export const INVOICE_PRIORITY = {
-    STANDARD: 'STANDARD',
-    EXPRESS: 'EXPRESS'
-}
-
-export const DELIVERY_STATUS = {
-    // hàng vẫn trong kho
-    IN_WAREHOUSE: 'IN_WAREHOUSE',
-    // Đơn hàng cần ship của shipper
-    TO_DELIVERY: 'TO_DELIVERY',
-    // shipper đang giao đơn của mình
-    DELIVERING: 'DELIVERING',
-    //hoàn thành
-    COMPLETED: 'COMPLETED',
-    // chưa giao được, sẽ giao sau hoặc khách báo giao sau   
-    CANCELLED: 'CANCELLED',
-    // hoàn trả- sau 3 lần cancelled
-    RETURN_REFUND: 'REFUND',
-}
-
-export const GENDER_ITEMS = [
-    { id: 'Male', title: 'Male' },
-    { id: 'Female', title: 'Female' },
-    { id: '', title: 'Other' },
-]
-
-export const host_url = 'http://localhost:8080/uploads/'
+export const DEFAULT_PAGE_SIZE = 5;
+export const DEFAULT_PAGE_RANGE = [5, 10, 20, { value: -1, label: 'Tất cả' }];

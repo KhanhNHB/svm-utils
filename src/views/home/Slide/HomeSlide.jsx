@@ -293,7 +293,7 @@ const HomeSlide = ({ home }) => {
                         <SunEditor
                             id='cấu hình'
                             autoFocus={true}
-                            height='300px'
+                            height='280px'
                             width='100%'
                             setContents={content}
                             onChange={setContent}
@@ -313,7 +313,7 @@ const HomeSlide = ({ home }) => {
                             setDefaultStyle="font-size: 16px; font-family: Manrope, sans-serif; font-weight: 500;"
                         />
                     </Box>
-                    <Box sx={{ marginTop: 3}}>
+                    <Box sx={{ marginTop: 3 }}>
                         <Button
                             variant="contained"
                             startIcon={<SaveIcon size={14} />}

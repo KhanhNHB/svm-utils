@@ -15,10 +15,10 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import API from '../../../api/API';
-import { host_url } from '../../../common/index';
+import { host_url, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_RANGE } from '../../../common/index';
 import { actGetAllFeatureInstructionsByCategoryId } from '../../../actions';
 import { INSTRUCTIONS_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
 import Loading from '../../../components/Loading';
@@ -71,7 +71,7 @@ const SetupList = () => {
   const data = useSelector(state => state.instructions.instructions);
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_PAGE_SIZE);
 
   const [instructions, setInstructions] = useState("");
 
@@ -83,7 +83,6 @@ const SetupList = () => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -341,7 +340,7 @@ const SetupList = () => {
                               } if (column.id == 'image') {
                                 return (
                                   <TableCell align={column.align} key={column.id + index + row.createdDate}>
-                                    <img src={host_url + value} style={{ maxWidth: '150px' }} />
+                                    <img src={host_url + value} style={{ maxWidth: '100px' }} />
                                   </TableCell>
                                 );
                               } else {
@@ -363,7 +362,7 @@ const SetupList = () => {
         {
           data && data.length && (
             <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
+              rowsPerPageOptions={DEFAULT_PAGE_RANGE}
               component="div"
               count={data.length}
               rowsPerPage={rowsPerPage}

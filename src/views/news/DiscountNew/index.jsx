@@ -1,74 +1,16 @@
 import React from 'react';
-import {
-  Grid,
-  Box
-} from '@mui/material';
+import { Box, Container } from '@mui/material';
 import DiscountNewList from './DiscountNewList';
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles((theme) => ({
-  root: {},
-  boundary: {
-    display: 'flex',
-    width: '100%',
-    flexDirection: 'column',
-  },
-  avatar: {
-    marginRight: theme.spacing(2)
-  },
-  container: {
-    maxHeight: 700,
-  },
-  modal: {
-    display: 'flex',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingModal: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    '& .MuiCircularProgress-root': {
-      outline: 'none'
-    },
-  },
-}));
-
-
-const Copyright = () => {
-  return (
-    <p variant="body2" align="center" fontSize={16} color="#000000" fontWeight={"medium"}>
-      {'©' + new Date().getFullYear() + ' '} Bản quyền thuộc về NEXTGEN
-    </p>
-  );
-}
 
 const DiscountNewListView = () => {
-  const classes = useStyles();
-
   return (
-    <Box>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Box sx={{
-            fontSize: 18,
-            fontWeight: "bold",
-            fontFamily: "Manrope, sans-serif",
-            textAlign: "center"
-          }}>
-            Tin Tức Khuyến Mại
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <DiscountNewList />
-        </Grid>
-        <Grid item xs={12}>
-          <Copyright sx={{ pt: 4 }} />
-        </Grid>
-      </Grid>
-    </Box>
+    <Container maxWidth="xl" style={{ paddingTop: 20, paddingBottom: 50}}>
+      <Box sx={{ textAlign: "center", paddingBottom: 5 }}>
+        <h1>Tin Tức Khuyến Mại</h1>
+      </Box>
+
+      <DiscountNewList />
+    </Container>
   );
 };
 

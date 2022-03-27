@@ -1,29 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Grid,
-  Box
-} from '@mui/material';
+import { Grid, Modal, Container } from '@mui/material';
 import { INSURANCE_ENDPOINT } from '../../../api/endpoint';
 import Cookies from 'js-cookie';
 import API from '../../../api/API';
-import {
-  RESPONSE_STATUS,
-  USER_DEVICE_TOKEN,
-  USER_TOKEN
-} from '../../../common';
+import { RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../common';
 import { actGetAllDealerInsurance } from '../../../actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
+import Loading from '../../../components/Loading';
 import { handleInsuranceCategoryId } from "../../../utils/handleInsuranceCategoryId";
 import DealerList from './DealerList';
-
-const Copyright = () => {
-  return (
-    <p variant="body2" align="center" fontSize={16} color="#000000" fontWeight={"medium"}>
-      {'©' + new Date().getFullYear() + ' '} Bản quyền thuộc về NEXTGEN
-    </p>
-  );
-}
 
 const DealerView = () => {
   const navigate = useNavigate();
@@ -59,36 +45,19 @@ const DealerView = () => {
     }
 
     fetchInsurances();
-
-    // const readCookie = async () => {
-    //   const token = Cookies.get(USER_TOKEN);
-    //   if (token) {
-    //     const response = await API.post(`${PROFILE_ENDPOINT}`, {
-    //       "access_token": user
-    //     });
-
-    //     if (response.ok) {
-    //       const fetchData = await response.json();
-    //       setUser(fetchData.data);
-    //       fetchInsurance(fetchData.data);
-    //       dispatch(actLoadProfile(fetchData.data));
-    //     }
-    //   }
-    // };
-    // readCookie();
   }, [dispatch, navigate]);
 
   return (
-    <Box>
+    <Container maxWidth="xl" style={{ paddingTop: 20, paddingBottom: 50 }}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <DealerList data={data} />
         </Grid>
-        <Grid item xs={12}>
-          <Copyright sx={{ pt: 4 }} />
-        </Grid>
+        <Modal open={loadingModal}>
+          <Loading />
+        </Modal>
       </Grid>
-    </Box>
+    </Container>
   );
 };
 

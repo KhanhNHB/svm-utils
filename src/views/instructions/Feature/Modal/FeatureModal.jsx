@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
-import {
-    Button,
-    Box,
-    Grid,
-    TextField,
-    Container,
-} from '@mui/material';
+import { Button, Box, Grid, TextField, Container } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
 import { UPLOAD_FILE } from '../../../../api/endpoint';
 import { host_url } from '../../../../common';
-import { useLocation, useNavigate } from 'react-router';
-import { useDispatch } from 'react-redux';
 import SunEditor from 'suneditor-react';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
@@ -54,16 +46,12 @@ const useStyles = makeStyles((theme) => ({
 
 const FeatureModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
     const classes = useStyles();
-    const dispatch = useDispatch;
-    const navigate = useNavigate();
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [description, setDescription] = useState("");
     const [image, setImage] = useState("");
     const [imageMessageError, setImageMessageError] = useState("");
-    const [loading, setLoading] = useState(false);
-    const location = useLocation();
 
     const handleChangeTitle = title => {
         setTitle(title);
@@ -111,7 +99,7 @@ const FeatureModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
     };
 
     return (
-        <Container maxWidth="lg" sx={{ marginTop: 4, height: 600, overflowY: "auto" }}>
+        <Container maxWidth="xl" sx={{ marginTop: 5, height: 1000, overflowY: "auto" }}>
             <Box
                 sx={{
                     borderRadius: 2,
@@ -127,7 +115,7 @@ const FeatureModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
                         <TextField
                             fullWidth
                             placeholder="Tiêu đề"
-                            label="tiêu đề"
+                            label="Tiêu đề"
                             name="tiêu đề"
                             value={title}
                             onChange={e => handleChangeTitle(e.target.value)}
@@ -136,33 +124,31 @@ const FeatureModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
                             InputLabelProps={{ shrink: true }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Box className={classes.title}>Nội dung</Box>
+                    <Grid item xs={12} sm={4}>
+                        <Box className={classes.title}>Mô tả ngắn</Box>
                         <form>
                             <textarea
                                 style={{
                                     width: '100%',
-                                    height: '330px',
-                                    padding: '12px 20px',
+                                    height: '150px',
+                                    padding: '8px 10px',
                                     boxSizing: 'border-box',
                                     border: '2px solid #ccc',
                                     borderRadius: '4px',
                                     backgroundColor: 'white',
-                                    fontSize: '16px',
+                                    fontSize: '15px',
                                     resize: 'none',
                                 }}
                                 onChange={handleChangeContent}
                                 value={content}
                             />
                         </form>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
                         <Box className={classes.title}>Hình ảnh</Box>
                         <Box
                             sx={{
                                 display: "flex",
                                 flexDirection: "column",
-                                height: "93%",
+                                height: "350px",
                                 backgroundImage: 'url("/image-default.png")',
                                 backgroundRepeat: 'no-repeat, repeat',
                                 backgroundPosition: 'center'
@@ -190,17 +176,17 @@ const FeatureModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
                                 </Button>
                             </label>
                             <Box sx={{ margin: "auto" }}>
-                                <img src={image ? (host_url + image) : ""} style={{ display: 'block', maxWidth: '277px', height: '277px' }} />
+                                <img src={image ? (host_url + image) : ""} style={{ display: 'block' }} />
                             </Box>
                             <p color='error'>{imageMessageError}</p>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>
                         </Box>
                     </Grid>
-                    <Grid item xs={12} sm={12}>
-                        <Box className={classes.title}>Chi tiết</Box>
+                    <Grid item xs={12} sm={8}>
+                        <Box className={classes.title}>Nội dung</Box>
                         <SunEditor
                             autoFocus={false}
-                            height={800}
+                            height={500}
                             setContents={description}
                             onChange={handleChangeDescription}
                             showToolbar={true}

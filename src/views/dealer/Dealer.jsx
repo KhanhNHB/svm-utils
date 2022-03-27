@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import {Grid, Button, Paper, Box} from '@mui/material';
-import { useDispatch, useSelector } from "react-redux";
-
+import React, { useState } from 'react';
+import { Button, Box, Container } from '@mui/material';
+import { useDispatch } from "react-redux";
 import DealerTable from './dealer-table/DealerTable';
 import DealerModal from './dealer-modal/DealerModal';
 import * as Actions from './redux/dealer.action';
-
 import './css/dealer.css'
 
 const Dealer = () => {
@@ -22,39 +20,27 @@ const Dealer = () => {
   }
 
   return (
-    <Box>
-      <Grid  container spacing={3}>
-        {/* Chart */}
-        <Grid item xs={12} md={12} lg={12}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              minHeight: 1000
-            }}
-          >
-          <Grid item xs={12} md={12} lg={12}>
-            <Button
-                  className='button-add-product'            
-                  background='info'
-                  variant='contained'
-                  onClick={(e) => handleAdd(e)}             
-              >Thêm mới Đại lý</Button>
-          </Grid>
-           <Grid item xs={12} md={12} lg={12} mt={5}>
-            <DealerTable/>
-          </Grid>
-          
-          <DealerModal
-              openDealer={openDealer}
-              handleCloseDealer={(e) => {handleOpenDealer(e)}}
-          />
-          </Paper>
-        </Grid>
-        </Grid>
-       
-    </Box>
+    <Container maxWidth="xl" style={{ paddingTop: 20, paddingBottom: 50 }}>
+      <Box sx={{ textAlign: "center" }}>
+        <h1>Hệ thống đại lý</h1>
+      </Box>
+
+      <Button
+        className='button-add-product'
+        background='info'
+        variant='contained'
+        onClick={(e) => handleAdd(e)}
+      >Thêm mới Đại lý
+      </Button>
+
+      <DealerTable />
+
+      <DealerModal
+        openDealer={openDealer}
+        handleCloseDealer={(e) => { handleOpenDealer(e) }}
+      />
+
+    </Container>
   );
 };
 

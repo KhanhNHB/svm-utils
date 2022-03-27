@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Box,
-  Divider,
   Drawer,
   Hidden,
   List,
@@ -12,14 +11,9 @@ import {
 } from '@material-ui/core';
 import {
   ShoppingBag as ShoppingBagIcon,
-  User as UserIcon,
-  Users as UsersIcon,
-  MapPin as MapIcon,
-  Octagon,
   Book as IntroduceIcon,
   Phone as ContactIcon,
   Pocket,
-  Shield,
   Clipboard,
   File
 } from 'react-feather';
@@ -152,7 +146,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           }
         </Typography>
       </Box>
-      <Divider />
       <Box p={2}>
         <List>
           {

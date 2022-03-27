@@ -19,7 +19,6 @@ import Cookies from 'js-cookie';
 import { USER_DEVICE_TOKEN, USER_TOKEN } from '../../common';
 import { actChangeKeyword, actLoadAssignHubStatus, actLoadAssignOrderToShipperStatus, actLoadProviderName } from '../../actions';
 import { useDispatch } from 'react-redux';
-import { Typography } from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
   root: { theme },

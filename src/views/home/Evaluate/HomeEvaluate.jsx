@@ -20,7 +20,7 @@ import {
 import { makeStyles } from '@mui/styles';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { actGetHomeEvaluate } from '../../../actions';
 import API from '../../../api/API';
 import { HOME_EVALUATE_ENDPOINT, HOME_EVALUATE_STEP_ENDPOINT } from '../../../api/endpoint';
@@ -64,7 +64,6 @@ function stableSort(array, comparator) {
     });
     return stabilizedThis.map((el) => el[0]);
 }
-
 
 const EnhancedTableHead = (props) => {
     const { order, orderBy, onRequestSort, user } = props;
@@ -166,7 +165,6 @@ const HomeEvaluate = ({ homeId }) => {
     const [loadingModal, setLoadingModal] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [message, setMessage] = useState('');
-    const location = useLocation();
 
     const [loading, setLoading] = useState(false);
 
@@ -342,7 +340,7 @@ const HomeEvaluate = ({ homeId }) => {
                                 <TextField
                                     fullWidth
                                     placeholder="Tiêu đề"
-                                    label="tiêu đề"
+                                    label="Tiêu đề"
                                     name="tiêu để"
                                     value={homeEvaluate.evaluateTitle}
                                     onChange={e => handleChangeTitle(e.target.value)}
@@ -354,7 +352,7 @@ const HomeEvaluate = ({ homeId }) => {
                                     <TextField
                                         fullWidth
                                         placeholder="Video"
-                                        label="link video"
+                                        label="Link video"
                                         name="video"
                                         value={homeEvaluate.videoUrl}
                                         onChange={e => handleChangeVideoUrl(e.target.value)}

@@ -19,7 +19,6 @@ import { actGetAllOnwerInsurance } from '../../../actions';
 import Loading from "../../../components/Loading";
 import { handleInsuranceCategoryId } from '../../../utils/handleInsuranceCategoryId';
 import { useLocation } from 'react-router';
-import SaveIcon from '@mui/icons-material/Save';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const useStyles = makeStyles((theme) => ({
@@ -120,14 +119,12 @@ const InsurancesList = ({ data }) => {
 
   return (
     <Box className={classes.boundary}>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Box>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
-              <Box
-                className={classes.text}
-                sx={{ fontSize: 24, textAlign: "center" }}>
-                Chính sách bảo hành
+              <Box sx={{ textAlign: "center" }}>
+                <h1>Chính sách bảo hành</h1>
               </Box>
             </Grid>
             <Grid item xs={12} sm={12}>
@@ -148,7 +145,7 @@ const InsurancesList = ({ data }) => {
                 ? <Loading />
                 : <SunEditor
                   autoFocus={false}
-                  height={800}
+                  height={500}
                   setContents={content}
                   onChange={handleChangeContent}
                   showToolbar={true}

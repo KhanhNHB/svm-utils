@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "suneditor/dist/css/suneditor.min.css";
 import Cookies from 'js-cookie';
-import { Box, Container, Grid, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, Container } from "@mui/material";
 import { HOME_ENDPOINT } from "../../api/endpoint";
 import API from '../../api/API';
 import { RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../common';
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { actGetHome } from "../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/Loading";
@@ -17,48 +16,11 @@ import HomeEvaluate from "./Evaluate/HomeEvaluate";
 import HomeSocialMedia from "./SocialMedia/HomeSocialMedia";
 import HomeOffer from "./Offer/HomeOffer";
 
-const useStyles = makeStyles((theme) => ({
-    root: {},
-    avatar: {
-        marginRight: theme.spacing(2)
-    },
-    container: {
-        maxHeight: 700,
-    },
-    modal: {
-        display: 'flex',
-        width: '100%',
-        height: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    loadingModal: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        '& .MuiCircularProgress-root': {
-            outline: 'none'
-        },
-    },
-    text: {
-        fontSize: 18,
-        fontWeight: "bold",
-        fontFamily: "Manrope, sans-serif"
-    }
-}));
-
 export default function Home() {
-    const classes = useStyles();
-    const regex = /(<([^>]+)>)/ig;
-
     const navigate = useNavigate();
-    const location = useLocation();
     const dispatch = useDispatch();
 
     const home = useSelector(state => state.home.home);
-
-    const [title, setTitle] = useState('');
-
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -89,17 +51,9 @@ export default function Home() {
     }, []);
 
     return (
-        <Container maxWidth="lg">
-            <Box sx={{ textAlign: "center", fontSize: 24, paddingBottom: 5 }}>
-                <Typography
-                    component="h5"
-                    variant="h5"
-                    color="inherit"
-                    noWrap
-                    sx={{ flexGrow: 1 }}
-                >
-                    Chỉnh sửa Trang chủ
-                </Typography>
+        <Container maxWidth="xl" style={{ paddingTop: 20, paddingBottom: 50 }}>
+            <Box sx={{ textAlign: "center", paddingBottom: 5 }}>
+                <h1>Chỉnh sửa Trang chủ</h1>
             </Box>
             {!loading
                 ? (
