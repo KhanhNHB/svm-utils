@@ -1,24 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, forwardRef } from 'react';
 import {
   Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
   Alert,
   Modal,
   Snackbar,
-  TableContainer,
-  Button
+  Button,
+  IconButton
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import API from '../../../api/API';
-import { host_url, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_RANGE } from '../../../common/index';
+import { host_url } from '../../../common/index';
 import { actGetAllDiscountNewsByCategoryId } from '../../../actions';
 import { NEWS_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
 import Loading from '../../../components/Loading';
@@ -26,13 +20,27 @@ import DiscountNewsEditor from './DiscountNewsEditor';
 import { handleNewCategoryId } from '../../../utils/handleNewCategoryId';
 import DiscountNewModal from './Modal/DiscountNewModal';
 import AddIcon from '@mui/icons-material/Add';
+import MaterialTable from 'material-table';
 
-const columns = [
-  { id: 'no', label: 'No.', minWidth: 50 },
-  { id: 'title', label: 'Tiêu đề', minWidth: 200 },
-  { id: 'image', label: 'Hình ảnh', minWidth: 200 },
-  { id: 'action', label: 'Action', minWidth: 200 },
-];
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Search from '@material-ui/icons/Search';
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+
+const tableIcons = {
+  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -68,8 +76,6 @@ const DiscountNewList = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const data = useSelector(state => state.news.news);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_PAGE_SIZE);
   const [news, setNews] = useState("");
   const [openAddModal, setOpenAddModal] = useState(false);
   const [imageMessageError, setImageMessageError] = useState("");
@@ -105,7 +111,6 @@ const DiscountNewList = () => {
         content: item.content,
         description: item.description,
         image: item.image,
-        action: item.id,
         is_active: item.is_active,
         createdDate: item.createdDate
       }
@@ -204,15 +209,6 @@ const DiscountNewList = () => {
     setSelectNews(false);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const handleChangePage = async (event, newPage) => {
-    setPage(newPage);
-  };
-
   const handleDelete = async (event, news) => {
     setLoadingModal(true);
 
@@ -295,76 +291,46 @@ const DiscountNewList = () => {
       >
         Tạo tin tức
       </Button>
-      <Box>
-        <TableContainer className={classes.container}>
-          <Table stickyHeader-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column, index) => (
-                  <TableCell
-                    key={index + column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                loading
-                  ? <Loading />
-                  : (data && data.length &&
-                    rows
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row, index) => {
-                        return (
-                          <TableRow hover role="checkbox" tabIndex={-1} key={row.id + index}>
-                            {columns.map((column, index) => {
-                              const value = row[column.id];
-                              if (column.id == 'action') {
-                                return (
-                                  <TableCell align={column.align} key={column.id + index + row.createdDate}>
-                                    <Button onClick={(e) => { handleDelete(e, row) }} color='error'>Ẩn</Button>
-                                    <Button onClick={(e) => { handleEdit(e, row) }} color='success'>Sửa</Button>
-                                  </TableCell>
-                                );
-                              } if (column.id == 'image') {
-                                return (
-                                  <TableCell align={column.align} key={column.id + index + row.createdDate}>
-                                    <img src={host_url + value} style={{ maxWidth: '100px' }} />
-                                  </TableCell>
-                                );
-                              } else {
-                                return (
-                                  <TableCell align={column.align} key={column.id + index + row.createdDate}>
-                                    {value}
-                                  </TableCell>
-                                );
-                              }
-                            })}
-                          </TableRow>
-                        );
-                      })
-                  )
+      <Box sx={{ height: 800 }}>
+        <MaterialTable
+          columns={[
+            { id: 'no', title: 'No.', field: "no" },
+            { id: 'title', title: 'Tiêu đề', align: "left", field: "title" },
+            {
+              id: 'image',
+              title: 'Hình ảnh',
+              render: rowData => {
+                return <img src={host_url + rowData.image} style={{ maxWidth: '100px' }} />
               }
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {
-          data && data.length && (
-            <TablePagination
-              rowsPerPageOptions={DEFAULT_PAGE_RANGE}
-              component="div"
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          )
-        }
+            },
+            {
+              id: "actions",
+              title: "Actions",
+              render: rowData => {
+                return (
+                  <div>
+                    <IconButton
+                      aria-label="edit"
+                      onClick={(e) => { handleEdit(e, rowData) }} color='error'
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      aria-label="delete"
+                      onClick={(e) => { handleDelete(e, rowData) }} color='success'
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                );
+              }
+            }
+          ]}
+          data={rows}
+          title="Danh sách tin tức"
+          icons={tableIcons}
+          options={{ sorting: true }}
+        />
       </Box>
 
       <Modal open={selectNews}>

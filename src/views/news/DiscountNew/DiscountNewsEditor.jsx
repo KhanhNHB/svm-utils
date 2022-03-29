@@ -133,7 +133,12 @@ const DiscountNewsEditor = ({
                                 </Button>
                             </label>
                             <Box sx={{ margin: "auto" }}>
-                                <img src={news.image ? (host_url + news.image) : ""} style={{ display: 'block' }} />
+                                {
+                                    news.image && <img
+                                        src={host_url + news.image}
+                                        style={{ display: 'block', width: "90%", height: "90%" }}
+                                    />
+                                }
                             </Box>
                             <p color='error'>{imageMessageError}</p>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>

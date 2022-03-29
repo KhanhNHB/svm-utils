@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const EventNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
+const EventNewModal = ({ onSubmit, onClose }) => {
     const classes = useStyles();
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -98,7 +98,7 @@ const EventNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => 
     };
 
     return (
-        <Container maxWidth="xl" sx={{ marginTop: 5, height: 1000, overflowY: "auto" }}>
+        <Container maxWidth="xl" sx={{ marginTop: 5, height: 500, overflowY: "auto" }}>
             <Box
                 sx={{
                     borderRadius: 2,
@@ -175,11 +175,12 @@ const EventNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => 
                                 </Button>
                             </label>
                             <Box sx={{ margin: "auto" }}>
-                                <img src={image ? (host_url + image) : ""} style={{ display: 'block' }} />
+                                {image && <img src={host_url + image} style={{ display: 'block', width: "90%", height: "90%" }} alt="img" />}
                             </Box>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>
                         </Box>
                     </Grid>
+
                     <Grid item xs={12} sm={8}>
                         <Box className={classes.title}>Nội dung</Box>
                         <SunEditor

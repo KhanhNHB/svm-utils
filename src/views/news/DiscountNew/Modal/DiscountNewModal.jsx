@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const DiscountNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
+const DiscountNewModal = ({ onSubmit, onClose }) => {
     const classes = useStyles();
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -98,7 +98,7 @@ const DiscountNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) 
     };
 
     return (
-        <Container maxWidth="xl" sx={{ marginTop: 5, height: 1000, overflowY: "auto" }}>
+        <Container maxWidth="xl" sx={{ marginTop: 5, height: 500, overflowY: "auto" }}>
             <Box
                 sx={{
                     borderRadius: 2,
@@ -142,122 +142,122 @@ const DiscountNewModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) 
                                 value={content}
                             />
                         </form>
-                    <Box className={classes.text}>Ảnh đại diện</Box>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            height: "350px",
-                            backgroundImage: 'url("/image-default.png")',
-                            backgroundRepeat: 'no-repeat, repeat',
-                            backgroundPosition: 'center'
-                        }}
-                    >
-                        <input
-                            accept="image/*"
-                            className='ip'
-                            style={{ display: 'none' }}
-                            id="raised-button-file-small"
-                            onChange={(e) => handleChangeImage(e)}
-                            multiple
-                            type="file"
-                        />
-                        <label htmlFor="raised-button-file-small" >
-                            <Button
-                                variant="raised"
-                                component="span"
-                                sx={{
-                                    background: 'wheat !important',
-                                    color: 'black !important'
-                                }}
-                            >
-                                Chọn hình ảnh
-                            </Button>
-                        </label>
-                        <Box sx={{ margin: "auto" }}>
-                            <img src={image ? (host_url + image) : ""} style={{ display: 'block' }} />
+                        <Box className={classes.text}>Ảnh đại diện</Box>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                height: "350px",
+                                backgroundImage: 'url("/image-default.png")',
+                                backgroundRepeat: 'no-repeat, repeat',
+                                backgroundPosition: 'center'
+                            }}
+                        >
+                            <input
+                                accept="image/*"
+                                className='ip'
+                                style={{ display: 'none' }}
+                                id="raised-button-file-small"
+                                onChange={(e) => handleChangeImage(e)}
+                                multiple
+                                type="file"
+                            />
+                            <label htmlFor="raised-button-file-small" >
+                                <Button
+                                    variant="raised"
+                                    component="span"
+                                    sx={{
+                                        background: 'wheat !important',
+                                        color: 'black !important'
+                                    }}
+                                >
+                                    Chọn hình ảnh
+                                </Button>
+                            </label>
+                            <Box sx={{ margin: "auto" }}>
+                                {image && <img src={host_url + image} style={{ display: 'block', width: "90%", height: "90%" }} alt="img" />}
+                            </Box>
+                            <p style={{ color: 'red' }}>{imageMessageError}</p>
                         </Box>
-                        <p style={{ color: 'red' }}>{imageMessageError}</p>
-                    </Box>
-                </Grid>
+                    </Grid>
 
-                <Grid item xs={12} sm={8}>
-                    <Box className={classes.title}>Nội dung</Box>
-                    <SunEditor
-                        autoFocus={false}
-                        height={500}
-                        setContents={description}
-                        onChange={handleChangeDescription}
-                        showToolbar={true}
-                        setOptions={{
-                            buttonList: [
-                                [
-                                    'undo',
-                                    'redo',
-                                    'link',
-                                    'fullScreen',
-                                    "bold",
-                                    "underline",
-                                    "italic",
-                                    "strike",
-                                    "list",
-                                    "align",
-                                    "fontSize",
-                                    "formatBlock",
-                                    "table",
-                                    "image"
+                    <Grid item xs={12} sm={8}>
+                        <Box className={classes.title}>Nội dung</Box>
+                        <SunEditor
+                            autoFocus={false}
+                            height={500}
+                            setContents={description}
+                            onChange={handleChangeDescription}
+                            showToolbar={true}
+                            setOptions={{
+                                buttonList: [
+                                    [
+                                        'undo',
+                                        'redo',
+                                        'link',
+                                        'fullScreen',
+                                        "bold",
+                                        "underline",
+                                        "italic",
+                                        "strike",
+                                        "list",
+                                        "align",
+                                        "fontSize",
+                                        "formatBlock",
+                                        "table",
+                                        "image"
+                                    ]
                                 ]
-                            ]
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Box className={classes.actions}>
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                onClick={() => handleCreate()}
-                                disabled={(!title && !content) ? true : false}
-                                startIcon={<AddIcon size={14} />}
-                                style={{ color: 'white' }}
-                                sx={{
-                                    dispaly: "flex",
-                                    alignItems: "center",
-                                    maxWidth: 130,
-                                    maxHeight: 35,
-                                    minWidth: 130,
-                                    minHeight: 35,
-                                    display: "flex",
-                                    textTransform: 'none',
-                                    background: 'linear-gradient(#00AFEC, #005FBE)',
-                                    fontSize: 14
-                                }}
-                            >
-                                Tạo mới
-                            </Button>
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                            <Box className={classes.actions}>
+                                <Button
+                                    color="primary"
+                                    variant="contained"
+                                    onClick={() => handleCreate()}
+                                    disabled={(!title && !content) ? true : false}
+                                    startIcon={<AddIcon size={14} />}
+                                    style={{ color: 'white' }}
+                                    sx={{
+                                        dispaly: "flex",
+                                        alignItems: "center",
+                                        maxWidth: 130,
+                                        maxHeight: 35,
+                                        minWidth: 130,
+                                        minHeight: 35,
+                                        display: "flex",
+                                        textTransform: 'none',
+                                        background: 'linear-gradient(#00AFEC, #005FBE)',
+                                        fontSize: 14
+                                    }}
+                                >
+                                    Tạo mới
+                                </Button>
+                            </Box>
+                            <Box className={classes.actions}>
+                                <Button
+                                    color="primary"
+                                    variant="outlined"
+                                    onClick={() => handleOnClose()}
+                                    startIcon={<CloseIcon size={14} />}
+                                    style={{
+                                        maxWidth: 130,
+                                        maxHeight: 35,
+                                        minWidth: 130,
+                                        minHeight: 35
+                                    }}
+                                >
+                                    Đóng
+                                </Button>
+                            </Box>
                         </Box>
-                        <Box className={classes.actions}>
-                            <Button
-                                color="primary"
-                                variant="outlined"
-                                onClick={() => handleOnClose()}
-                                startIcon={<CloseIcon size={14} />}
-                                style={{
-                                    maxWidth: 130,
-                                    maxHeight: 35,
-                                    minWidth: 130,
-                                    minHeight: 35
-                                }}
-                            >
-                                Đóng
-                            </Button>
-                        </Box>
-                    </Box>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </Box>
-        </Container >
+            </Box>
+        </Container>
     )
 }
 

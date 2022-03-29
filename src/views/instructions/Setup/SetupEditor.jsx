@@ -133,12 +133,18 @@ const SetupEditor = ({
                                 </Button>
                             </label>
                             <Box sx={{ margin: "auto" }}>
-                                <img src={instructions.image ? (host_url + instructions.image) : ""} style={{ display: 'block' }} />
+                                {
+                                    instructions.image && <img
+                                        src={host_url + instructions.image}
+                                        style={{ display: 'block', width: "90%", height: "90%" }}
+                                    />
+                                }
                             </Box>
                             <p color='error'>{imageMessageError}</p>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>
                         </Box>
                     </Grid>
+
                     <Grid item xs={12} sm={8}>
                         <Box className={classes.title}>Nội dung</Box>
                         <SunEditor

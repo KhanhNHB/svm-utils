@@ -3,9 +3,7 @@ import { Button, Box, Grid, TextField, Container } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
 import { UPLOAD_FILE } from '../../../../api/endpoint';
-import { host_url } from '../../../../common';
-import { useLocation, useNavigate } from 'react-router';
-import { useDispatch } from 'react-redux';
+import { host_url, } from '../../../../common';
 import SunEditor from 'suneditor-react';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
@@ -46,18 +44,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const SetupModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
+const SetupModal = ({ onSubmit, onClose }) => {
     const classes = useStyles();
-    const dispatch = useDispatch;
-    const navigate = useNavigate();
-
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [description, setDescription] = useState("");
     const [image, setImage] = useState("");
     const [imageMessageError, setImageMessageError] = useState("");
-    const [loading, setLoading] = useState(false);
-    const location = useLocation();
 
     const handleChangeTitle = title => {
         setTitle(title);
@@ -84,7 +77,7 @@ const SetupModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
         })
             .then(res => {
                 setImage(res.data.url);
-                setImageMessageError('')
+                setImageMessageError('');
             })
             .catch(err => {
                 setImageMessageError('Tải hình ảnh thất bại, mời thử lại!')
@@ -105,7 +98,7 @@ const SetupModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
     };
 
     return (
-        <Container maxWidth="xl" sx={{ marginTop: 5, height: 1000, overflowY: "auto" }}>
+        <Container maxWidth="xl" sx={{ marginTop: 5, height: 500, overflowY: "auto" }}>
             <Box
                 sx={{
                     borderRadius: 2,
@@ -149,7 +142,7 @@ const SetupModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
                                 value={content}
                             />
                         </form>
-                        <Box className={classes.title}>Ảnh đại diện</Box>
+                        <Box className={classes.text}>Ảnh đại diện</Box>
                         <Box
                             sx={{
                                 display: "flex",
@@ -182,12 +175,12 @@ const SetupModal = ({ handleMessage, handleSnackbar, onSubmit, onClose }) => {
                                 </Button>
                             </label>
                             <Box sx={{ margin: "auto" }}>
-                                <img src={image ? (host_url + image) : ""} style={{ display: 'block' }} />
+                                {image && <img src={host_url + image} style={{ display: 'block', width: "90%", height: "90%" }} alt="img" />}
                             </Box>
-                            <p color='error'>{imageMessageError}</p>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>
                         </Box>
                     </Grid>
+
                     <Grid item xs={12} sm={8}>
                         <Box className={classes.title}>Nội dung</Box>
                         <SunEditor
