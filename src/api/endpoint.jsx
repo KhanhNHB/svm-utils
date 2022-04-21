@@ -64,6 +64,8 @@ export const ORDER_TRIAL__BY_ID_ENDPOINT = `${BASE_URL}/order-trial/id`;
 export const SETTING_UPDATE = `${BASE_URL}/setting`;
 export const SETTING_LOAD   = `${BASE_URL}/setting/all`;
 
+export const GET_AL_NOTIFICATION_EMAILS   = `${BASE_URL}/notification/all`;
+
 
 
 export const UPLOAD_FILE = `${BASE_URL}/file/upload`;

@@ -27,6 +27,7 @@ import contact from '../views/contact/redux/contact.reducer';
 import order from '../views/order/redux/order.reducer';
 import orderTrial from '../views/order-trial/redux/order-trial.reducer';
 import dealer from '../views/dealer/redux/dealer.reducer';
+import email from '../views/mail/redux/mail.reducer';
 
 const appReducers = combineReducers({
         user,
@@ -54,7 +55,8 @@ const appReducers = combineReducers({
         insurance,
         feature,
         assignHubStatus,
-        assignOrderToShipperStatus
+        assignOrderToShipperStatus,
+        email
 });
 
 export default appReducers;

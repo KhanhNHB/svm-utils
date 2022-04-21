@@ -1,0 +1,26 @@
+.send-mail-socket {
+    margin:20px auto !important;
+    float: right;
+    display: block !important;
+}
+
+.list-success {
+    color:green;
+}
+.item-success {
+    color:green;
+    font-style: italic;
+}
+.list-failed {
+    color: red;
+}
+.item-failed {
+    color: red;
+    font-style: italic;
+}
+.result-hidden {
+    display:none !important;
+}
+.result-show {
+    display: flex !important;
+}
