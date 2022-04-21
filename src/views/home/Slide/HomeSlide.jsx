@@ -419,7 +419,7 @@ const HomeSlide = ({ home }) => {
                                             <p style={{ color: 'red' }}>{largeImageMessageError.id === slide.id ? largeImageMessageError.message : ""}</p>
                                         </Box>
                                     </Box>
-                                    <Box className={classes.text} sx={{ marginBottom: 1 }}>
+                                    {/* <Box className={classes.text} sx={{ marginBottom: 1 }}>
                                         Hình slide {index + 1}
                                     </Box>
                                     <Box
@@ -458,7 +458,7 @@ const HomeSlide = ({ home }) => {
                                             />
                                         </Box>
                                         <p style={{ color: 'red' }}>{smallImageMessageError.id === slide.id ? smallImageMessageError.message : ""}</p>
-                                    </Box>
+                                    </Box> */}
                                 </Box>
                             </Grid>
                         })}

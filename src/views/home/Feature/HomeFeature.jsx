@@ -415,7 +415,7 @@ const HomeFeature = ({ homeId }) => {
                             onChangePage={() => { }}
                         />
                     )}
-                    <Box>
+                    {/* <Box>
                         <Button
                             variant="contained"
                             startIcon={<SaveIcon size={14} />}
@@ -435,7 +435,7 @@ const HomeFeature = ({ homeId }) => {
                         >
                             Lưu lại
                         </Button>
-                    </Box>
+                    </Box> */}
                 </Box>
             </Grid>
             <Modal open={selectFeatureDetail}>
