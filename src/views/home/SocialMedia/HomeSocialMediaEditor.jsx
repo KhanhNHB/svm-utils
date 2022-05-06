@@ -9,6 +9,8 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import { UPLOAD_FILE } from '../../../api/endpoint';
 import axios from 'axios';
+import { host_url } from '../../../common';
+import SunEditor from 'suneditor-react';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'space-between',
     },
     title: {
-        color: "red",
+        color: "black",
         display: "flex",
         fontSize: 24,
         fontFamily: "Manrope, sans-serif",
@@ -49,9 +51,11 @@ const HomeSocialMediaEditor = ({
 }) => {
     const classes = useStyles();
 
-    const [id, setId] = useState(homeSocialMediaDetail.id ? homeSocialMediaDetail.id : '');
+    const [id, setId] = useState(homeSocialMediaDetail.id ? homeSocialMediaDetail.id : -1);
     const [image, setImage] = useState(homeSocialMediaDetail.image ? homeSocialMediaDetail.image : '');
     const [title, setTitle] = useState(homeSocialMediaDetail.title ? homeSocialMediaDetail.title : '');
+    const [content, setContent] = useState(homeSocialMediaDetail.content ? homeSocialMediaDetail.content : '');
+    const [description, setDescription] = useState(homeSocialMediaDetail.description ? homeSocialMediaDetail.description : '');
 
     const [imageMessageError, setImageMessageError] = useState('');
 
@@ -82,8 +86,16 @@ const HomeSocialMediaEditor = ({
         setTitle(title);
     }
 
+    const handleChangeContent = (content) => {
+        setContent(content);
+    }
+
+    const handleChangeDescription = (description) => {
+        setDescription(description);
+    }
+
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="xl" sx={{ marginTop: 5, height: 500, overflowY: "auto" }}>
             <Box
                 sx={{
                     borderRadius: 2,
@@ -107,7 +119,27 @@ const HomeSocialMediaEditor = ({
                             className={classes.title}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={12}>
+                    <Grid item xs={6} sm={6}>
+                        <Box className={classes.text}>Mô tả ngắn</Box>
+                        <form>
+                            <textarea
+                                style={{
+                                    width: '100%',
+                                    height: '150px',
+                                    padding: '8px 10px',
+                                    boxSizing: 'border-box',
+                                    border: '2px solid #ccc',
+                                    borderRadius: '4px',
+                                    backgroundColor: 'white',
+                                    fontSize: '15px',
+                                    resize: 'none',
+                                }}
+                                onChange={handleChangeContent}
+                                value={content}
+                            />
+                        </form>
+                    </Grid>
+                    <Grid item xs={6} sm={6}>
                         <Box className={classes.text}>Hình ảnh</Box>
                         <Box
                             sx={{
@@ -139,11 +171,41 @@ const HomeSocialMediaEditor = ({
                                 />
                             </Button>
                             <Box sx={{ margin: "auto" }}>
-                                <img src={image} style={{ display: 'block', maxWidth: '277px', height: '277px' }} />
+                                <img src={host_url + image} style={{ display: 'block', maxWidth: '277px', height: '277px' }} alt="NextGEN" />
                             </Box>
                             <p color='error'>{imageMessageError}</p>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>
                         </Box>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                        <Box className={classes.title}>Nội dung</Box>
+                        <SunEditor
+                            autoFocus={false}
+                            height={500}
+                            setContents={description}
+                            onChange={handleChangeDescription}
+                            showToolbar={true}
+                            setOptions={{
+                                buttonList: [
+                                    [
+                                        'undo',
+                                        'redo',
+                                        'link',
+                                        'fullScreen',
+                                        "bold",
+                                        "underline",
+                                        "italic",
+                                        "strike",
+                                        "list",
+                                        "align",
+                                        "fontSize",
+                                        "formatBlock",
+                                        "table",
+                                        "image"
+                                    ]
+                                ]
+                            }}
+                        />
                     </Grid>
                     <Grid item xs={12} sm={12}>
                         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -151,8 +213,7 @@ const HomeSocialMediaEditor = ({
                                 <Button
                                     color="primary"
                                     variant="contained"
-                                    onClick={() => onSubmit(id, image, title)}
-                                    disabled={!homeSocialMediaDetail ? true : false}
+                                    onClick={() => onSubmit(id, image, title, content)}
                                     style={{ color: 'white', maxWidth: 120, minWidth: 120 }}>
                                     Lưu lại
                                 </Button>

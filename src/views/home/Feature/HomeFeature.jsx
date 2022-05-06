@@ -1,21 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { forwardRef, useEffect, useState } from 'react';
 import {
     Box,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TablePagination,
-    TableRow,
     Alert,
     Modal,
-    TableSortLabel,
     Snackbar,
-    TableContainer,
-    TextField,
     Button,
-    Grid
+    Grid,
+    IconButton,
+    TextField
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Cookies from 'js-cookie';
@@ -29,84 +21,37 @@ import parse from "html-react-parser";
 import LinesEllipsis from 'react-lines-ellipsis';
 import Loading from '../../../components/Loading';
 import HomeFeatureEditor from './HomeFeatureEditor';
-import SaveIcon from '@mui/icons-material/Save';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import WarnDialog from '../../../components/WarnDialog';
+import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/SaveOutlined';
+import MaterialTable from 'material-table';
 
-const columns = [
-    { id: 'id', label: 'Id', minWidth: 50, align: 'left' },
-    { id: 'icon', label: 'SVG Icon', minWidth: 250, align: 'left' },
-    { id: 'image', label: 'Hình ảnh', minWidth: 150, align: 'left' },
-    { id: 'title', label: 'Tiêu đề', minWidth: 300, align: 'left' }
-];
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Search from '@material-ui/icons/Search';
+import EditIcon from "@material-ui/icons/Edit";
 
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-}
-
-
-const EnhancedTableHead = (props) => {
-    const { order, orderBy, onRequestSort, user } = props;
-    const createSortHandler = (property) => (event) => {
-        onRequestSort(event, property);
-    };
-
-    return (
-        <TableHead>
-            <TableRow>
-                {columns.map((headCell) => (
-                    <TableCell
-                        key={headCell.id}
-                        padding={headCell.disablePadding ? 'none' : 'default'}
-                        sortDirection={orderBy === headCell.id ? order : false}
-                        align={headCell.align}
-                        style={{ minWidth: headCell.minWidth }}
-                    >
-                        <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
-                        >
-                            {headCell.label}
-                        </TableSortLabel>
-                    </TableCell>
-                ))}
-                <TableCell style={{ minWidth: 50 }}>Action</TableCell>
-            </TableRow>
-        </TableHead>
-    );
-}
-
-EnhancedTableHead.propTypes = {
-    classes: PropTypes.object.isRequired,
-    orderBy: PropTypes.string.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+const tableIcons = {
+    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
 };
 
 const useStyles = makeStyles((theme) => ({
     root: {},
+    boundary: {
+        display: 'flex',
+        width: '100%',
+        flexDirection: 'column',
+    },
     avatar: {
         marginRight: theme.spacing(2)
     },
@@ -158,16 +103,34 @@ const HomeFeature = ({ homeId }) => {
     const dispatch = useDispatch();
     const homeFeature = useSelector(state => state.homeFeature.homeFeature);
 
-    const [order, setOrder] = useState('asc');
-    const [orderBy, setOrderBy] = useState('id');
-
     const [featureDetail, setFeatureDetail] = useState("");
     const [selectFeatureDetail, setSelectFeatureDetail] = useState(false);
 
     const [loading, setLoading] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [message, setMessage] = useState('');
+    const [rows, setRows] = useState(null);
 
+    const mappingItems = (data) => {
+        if (data !== null && data.homeFeatureDetail !== null && data.homeFeatureDetail.length) {
+            let homeFeatureDetail = [...data.homeFeatureDetail].map((item, index) => {
+                return {
+                    no: index + 1,
+                    id: item.id,
+                    title: item.title,
+                    icon: item.icon,
+                    image: item.image,
+                    content: item.content,
+                    is_active: item.is_active,
+                    createdDate: item.createdDate
+                }
+            });
+
+            return homeFeatureDetail;
+        }
+
+        return [];
+    }
 
     useEffect(() => {
         const fetchHomeFeature = async () => {
@@ -177,6 +140,7 @@ const HomeFeature = ({ homeId }) => {
                 const response = await API.get(`${HOME_FEATURE_ENDPOINT}/home_id/${homeId}`);
                 if (response.ok) {
                     const fetchData = await response.json();
+                    setRows(mappingItems(fetchData));
                     dispatch(actGetHomeFeature(fetchData));
                 } else {
                     if (response.status === RESPONSE_STATUS.FORBIDDEN) {
@@ -195,15 +159,36 @@ const HomeFeature = ({ homeId }) => {
         fetchHomeFeature();
     }, []);
 
-    const handleClicItem = (featureDetail) => {
-        setFeatureDetail(featureDetail);
+    const onEdit = (event, item) => {
+        setFeatureDetail(item);
         setSelectFeatureDetail(true);
     };
 
-    const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
+    const onDelete = async (item) => {
+        setLoading(true);
+
+        const response = await API.delete(`${HOME_FEATURE_DETAIL_ENDPOINT}/id/${item.id}`);
+        if (response.ok) {
+            const res = await API.get(`${HOME_FEATURE_ENDPOINT}/home_id/${homeId}`);
+            if (res.ok) {
+                const fetchData = await res.json();
+                dispatch(actGetHomeFeature(fetchData));
+                setRows(mappingItems(fetchData));
+                setMessage(`Xóa tính năng thành công!`);
+                setOpenSnackbar(true);
+            } else {
+                if (response.status === RESPONSE_STATUS.FORBIDDEN) {
+                    Cookies.remove(USER_TOKEN);
+                    Cookies.remove(USER_DEVICE_TOKEN);
+                    navigate('/', { replace: true });
+                }
+            }
+        } else {
+            setMessage(`Xóa tính năng thất bại!`);
+            setOpenSnackbar(true);
+        }
+
+        setLoading(false);
     };
 
     const handleCloseSnackbar = (event, reason) => {
@@ -213,37 +198,15 @@ const HomeFeature = ({ homeId }) => {
         setOpenSnackbar(false);
     };
 
-    const _hanleRowTableData = (column, value) => {
-        switch (column) {
-            case 'icon':
-                return value.length > 50 ? value.substring(0, 50) + "..." : value;
-            case 'image':
-                return (
-                    <img
-                        alt="News Image"
-                        style={{ height: 45, width: 60 }}
-                        src={value ? host_url + value : 'image-default.png'}
-                    />
-                );
-            case 'title':
-                return (
-                    <LinesEllipsis
-                        text={parse(value)}
-                        maxLine='3'
-                        ellipsis='...'
-                        trimRight
-                        basedOn='letters'
-                    />
-                );
-            default:
-                return value;
-        };
-    }
-
     const handleChangeTitle = title => {
         const feature = { ...homeFeature, featureTitle: title };
         dispatch(actGetHomeFeature(feature));
     }
+
+    const handleAddItem = () => {
+        setFeatureDetail("");
+        setSelectFeatureDetail(true);
+    };
 
     const onSubmitFeature = async () => {
         setLoading(true);
@@ -259,6 +222,7 @@ const HomeFeature = ({ homeId }) => {
             if (res.ok) {
                 const fetchData = await res.json();
                 dispatch(actGetHomeFeature(fetchData));
+                setRows(mappingItems(fetchData));
                 setMessage(`Cập nhật tiêu đề tính năng thành công!`);
                 setOpenSnackbar(true);
             } else {
@@ -281,17 +245,26 @@ const HomeFeature = ({ homeId }) => {
         const data = {
             id: id,
             image: image,
+            homeFeatureId: homeFeature.featureId,
             icon: icon,
             title: title,
             content: content
         };
 
-        const response = await API.put(`${HOME_FEATURE_DETAIL_ENDPOINT}`, data);
+        let response;
+
+        if (id === -1) {
+            response = await API.post(`${HOME_FEATURE_DETAIL_ENDPOINT}`, data);
+        } else {
+            response = await API.put(`${HOME_FEATURE_DETAIL_ENDPOINT}`, data);
+        }
+
         if (response.ok) {
             const res = await API.get(`${HOME_FEATURE_ENDPOINT}/home_id/${homeId}`);
             if (res.ok) {
                 const fetchData = await res.json();
                 dispatch(actGetHomeFeature(fetchData));
+                setRows(mappingItems(fetchData));
                 setMessage(`Cập nhật chi tiết tính năng thành công!`);
                 setOpenSnackbar(true);
             } else {
@@ -331,96 +304,34 @@ const HomeFeature = ({ homeId }) => {
                             Tính năng
                         </Box>
                     </Box>
-                    <TextField
-                        fullWidth
-                        placeholder="Tiêu đề"
-                        label="Tiêu đề"
-                        name="tiêu đề"
-                        value={homeFeature.featureTitle}
-                        onChange={e => handleChangeTitle(e.target.value)}
-                        variant="outlined"
-                        className={classes.title}
+                    <Box
                         sx={{
-                            marginBottom: 3,
+                            display: "flex",
+                            flexDirection: "column",
+                            marginBottom: 3
                         }}
-                        InputLabelProps={{ shrink: true }}
-                    />
-                    <TableContainer className={classes.container}>
-                        <Table aria-label="sticky table">
-                            <EnhancedTableHead
-                                classes={classes}
-                                order={order}
-                                orderBy={orderBy}
-                                onRequestSort={handleRequestSort}
-                                key={1}
-                            />
-                            {(homeFeature.homeFeatureDetail && homeFeature.homeFeatureDetail.length) &&
-                                <TableBody>
-                                    {stableSort(homeFeature.homeFeatureDetail, getComparator(order, orderBy)).map((item, index) => {
-                                        return (
-                                            <TableRow
-                                                hover
-                                                role="checkbox"
-                                                tabIndex={-1}
-                                                key={item.id}
-                                            >
-                                                {columns.map((column, index) => {
-                                                    const value = _hanleRowTableData(column.id, item[column.id]);
-                                                    return (
-                                                        <TableCell
-                                                            align={column.align}
-                                                            id={index}
-                                                            key={index}
-                                                        >
-                                                            {value}
-                                                        </TableCell>
-                                                    );
-                                                })}
-                                                <TableCell align={"left"}>
-                                                    <Button
-                                                        variant="contained"
-                                                        startIcon={<EditOutlinedIcon size={14} />}
-                                                        size="medium"
-                                                        sx={{
-                                                            dispaly: "flex",
-                                                            alignItems: "center",
-                                                            maxWidth: 130,
-                                                            maxHeight: 35,
-                                                            minWidth: 130,
-                                                            minHeight: 35,
-                                                            display: "flex",
-                                                            textTransform: 'none',
-                                                            background: 'linear-gradient(#00AFEC, #005FBE)',
-                                                            fontSize: 14
-                                                        }}
-                                                        onClick={() => handleClicItem(item)}
-                                                    >
-                                                        Chỉnh sửa
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            }
-                        </Table>
-                    </TableContainer>
-                    {homeFeature.homeFeatureDetail && homeFeature.homeFeatureDetail.length && (
-                        <TablePagination
-                            rowsPerPageOptions={[0]}
-                            component="div"
-                            count={homeFeature.homeFeatureDetail.length}
-                            rowsPerPage={10}
-                            page={0}
-                            onChangePage={() => { }}
+                    >
+                        <TextField
+                            fullWidth
+                            placeholder="Tiêu đề"
+                            label="Tiêu đề"
+                            name="tiêu đề"
+                            value={homeFeature.featureTitle}
+                            onChange={e => handleChangeTitle(e.target.value)}
+                            variant="outlined"
+                            className={classes.title}
+                            sx={{
+                                background: "white",
+                                marginBottom: 3,
+                            }}
+                            InputLabelProps={{ shrink: true }}
                         />
-                    )}
-                    {/* <Box>
+                    </Box>
+                    <Box>
                         <Button
                             variant="contained"
-                            startIcon={<SaveIcon size={14} />}
+                            startIcon={<AddIcon size={14} />}
                             style={{
-                                dispaly: "flex",
                                 alignItems: "center",
                                 maxWidth: 130,
                                 maxHeight: 35,
@@ -429,13 +340,101 @@ const HomeFeature = ({ homeId }) => {
                                 display: "flex",
                                 textTransform: 'none',
                                 background: 'linear-gradient(#00AFEC, #005FBE)',
+                                color: "white",
                                 fontSize: 14
                             }}
-                            onClick={() => onSubmitFeature()}
+                            onClick={handleAddItem}
                         >
-                            Lưu lại
+                            Thêm mới
                         </Button>
-                    </Box> */}
+                        <Box sx={{ marginTop: 3, marginBottom: 3 }}>
+                            {rows
+                                ? (
+                                    <MaterialTable
+                                        columns={[
+                                            { id: 'no', title: 'No.', field: "no" },
+                                            {
+                                                id: 'icon',
+                                                title: 'Icon',
+                                                field: "icon",
+                                                render: rowData => {
+                                                    return rowData.icon.length > 50 ? rowData.icon.substring(0, 50) + "..." : rowData.icon;
+                                                }
+                                            },
+                                            {
+                                                id: 'image',
+                                                title: 'Hình ảnh',
+                                                render: rowData => {
+                                                    return <img src={host_url + rowData.image} style={{ maxWidth: '100px' }} />
+                                                }
+                                            },
+                                            {
+                                                id: 'title',
+                                                title: 'Tiêu đề',
+                                                align: "left",
+                                                field: "title",
+                                                render: rowData => {
+                                                    return (
+                                                        <LinesEllipsis
+                                                            text={parse(rowData.title)}
+                                                            maxLine='3'
+                                                            ellipsis='...'
+                                                            trimRight
+                                                            basedOn='letters'
+                                                        />
+                                                    );
+                                                }
+                                            },
+                                            {
+                                                id: "actions",
+                                                title: "Actions",
+                                                render: rowData => {
+                                                    return (
+                                                        <Box style={{
+                                                            display: "flex"
+                                                        }}>
+                                                            <IconButton
+                                                                aria-label="edit"
+                                                                onClick={(e) => { onEdit(e, rowData) }}
+                                                                color='success'
+                                                            >
+                                                                <EditIcon />
+                                                            </IconButton>
+                                                            <WarnDialog item={rowData} onClick={onDelete} />
+                                                        </Box>
+                                                    );
+                                                }
+                                            }
+                                        ]}
+                                        data={rows}
+                                        title="Danh sách tính năng"
+                                        icons={tableIcons}
+                                        options={{ sorting: true }}
+                                    />
+                                )
+                                : <Loading />
+                            }
+                        </Box>
+                    </Box>
+                    <Button
+                        variant="contained"
+                        startIcon={<SaveIcon size={14} />}
+                        style={{
+                            alignItems: "center",
+                            maxWidth: 130,
+                            maxHeight: 35,
+                            minWidth: 130,
+                            minHeight: 35,
+                            display: "flex",
+                            textTransform: 'none',
+                            background: 'linear-gradient(#00AFEC, #005FBE)',
+                            color: "white",
+                            fontSize: 14
+                        }}
+                        onClick={() => onSubmitFeature()}
+                    >
+                        Lưu lại
+                    </Button>
                 </Box>
             </Grid>
             <Modal open={selectFeatureDetail}>

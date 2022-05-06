@@ -291,7 +291,7 @@ const EventNewList = () => {
       >
         Tạo tin tức
       </Button>
-      <Box sx={{ height: 800 }}>
+      <Box sx={{ height: 800, marginTop: 3 }}>
         <MaterialTable
           columns={[
             { id: 'no', title: 'No.', field: "no" },
@@ -311,13 +311,13 @@ const EventNewList = () => {
                   <div>
                     <IconButton
                       aria-label="edit"
-                      onClick={(e) => { handleEdit(e, rowData) }} color='error'
+                      onClick={(e) => { handleEdit(e, rowData) }} color='success'
                     >
                       <EditIcon />
                     </IconButton>
                     <IconButton
                       aria-label="delete"
-                      onClick={(e) => { handleDelete(e, rowData) }} color='success'
+                      onClick={(e) => { handleDelete(e, rowData) }} color='error'
                     >
                       <DeleteIcon />
                     </IconButton>

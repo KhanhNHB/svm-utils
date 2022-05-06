@@ -55,7 +55,7 @@ const DiscountNewsEditor = ({
     const classes = useStyles();
 
     return (
-        <Container maxWidth="xl" sx={{ marginTop: 5, height: 1000, overflowY: "auto" }}>
+        <Container maxWidth="xl" sx={{ marginTop: 5, height: 500, overflowY: "auto" }}>
             <Box
                 sx={{
                     borderRadius: 2,

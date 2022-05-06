@@ -1,21 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { forwardRef, useEffect, useState } from 'react';
 import {
     Box,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TablePagination,
-    TableRow,
     Alert,
     Modal,
-    TableSortLabel,
     Snackbar,
-    TableContainer,
     TextField,
     Button,
-    Grid
+    Grid,
+    Divider,
+    IconButton
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Cookies from 'js-cookie';
@@ -23,85 +16,35 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { actGetHomeSocialMedia } from '../../../actions';
 import API from '../../../api/API';
-import { HOME_SOCIAL_MEDIA_DETAIL_ENDPOINT, HOME_SOCIAL_MEDIA_ENDPOINT, HOME_VISION_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
-import { RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../common';
+import { HOME_SOCIAL_MEDIA_DETAIL_ENDPOINT, HOME_SOCIAL_MEDIA_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
+import { host_url, RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../common';
 import parse from "html-react-parser";
 import LinesEllipsis from 'react-lines-ellipsis';
 import Loading from '../../../components/Loading';
 import HomeSocialMediaEditor from './HomeSocialMediaEditor';
 import SaveIcon from '@mui/icons-material/Save';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
-const columns = [
-    { id: 'id', label: 'Id', minWidth: 50, align: 'left' },
-    { id: 'image', label: 'Hình ảnh', minWidth: 120, align: 'left' },
-    { id: 'title', label: 'Tiêu đề', minWidth: 200, align: 'left' }
-];
+import WarnDialog from '../../../components/WarnDialog';
+import AddIcon from '@mui/icons-material/Add';
+import MaterialTable from 'material-table';
 
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Search from '@material-ui/icons/Search';
+import EditIcon from "@material-ui/icons/Edit";
 
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-}
-
-
-const EnhancedTableHead = (props) => {
-    const { order, orderBy, onRequestSort, user } = props;
-    const createSortHandler = (property) => (event) => {
-        onRequestSort(event, property);
-    };
-
-    return (
-        <TableHead>
-            <TableRow>
-                {columns.map((headCell) => (
-                    <TableCell
-                        key={headCell.id}
-                        padding={headCell.disablePadding ? 'none' : 'default'}
-                        sortDirection={orderBy === headCell.id ? order : false}
-                        align={headCell.align}
-                        style={{ minWidth: headCell.minWidth }}
-                    >
-                        <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
-                        >
-                            {headCell.label}
-                        </TableSortLabel>
-                    </TableCell>
-                ))}
-                <TableCell align={"left"}>Action</TableCell>
-            </TableRow>
-        </TableHead>
-    );
-}
-
-EnhancedTableHead.propTypes = {
-    classes: PropTypes.object.isRequired,
-    orderBy: PropTypes.string.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+const tableIcons = {
+    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -171,6 +114,29 @@ const HomeSocialMedia = ({ homeId }) => {
     const [imageMessageError, setImageMessageError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const [rows, setRows] = useState(null);
+
+    const mappingItems = (data) => {
+        console.log(data);
+        if (data !== null && data.homeSocialMediaDetails !== null && data.homeSocialMediaDetails.length) {
+            let homeSocialMediaDetails = [...data.homeSocialMediaDetails].map((item, index) => {
+                return {
+                    no: index + 1,
+                    id: item.id,
+                    homeSocialMediaId: item.homeSocialMediaId,
+                    title: item.title,
+                    content: item.content,
+                    image: item.image,
+                    description: item.description
+                }
+            });
+
+            return homeSocialMediaDetails;
+        }
+
+        return [];
+    }
+
     useEffect(() => {
         const fetchHomeSocialMedia = async () => {
             setLoading(true);
@@ -179,6 +145,7 @@ const HomeSocialMedia = ({ homeId }) => {
                 const response = await API.get(`${HOME_SOCIAL_MEDIA_ENDPOINT}/home_id/${homeId}`);
                 if (response.ok) {
                     const fetchData = await response.json();
+                    setRows(mappingItems(fetchData));
                     dispatch(actGetHomeSocialMedia(fetchData));
                 } else {
                     if (response.status === RESPONSE_STATUS.FORBIDDEN) {
@@ -214,29 +181,6 @@ const HomeSocialMedia = ({ homeId }) => {
         }
         setOpenSnackbar(false);
     };
-
-    const _hanleRowTableData = (column, value, newsItem) => {
-        switch (column) {
-            case 'image':
-                return (
-                    <img alt="News Image" style={{ height: 45, width: 60 }} src={value
-                        ? value
-                        : 'image-default.png'} />
-                );
-            case 'title':
-                return (
-                    <LinesEllipsis
-                        text={parse(value)}
-                        maxLine='3'
-                        ellipsis='...'
-                        trimRight
-                        basedOn='letters'
-                    />
-                );
-            default:
-                return value;
-        };
-    }
 
     const handleChangeTitle = title => {
         const dataSocialMedia = { ...homeSocialMedia, title: title };
@@ -290,20 +234,63 @@ const HomeSocialMedia = ({ homeId }) => {
         setLoading(false);
     }
 
-    const onSubmitSocialMediaDetail = async (id, image, title) => {
-        setLoading(true);
-        const data = {
-            id: id,
-            image: image,
-            title: title
-        };
+    const onEdit = (event, item) => {
+        setHomeSocialMediaDetail(item);
+        setSelectSocialMediaDetail(true);
+    };
 
-        const response = await API.put(`${HOME_SOCIAL_MEDIA_DETAIL_ENDPOINT}`, data);
+    const onDelete = async (item) => {
+        setLoading(true);
+
+        const response = await API.delete(`${HOME_SOCIAL_MEDIA_DETAIL_ENDPOINT}/id/${item.id}`);
         if (response.ok) {
             const res = await API.get(`${HOME_SOCIAL_MEDIA_ENDPOINT}/home_id/${homeId}`);
             if (res.ok) {
                 const fetchData = await res.json();
                 dispatch(actGetHomeSocialMedia(fetchData));
+                setRows(mappingItems(fetchData));
+                setMessage(`Xóa tin truyền thông thành công!`);
+                setOpenSnackbar(true);
+            } else {
+                if (response.status === RESPONSE_STATUS.FORBIDDEN) {
+                    Cookies.remove(USER_TOKEN);
+                    Cookies.remove(USER_DEVICE_TOKEN);
+                    navigate('/', { replace: true });
+                }
+            }
+        } else {
+            setMessage(`Xóa tin truyền thông thất bại!`);
+            setOpenSnackbar(true);
+        }
+
+        setLoading(false);
+    };
+
+    const onSubmitSocialMediaDetail = async (id, image, title, content, description) => {
+        setLoading(true);
+        const data = {
+            id: id,
+            homeSocialMediaId: homeSocialMedia.id,
+            image: image,
+            title: title,
+            content: content,
+            description: description
+        };
+
+        let response;
+
+        if (id === -1) {
+            response = await API.post(`${HOME_SOCIAL_MEDIA_DETAIL_ENDPOINT}`, data);
+        } else {
+            response = await API.put(`${HOME_SOCIAL_MEDIA_DETAIL_ENDPOINT}`, data);
+        }
+
+        if (response.ok) {
+            const res = await API.get(`${HOME_SOCIAL_MEDIA_ENDPOINT}/home_id/${homeId}`);
+            if (res.ok) {
+                const fetchData = await res.json();
+                dispatch(actGetHomeSocialMedia(fetchData));
+                setRows(mappingItems(fetchData));
                 setMessage(`Cập nhật chi tiết truyền thông thành công!`);
                 setOpenSnackbar(true);
             } else {
@@ -322,6 +309,10 @@ const HomeSocialMedia = ({ homeId }) => {
         onClose();
     }
 
+    const handleAddItem = () => {
+        setHomeSocialMediaDetail("");
+        setSelectSocialMediaDetail(true);
+    };
 
     return (
         <Grid container>
@@ -351,10 +342,14 @@ const HomeSocialMedia = ({ homeId }) => {
                         InputLabelProps={{ shrink: true }}
                     />
                     <Grid container sx={{ marginTop: 3 }}>
-                        <Grid item xs={12} sm={4.2}>
+                        <Grid item xs={12} sm={12}>
                             <Box
                                 className={classes.container}
-                                sx={{ display: "flex", flexDirection: "column" }}
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    marginBottom: 3
+                                }}
                             >
                                 <TextField
                                     fullWidth
@@ -386,99 +381,117 @@ const HomeSocialMedia = ({ homeId }) => {
                                     />
                                 </form>
                             </Box>
+                            <Button
+                                variant="contained"
+                                startIcon={<SaveIcon size={14} />}
+                                style={{
+                                    alignItems: "center",
+                                    maxWidth: 130,
+                                    maxHeight: 35,
+                                    minWidth: 130,
+                                    minHeight: 35,
+                                    display: "flex",
+                                    textTransform: 'none',
+                                    background: 'linear-gradient(#00AFEC, #005FBE)',
+                                    fontSize: 14
+                                }}
+                                onClick={() => onSubmitSocialMedia()}
+                            >
+                                Lưu lại
+                            </Button>
                         </Grid>
-                        <Grid item xs={12} sm={0.1}></Grid>
-                        <Grid item xs={12} sm={7.7}>
-                            <TableContainer className={classes.container} sx={{ height: 360 }}>
-                                <Table aria-label="sticky table">
-                                    <EnhancedTableHead
-                                        classes={classes}
-                                        order={order}
-                                        orderBy={orderBy}
-                                        onRequestSort={handleRequestSort}
-                                        key={1}
-                                    />
-                                    {(homeSocialMedia.homeSocialMediaDetails && homeSocialMedia.homeSocialMediaDetails.length) &&
-                                        <TableBody>
-                                            {stableSort(homeSocialMedia.homeSocialMediaDetails, getComparator(order, orderBy)).map((item, index) => {
-                                                return (
-                                                    <TableRow
-                                                        hover
-                                                        role="checkbox"
-                                                        tabIndex={-1}
-                                                        key={item.id}
-                                                    >
-                                                        {columns.map((column, index) => {
-                                                            const value = _hanleRowTableData(column.id, item[column.id], item);
-                                                            return (
-                                                                <TableCell
-                                                                    align={column.align}
-                                                                    id={index}
-                                                                    key={index}
+                        <Grid item xs={12} sm={12}>
+                            <Box
+                                style={{
+                                    marginTop: 27,
+                                    marginBottom: 27
+                                }}
+                            >
+                                <Divider />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <Button
+                                variant="contained"
+                                startIcon={<AddIcon size={14} />}
+                                style={{
+                                    alignItems: "center",
+                                    maxWidth: 130,
+                                    maxHeight: 35,
+                                    minWidth: 130,
+                                    minHeight: 35,
+                                    display: "flex",
+                                    textTransform: 'none',
+                                    background: 'linear-gradient(#00AFEC, #005FBE)',
+                                    color: "white",
+                                    fontSize: 14
+                                }}
+                                onClick={handleAddItem}
+                            >
+                                Thêm mới
+                            </Button>
+                            <Box sx={{ marginTop: 3, marginBottom: 3 }}>
+                                {rows
+                                    ? (
+                                        <MaterialTable
+                                            columns={[
+                                                { id: 'no', title: 'No.', field: "no" },
+                                                {
+                                                    id: 'image',
+                                                    title: 'Hình ảnh',
+                                                    render: rowData => {
+                                                        return <img src={host_url + rowData.image} style={{ maxWidth: '100px' }} />
+                                                    }
+                                                },
+                                                {
+                                                    id: 'title',
+                                                    title: 'Tiêu đề',
+                                                    align: "left",
+                                                    field: "title",
+                                                    render: rowData => {
+                                                        return (
+                                                            <LinesEllipsis
+                                                                text={parse(rowData.title)}
+                                                                maxLine='3'
+                                                                ellipsis='...'
+                                                                trimRight
+                                                                basedOn='letters'
+                                                            />
+                                                        );
+                                                    }
+                                                },
+                                                {
+                                                    id: "actions",
+                                                    title: "Actions",
+                                                    render: rowData => {
+                                                        return (
+                                                            <Box style={{
+                                                                display: "flex"
+                                                            }}>
+                                                                <IconButton
+                                                                    aria-label="edit"
+                                                                    onClick={(e) => { onEdit(e, rowData) }}
+                                                                    color='success'
                                                                 >
-                                                                    {value}
-                                                                </TableCell>
-                                                            );
-                                                        })}
-                                                        <TableCell align={"left"}>
-                                                            <Button
-                                                                variant="contained"
-                                                                startIcon={<EditOutlinedIcon size={14} />}
-                                                                sx={{
-                                                                    dispaly: "flex",
-                                                                    alignItems: "center",
-                                                                    maxWidth: 130,
-                                                                    maxHeight: 35,
-                                                                    minWidth: 130,
-                                                                    minHeight: 35,
-                                                                    display: "flex",
-                                                                    textTransform: 'none',
-                                                                    background: 'linear-gradient(#00AFEC, #005FBE)',
-                                                                    fontSize: 14
-                                                                }}
-                                                                onClick={() => handleClicItem(item)}
-                                                            >
-                                                                Chỉnh sửa
-                                                            </Button>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                );
-                                            })}
-                                        </TableBody>
-                                    }
-                                </Table>
-                            </TableContainer>
-                            {homeSocialMedia.homeSocialMediaDetails && homeSocialMedia.homeSocialMediaDetails.length && (
-                                <TablePagination
-                                    rowsPerPageOptions={[0]}
-                                    component="div"
-                                    count={homeSocialMedia.homeSocialMediaDetails.length}
-                                    rowsPerPage={10}
-                                    page={0}
-                                    onChangePage={() => { }}
-                                />
-                            )}
+                                                                    <EditIcon />
+                                                                </IconButton>
+                                                                <WarnDialog item={rowData} onClick={onDelete} />
+                                                            </Box>
+                                                        );
+                                                    }
+                                                }
+                                            ]}
+                                            data={rows}
+                                            title="Danh sách tính năng"
+                                            icons={tableIcons}
+                                            options={{ sorting: true }}
+                                        />
+                                    )
+                                    : <Loading />
+                                }
+                            </Box>
                         </Grid>
                     </Grid>
-                    <Button
-                        variant="contained"
-                        startIcon={<SaveIcon size={14} />}
-                        style={{
-                            dispaly: "flex",
-                            alignItems: "center",
-                            maxWidth: 130,
-                            maxHeight: 35,
-                            minWidth: 130,
-                            minHeight: 35,
-                            display: "flex",
-                            textTransform: 'none',
-                            background: 'linear-gradient(#00AFEC, #005FBE)',
-                            fontSize: 14
-                        }}
-                        onClick={() => onSubmitSocialMedia()}
-                    >
-                        Lưu lại
-                    </Button>
                 </Box>
             </Grid>
             <Modal open={selectSocialMediaDetail}>
@@ -507,7 +520,7 @@ const HomeSocialMedia = ({ homeId }) => {
             <Modal open={loadingModal}>
                 <Loading />
             </Modal>
-        </Grid >
+        </Grid>
     )
 }
 

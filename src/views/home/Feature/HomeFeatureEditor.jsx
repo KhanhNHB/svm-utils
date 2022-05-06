@@ -128,7 +128,7 @@ const HomeFeatureEditor = ({
                                     boxSizing: 'border-box',
                                     border: '2px solid #ccc',
                                     borderRadius: '4px',
-                                    backgroundColor: '#f8f8f8',
+                                    backgroundColor: 'white',
                                     fontSize: '16px',
                                     resize: 'none',
                                 }}
@@ -189,7 +189,7 @@ const HomeFeatureEditor = ({
                                 />
                             </Button>
                             <Box sx={{ margin: "auto" }}>
-                                <img src={host_url + image} style={{ display: 'block', maxWidth: '277px', height: '277px' }} />
+                                <img src={host_url + image} style={{ display: 'block', maxWidth: '277px', height: '277px' }} alt="NextGEN" />
                             </Box>
                             <p style={{ color: 'red' }}>{imageMessageError}</p>
                         </Box>
@@ -201,8 +201,8 @@ const HomeFeatureEditor = ({
                                     color="primary"
                                     variant="contained"
                                     onClick={() => onSubmit(id, image, icon, title, content)}
-                                    disabled={!featureDetail ? true : false}
-                                    style={{ color: 'white', maxWidth: 120, minWidth: 120 }}>
+                                    style={{ color: 'white', maxWidth: 120, minWidth: 120 }}
+                                >
                                     Lưu lại
                                 </Button>
                             </Box>

@@ -444,7 +444,6 @@ const HomeEvaluate = ({ homeId }) => {
                             variant="contained"
                             startIcon={<SaveIcon size={14} />}
                             style={{
-                                dispaly: "flex",
                                 alignItems: "center",
                                 maxWidth: 130,
                                 maxHeight: 35,
