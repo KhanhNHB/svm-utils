@@ -134,7 +134,7 @@ const HomeSocialMediaEditor = ({
                                     fontSize: '15px',
                                     resize: 'none',
                                 }}
-                                onChange={handleChangeContent}
+                                onChange={e => handleChangeContent(e.target.value)}
                                 value={content}
                             />
                         </form>
@@ -213,7 +213,7 @@ const HomeSocialMediaEditor = ({
                                 <Button
                                     color="primary"
                                     variant="contained"
-                                    onClick={() => onSubmit(id, image, title, content)}
+                                    onClick={() => onSubmit(id, image, title, content, description)}
                                     style={{ color: 'white', maxWidth: 120, minWidth: 120 }}>
                                     Lưu lại
                                 </Button>

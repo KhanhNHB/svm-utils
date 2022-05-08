@@ -117,7 +117,7 @@ const HomeSocialMedia = ({ homeId }) => {
     const [rows, setRows] = useState(null);
 
     const mappingItems = (data) => {
-        console.log(data);
+        
         if (data !== null && data.homeSocialMediaDetails !== null && data.homeSocialMediaDetails.length) {
             let homeSocialMediaDetails = [...data.homeSocialMediaDetails].map((item, index) => {
                 return {
@@ -163,17 +163,6 @@ const HomeSocialMedia = ({ homeId }) => {
 
         fetchHomeSocialMedia();
     }, []);
-
-    const handleClicItem = (socialMediaDetail) => {
-        setHomeSocialMediaDetail(socialMediaDetail);
-        setSelectSocialMediaDetail(true);
-    };
-
-    const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
