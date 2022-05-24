@@ -354,18 +354,10 @@ const HomeFeature = ({ homeId }) => {
                                         columns={[
                                             { id: 'no', title: 'No.', field: "no" },
                                             {
-                                                id: 'icon',
-                                                title: 'Icon',
-                                                field: "icon",
-                                                render: rowData => {
-                                                    return rowData.icon.length > 50 ? rowData.icon.substring(0, 50) + "..." : rowData.icon;
-                                                }
-                                            },
-                                            {
                                                 id: 'image',
                                                 title: 'Hình ảnh',
                                                 render: rowData => {
-                                                    return <img src={host_url + rowData.image} style={{ maxWidth: '100px' }} />
+                                                    return <img src={host_url + rowData.image} style={{ maxWidth: '80px' }} />
                                                 }
                                             },
                                             {

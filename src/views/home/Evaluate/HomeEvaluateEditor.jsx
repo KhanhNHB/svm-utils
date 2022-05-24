@@ -8,8 +8,6 @@ import {
 } from '@mui/material';
 import SunEditor from 'suneditor-react';
 import { makeStyles } from '@material-ui/styles';
-import { VisibilityTwoTone } from '@material-ui/icons';
-import { UPLOAD_FILE } from '../../../api/endpoint';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,6 +51,7 @@ const HomeEvaluateEditor = ({
     const [id, setId] = useState(homeEvaluateStep.id ? homeEvaluateStep.id : -1);
     const [title, setTitle] = useState(homeEvaluateStep.title ? homeEvaluateStep.title : "");
     const [content, setContent] = useState(homeEvaluateStep.content ? homeEvaluateStep.content : "");
+    const [videoUrl, setVideoUrl] = useState(homeEvaluateStep.videoUrl ? homeEvaluateStep.videoUrl : "");
 
     const handleChangeTitle = (title) => {
         setTitle(title);
@@ -60,6 +59,10 @@ const HomeEvaluateEditor = ({
 
     const handleChangeContent = (content) => {
         setContent(content);
+    };
+
+    const handleChangeVideo = (video) => {
+        setVideoUrl(video);
     };
 
     return (
@@ -108,6 +111,18 @@ const HomeEvaluateEditor = ({
                                     ]
                                 ]
                             }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                        <Box className={classes.text}>Link Video</Box>
+                        <TextField
+                            fullWidth
+                            placeholder="Link Video"
+                            name="link-video"
+                            value={videoUrl}
+                            onChange={e => handleChangeVideo(e.target.value)}
+                            variant="outlined"
+                            className={classes.title}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12}>

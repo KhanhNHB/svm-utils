@@ -28,7 +28,6 @@ import { RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../common'
 import parse from "html-react-parser";
 import LinesEllipsis from 'react-lines-ellipsis';
 import Loading from '../../../components/Loading';
-import VideoCard from '../../../components/VideoCard';
 import HomeEvaluateEditor from './HomeEvaluateEditor';
 import SaveIcon from '@mui/icons-material/Save';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -332,7 +331,7 @@ const HomeEvaluate = ({ homeId }) => {
                         </Box>
                     </Box>
                     <Grid container>
-                        <Grid item xs={12} sm={4.2}>
+                        <Grid item xs={12} sm={12}>
                             <Box
                                 className={classes.container}
                                 sx={{ display: "flex", flexDirection: "column" }}
@@ -348,26 +347,9 @@ const HomeEvaluate = ({ homeId }) => {
                                     className={classes.title}
                                     InputLabelProps={{ shrink: true }}
                                 />
-                                <Box sx={{ display: "flex", marginTop: 5 }}>
-                                    <TextField
-                                        fullWidth
-                                        placeholder="Video"
-                                        label="Link video"
-                                        name="video"
-                                        value={homeEvaluate.videoUrl}
-                                        onChange={e => handleChangeVideoUrl(e.target.value)}
-                                        variant="outlined"
-                                        className={classes.title}
-                                        InputLabelProps={{ shrink: true }}
-                                    />
-                                </Box>
-                                <Box sx={{ display: "flex" }}>
-                                    <VideoCard videoUrl={homeEvaluate.videoUrl} />
-                                </Box>
                             </Box>
                         </Grid>
-                        <Grid item xs={12} sm={0.1}></Grid>
-                        <Grid item xs={12} sm={7.7}>
+                        <Grid item xs={12} sm={12}>
                             <TableContainer className={classes.container}>
                                 <Table aria-label="sticky table">
                                     <EnhancedTableHead
