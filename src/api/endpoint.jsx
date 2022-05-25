@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:8080";
+export const BASE_URL = "https://api-svm.webby.vn";
 // export const BASE_URL = "https://________";
 
 export const LOGIN_ENDPOINT = `${BASE_URL}/login`;
@@ -6,6 +6,7 @@ export const LOGIN_ENDPOINT = `${BASE_URL}/login`;
 export const HOME_ENDPOINT = `${BASE_URL}/home`;
 export const HOME_SLIDE_ENDPOINT = `${BASE_URL}/home-slide`;
 export const HOME_VISION_ENDPOINT = `${BASE_URL}/home-vision`;
+export const HOME_BANNER_ENDPOINT = `${BASE_URL}/home-banner`;
 export const HOME_FEATURE_ENDPOINT = `${BASE_URL}/home-feature`;
 export const HOME_FEATURE_DETAIL_ENDPOINT = `${BASE_URL}/home-feature-detail`;
 export const HOME_EVALUATE_ENDPOINT = `${BASE_URL}/home-evaluate`;

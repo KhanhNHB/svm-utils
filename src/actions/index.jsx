@@ -42,6 +42,13 @@ export const actGetHomeVision = (homeVision) => {
     }
 };
 
+export const actGetHomeBanner = (homeBanner) => {
+    return {
+        type: types.GET_HOME_BANNER,
+        homeBanner,
+    }
+};
+
 export const actGetHomeFeature = (homeFeature) => {
     return {
         type: types.GET_HOME_FEATURE,

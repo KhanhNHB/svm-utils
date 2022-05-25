@@ -19,16 +19,18 @@ import {
 import { makeStyles } from '@mui/styles';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
-import { actGetHomeVision } from '../../../actions';
+import { useNavigate } from 'react-router';
+import { actGetHomeVision, actGetHomeBanner } from '../../../actions';
 import API from '../../../api/API';
-import { HOME_VISION_ENDPOINT } from '../../../api/endpoint';
-import { RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../common';
+import { HOME_VISION_ENDPOINT, HOME_BANNER_ENDPOINT, UPLOAD_FILE } from '../../../api/endpoint';
+import { host_url, RESPONSE_STATUS, USER_DEVICE_TOKEN, USER_TOKEN } from '../../../common';
 import parse from "html-react-parser";
 import LinesEllipsis from 'react-lines-ellipsis';
 import Loading from '../../../components/Loading';
 import HomeVisionEditor from './HomeVisionEditor';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import axios from "axios";
+import SaveIcon from '@mui/icons-material/Save';
 
 const columns = [
     { id: 'id', label: 'Id', minWidth: 350, align: 'left' },
@@ -144,11 +146,11 @@ const useStyles = makeStyles((theme) => ({
 
 const HomeVision = ({ homeId }) => {
     const classes = useStyles();
-    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const homeVision = useSelector(state => state.homeVision.homeVision);
+    const homeBanner = useSelector(state => state.homeVision.homeBanner);
 
     const [order, setOrder] = useState('asc');
     const [vision, setVision] = useState("");
@@ -160,10 +162,10 @@ const HomeVision = ({ homeId }) => {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [message, setMessage] = useState('');
 
+    const [imageMessageError, setImageMessageError] = useState({ id: -1, message: "" });
+
     useEffect(() => {
         const fetchHomeVision = async () => {
-            setLoading(true);
-
             try {
                 const response = await API.get(`${HOME_VISION_ENDPOINT}/home_id/${homeId}`);
                 if (response.ok) {
@@ -179,13 +181,33 @@ const HomeVision = ({ homeId }) => {
                     }
                 }
             } catch (err) {
-
             }
-
-            setLoading(false);
         };
 
         fetchHomeVision();
+    }, []);
+
+    useEffect(() => {
+        const fetchHomeBanner = async () => {
+            try {
+                const response = await API.get(`${HOME_BANNER_ENDPOINT}/banner/vision`);
+                if (response.ok) {
+                    const fetchData = await response.json();
+                    const data = fetchData;
+
+                    dispatch(actGetHomeBanner(data));
+                } else {
+                    if (response.status === RESPONSE_STATUS.FORBIDDEN) {
+                        Cookies.remove(USER_TOKEN);
+                        Cookies.remove(USER_DEVICE_TOKEN);
+                        navigate('/', { replace: true });
+                    }
+                }
+            } catch (err) {
+            }
+        };
+
+        fetchHomeBanner();
     }, []);
 
     const handleClicItem = (vision) => {
@@ -275,6 +297,61 @@ const HomeVision = ({ homeId }) => {
         setSelectVision(false);
     };
 
+    const handleChangeImage = async (event) => {
+        const image = event.target.files[0]
+        const formData = new FormData();
+        formData.append('file', image);
+
+        axios.post(UPLOAD_FILE, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data;boundary=---',
+                'Access-Control-Allow-Origin': '*'
+            },
+        }).then(res => {
+            const homeBanner = [...homeBanner];
+
+            dispatch(actGetHomeBanner(homeBanner.image));
+            setImageMessageError({ id: -1, message: "" });
+        }).catch(err => {
+            setImageMessageError({ id: 0, message: 'Tải hình ảnh nền thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại!' });
+        });
+    };
+
+    const onSubmitHomeBanner = async (banner) => {
+
+        // const data = {
+        //     image: banner,
+        //     position: "vision"
+        // };
+
+        // const response = await API.put(`${HOME_SLIDE_ENDPOINT}`, data);
+
+        // if (response.ok) {
+        //     try {
+        //         const res = await API.get(`${HOME_SLIDE_ENDPOINT}`);
+        //         if (res.ok) {
+        //             const fetchData = await res.json();
+        //             const data = fetchData;
+        //             dispatch(actGetHomeSlide(data));
+        //             setMessage(`Cập nhật hình nền thành công!`);
+        //             setOpenSnackbar(true);
+        //         } else {
+        //             if (response.status === RESPONSE_STATUS.FORBIDDEN) {
+        //                 Cookies.remove(USER_TOKEN);
+        //                 Cookies.remove(USER_DEVICE_TOKEN);
+        //                 navigate('/', { replace: true });
+        //             }
+        //         }
+        //     } catch (err) {
+
+        //     }
+        // } else {
+        //     setMessage(`Cập nhật hình nền thất bại!`);
+        //     setOpenSnackbar(true);
+        // }
+
+    };
+
     return (
         <Grid container>
             <Grid item xs={12} sm={12} sx={{ marginTop: 5 }}>
@@ -282,6 +359,71 @@ const HomeVision = ({ homeId }) => {
                     <Box className={classes.title} sx={{ marginBottom: 3 }}>
                         Hỗ trợ
                     </Box>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            height: "93%",
+                            backgroundImage: !homeBanner.image && 'url("/image-default.png")',
+                            backgroundRepeat: 'no-repeat, repeat',
+                            backgroundPosition: 'center',
+                            marginBottom: 5
+                        }}
+                    >
+                        <Button
+                            variant="raised"
+                            component="label"
+                            sx={{
+                                background: 'wheat !important',
+                                color: 'black !important',
+                                width: "200px"
+                            }}
+                        >
+                            Chọn hình ảnh
+                            <input
+                                accept="image/*"
+                                className='ip'
+                                style={{ display: 'none' }}
+                                id="raised-button-file-small"
+                                onChange={(e) => handleChangeImage(e)}
+                                multiple
+                                type="file"
+                            />
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            startIcon={<SaveIcon size={14} />}
+                            style={{
+                                dispaly: "flex",
+                                alignItems: "center",
+                                maxWidth: 130,
+                                maxHeight: 35,
+                                minWidth: 130,
+                                minHeight: 35,
+                                display: "flex",
+                                textTransform: 'none',
+                                background: 'linear-gradient(#00AFEC, #005FBE)',
+                                fontSize: 14,
+                                margin: "10px 0"
+                            }}
+                            onClick={() => onSubmitHomeBanner(homeBanner.image)}
+                        >
+                            Lưu lại
+                        </Button>
+
+                        <Box>
+                            <img
+                                src={homeBanner.image ? host_url + homeBanner.image : ""}
+                                style={{ display: 'block', maxWidth: '100%', height: '250px' }}
+                            />
+                            <p style={{ color: 'red' }}>{imageMessageError.id === 0 ? imageMessageError.message : ""}</p>
+                        </Box>
+
+                       
+                    </Box>
+
+
                     <TableContainer className={classes.container}>
                         <Table aria-label="sticky table">
                             <EnhancedTableHead
