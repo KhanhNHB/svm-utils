@@ -308,47 +308,49 @@ const HomeVision = ({ homeId }) => {
                 'Access-Control-Allow-Origin': '*'
             },
         }).then(res => {
-            const homeBanner = [...homeBanner];
+            var result = homeBanner;
+            result.image = res.data.url;
 
-            dispatch(actGetHomeBanner(homeBanner.image));
+            dispatch(actGetHomeBanner(result));
             setImageMessageError({ id: -1, message: "" });
         }).catch(err => {
-            setImageMessageError({ id: 0, message: 'Tải hình ảnh nền thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại!' });
+            setImageMessageError({ id: 0, message: 'Tải hình ảnh nền thất bại. Lỗi Network hoặc file có kích thước lớn hơn 25MB, mời thử lại!' });
         });
     };
 
-    const onSubmitHomeBanner = async (banner) => {
+    const onSubmitHomeBanner = async (image) => {
 
-        // const data = {
-        //     image: banner,
-        //     position: "vision"
-        // };
+        const data = {
+            image: image,
+            id: homeBanner.id,
+            position: "vision"
+        };
 
-        // const response = await API.put(`${HOME_SLIDE_ENDPOINT}`, data);
+        const response = await API.put(`${HOME_BANNER_ENDPOINT}`, data);
 
-        // if (response.ok) {
-        //     try {
-        //         const res = await API.get(`${HOME_SLIDE_ENDPOINT}`);
-        //         if (res.ok) {
-        //             const fetchData = await res.json();
-        //             const data = fetchData;
-        //             dispatch(actGetHomeSlide(data));
-        //             setMessage(`Cập nhật hình nền thành công!`);
-        //             setOpenSnackbar(true);
-        //         } else {
-        //             if (response.status === RESPONSE_STATUS.FORBIDDEN) {
-        //                 Cookies.remove(USER_TOKEN);
-        //                 Cookies.remove(USER_DEVICE_TOKEN);
-        //                 navigate('/', { replace: true });
-        //             }
-        //         }
-        //     } catch (err) {
+        if (response.ok) {
+            try {
+                const res = await API.get(`${HOME_BANNER_ENDPOINT}/banner/vision`);
+                if (res.ok) {
+                    const fetchData = await res.json();
+                    const data = fetchData;
+                    dispatch(actGetHomeBanner(data));
+                    setMessage(`Cập nhật hình nền thành công!`);
+                    setOpenSnackbar(true);
+                } else {
+                    if (response.status === RESPONSE_STATUS.FORBIDDEN) {
+                        Cookies.remove(USER_TOKEN);
+                        Cookies.remove(USER_DEVICE_TOKEN);
+                        navigate('/', { replace: true });
+                    }
+                }
+            } catch (err) {
 
-        //     }
-        // } else {
-        //     setMessage(`Cập nhật hình nền thất bại!`);
-        //     setOpenSnackbar(true);
-        // }
+            }
+        } else {
+            setMessage(`Cập nhật hình nền thất bại!`);
+            setOpenSnackbar(true);
+        }
 
     };
 

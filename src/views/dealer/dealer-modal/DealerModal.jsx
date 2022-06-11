@@ -148,7 +148,7 @@ const DealerModal = ({ openDealer, handleCloseDealer }) => {
             })
             .catch(err => {
                 setThumbnail('')
-                setThumbnailErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
+                setThumbnailErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 25MB, mời thử lại! ')
             });
         }
 

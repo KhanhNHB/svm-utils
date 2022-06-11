@@ -171,7 +171,7 @@ const SetupList = () => {
           return { ...instructions, image: "" };
         });
         setImageMessageError('Tải hình ảnh thất bại, mời thử lại!')
-        setImageMessageError('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
+        setImageMessageError('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 25MB, mời thử lại! ')
       });
   }
 

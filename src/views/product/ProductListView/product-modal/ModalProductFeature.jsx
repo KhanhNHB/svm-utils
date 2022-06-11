@@ -185,7 +185,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
         })
         .catch(err => {
             setSmallUrl('')
-            setSmallErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
+            setSmallErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 25MB, mời thử lại! ')
         });
         
 
@@ -208,7 +208,7 @@ const ModalProductFeature = ({ openFeature, handleCloseFeature }) => {
         })
         .catch(err => {
             setLargeUrl('')
-            setLargeErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
+            setLargeErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 25MB, mời thử lại! ')
         });
     }
 

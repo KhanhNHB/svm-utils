@@ -80,7 +80,7 @@ const ModalProductImage = ({ openImage, handleCloseImage }) => {
         })
         .catch(err => {
             setSmalImagelUrl('')
-            setSmallErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
+            setSmallErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 25MB, mời thử lại! ')
         });
         
 
@@ -103,7 +103,7 @@ const ModalProductImage = ({ openImage, handleCloseImage }) => {
         })
         .catch(err => {
             setLargeImageUrl('')
-            setLargeErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại! ')
+            setLargeErr('Tải hình ảnh thất bại. Lỗi Network hoặc file có kích thước lớn hơn 25MB, mời thử lại! ')
         });
     }
     const reset = () => {

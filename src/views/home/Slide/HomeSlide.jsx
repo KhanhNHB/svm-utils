@@ -221,7 +221,7 @@ const HomeSlide = ({ home }) => {
             dispatch(actGetHomeSlide(result));
             setLargeImageMessageError({ id: -1, message: "" });
         }).catch(err => {
-            setLargeImageMessageError({ id: slideId, message: 'Tải hình ảnh nền thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại!' });
+            setLargeImageMessageError({ id: slideId, message: 'Tải hình ảnh nền thất bại. Lỗi Network hoặc file có kích thước lớn hơn 25MB, mời thử lại!' });
         });
     };
 
@@ -248,7 +248,7 @@ const HomeSlide = ({ home }) => {
             dispatch(actGetHomeSlide(result));
             setSmallImageMessageError({ id: -1, message: "" });
         }).catch(err => {
-            setSmallImageMessageError({ id: slideId, message: 'Tải hình ảnh slide thất bại. Lỗi Network hoặc file có kích thước lớn hơn 1MB, mời thử lại!' });
+            setSmallImageMessageError({ id: slideId, message: 'Tải hình ảnh slide thất bại. Lỗi Network hoặc file có kích thước lớn hơn 25MB, mời thử lại!' });
         });
     };
 
